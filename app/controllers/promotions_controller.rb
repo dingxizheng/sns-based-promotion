@@ -69,7 +69,9 @@ class PromotionsController < ApplicationController
 
     # load customer resources
     def load_customer
-      @customer = User.find(params[:user_id])
+      if params[:user_id]
+        @customer = User.find(params[:user_id])
+      end
     end
 
 end
