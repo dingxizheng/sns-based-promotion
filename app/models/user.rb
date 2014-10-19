@@ -25,7 +25,7 @@ class User
   has_one  :session
 
   # validaters
-  validates_uniqueness_of :name, :email, :phone
+  validates_uniqueness_of :name, :email
   validates_format_of :email, with: /\A([\w+\-].?)+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z/i
 
   # see if passworkd matches or not
