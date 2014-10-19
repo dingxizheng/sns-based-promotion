@@ -17,7 +17,7 @@ class Session
 
   # return true if session expires
   def expire?
-  	DateTime.now < self.expire_at
+  	DateTime.now > self.expire_at
   end
  
   private
