@@ -1,4 +1,7 @@
 class PromotionsController < ApplicationController
+
+  # always put this at top
+  before_action :restrict_access, only: [:create, :update, :destory]
   before_action :set_promotion, only: [:show, :update, :destroy]
   before_action :load_customer, only: [:index, :create]
 
@@ -71,6 +74,8 @@ class PromotionsController < ApplicationController
     def load_customer
       if params[:user_id]
         @customer = User.find(params[:user_id])
+      else
+        @customer = @current_user
       end
     end
 

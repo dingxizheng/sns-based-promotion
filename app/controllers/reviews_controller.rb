@@ -1,4 +1,9 @@
 class ReviewsController < ApplicationController
+
+  before_action :restrict_access, only: [:create, :update, :destory]
+  before_action :set_review, only: [:show, :update, :destroy]
+  before_action :load_reviewer
+
   # GET /reviews
   # GET /reviews.json
   def index
@@ -18,8 +23,7 @@ class ReviewsController < ApplicationController
   # POST /reviews
   # POST /reviews.json
   def create
-    @review = Review.new(params[:review])
-
+    @review = @reviewer.opinions.build(review_params)
     if @review.save
       render json: @review, status: :created, location: @review
     else
@@ -47,4 +51,25 @@ class ReviewsController < ApplicationController
 
     head :no_content
   end
+
+  private
+    # Use callbacks to share common setup or constraints between actions.
+    def set_review
+      @review = Review.find(params[:id])
+    end
+
+    # only permit the trusted paramsters
+    def review_params
+      params.require(:review).permit(:body, :customer_id)
+    end
+
+    # load customer resources
+    def load_reviewer
+      if params[:user_id]
+        @reviewer = User.find(params[:user_id])
+      else
+        @reviewer = @current_user
+      end
+    end
+
 end

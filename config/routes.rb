@@ -1,6 +1,6 @@
 GampApi::Application.routes.draw do
   
-  # resources :reviews, except: [:new, :edit]
+  resources :reviews, except: [:new, :edit]
   
   resources :promotions, except: [:new, :edit]
   
@@ -8,6 +8,11 @@ GampApi::Application.routes.draw do
     resources :promotions, except: [:new, :edit]
     resources :reviews, except: [:new, :edit]
   end
+
+  # authentication
+  post 'signin' => 'accounts#signin'
+  post 'signout' => 'accounts#signout'
+  post 'signup' => 'accounts#signup_with_email'
   
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

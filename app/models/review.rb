@@ -5,6 +5,9 @@ class Review
   # fields
   field :body, type: String
 
-  belongs_to :author, class_name: 'User'
-  embedded_in :customer, inverse_of: :reviews, class_name: 'User'
+  # relationships
+  belongs_to :reviewer, inverse_of: :opinions, class_name: 'User'
+  belongs_to :customer, inverse_of: :reviews, class_name: 'User'
+
+
 end
