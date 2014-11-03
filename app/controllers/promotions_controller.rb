@@ -13,14 +13,13 @@ class PromotionsController < ApplicationController
     else 
       @promotions = @customer.promotions
     end
-
-    render json: @promotions
+    render 'promotions/promotions', :locals => { :promotions => @promotions }
   end
 
   # GET /promotions/1
   # GET /promotions/1.json
   def show
-    render json: @promotion
+    render :partial => 'promotions/promotion', :locals => { :promotion => @promotion }
   end
 
   # POST /promotions
@@ -33,28 +32,22 @@ class PromotionsController < ApplicationController
       @promotion = @customer.promotions.build(promotion_params)
     end
 
-    if @promotion.save
-      render json: @promotion, status: :created, location: @promotion
-    else
-      render json: @promotion.errors, status: :unprocessable_entity
-    end
+    raise UnprocessableEntityError.new(@promotion.errors) unless @promotion.save
+
+    render :partial => 'promotions/promotion', :locals => { :promotion => @promotion }, status: :created
   end
 
   # PATCH/PUT /promotions/1
   # PATCH/PUT /promotions/1.json
   def update
-    if @promotion.update(promotion_params)
-      head :no_content
-    else
-      render json: @promotion.errors, status: :unprocessable_entity
-    end
+    raise UnprocessableEntityError.new(@promotion.errors) unless @promotion.update(promotion_params)
+    render :partial => 'promotions/promotion', :locals => { :promotion => @promotion }
   end
 
   # DELETE /promotions/1
   # DELETE /promotions/1.json
   def destroy
     @promotion.destroy
-
     head :no_content
   end
 

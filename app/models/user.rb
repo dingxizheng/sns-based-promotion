@@ -3,6 +3,7 @@ require 'digest'
 class User
   include Mongoid::Document
   include Mongoid::Timestamps
+  include Sunspot::Mongoid2
 
    # filters
   before_create :encrypt_password
@@ -24,9 +25,31 @@ class User
   has_many :promotions
   has_one  :session
 
+  # sunspot
+  searchable do
+    
+    text :name, :email, :description, :keywords, :address
+
+  end
+
   # validaters
   validates_uniqueness_of :name, :email
   validates_format_of :email, with: /\A([\w+\-].?)+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z/i
+
+  def get_id
+    self.id.to_s
+  end
+
+  # add keyword to user
+  def add_keyword(keyword)
+    if self.keywords.include?(keyword)
+      self.errors.add :keywords, 'could not have duplicate values'
+      # return false if an error added
+      return false
+    else
+      self.push(keywords: keyword)
+    end
+  end
 
   # see if passworkd matches or not
   def password_match?(password)

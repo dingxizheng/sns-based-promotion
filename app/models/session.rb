@@ -7,7 +7,7 @@ class Session
  
   # fields
   field :access_token, type: String
-  field :expire_at, type: Date, default: DateTime.now + 1.hours
+  field :expire_at, type: DateTime, default: DateTime.now + 1.hours
 
   # relations
   belongs_to :user
@@ -18,6 +18,10 @@ class Session
   # return true if session expires
   def expire?
   	DateTime.now > self.expire_at
+  end
+
+  def refresh
+    self.expire_at = DateTime.now + 1.hours
   end
  
   private

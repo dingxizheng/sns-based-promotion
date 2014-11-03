@@ -9,5 +9,9 @@ class Review
   belongs_to :reviewer, inverse_of: :opinions, class_name: 'User'
   belongs_to :customer, inverse_of: :reviews, class_name: 'User'
 
+  def get_id
+  	self.id.to_s
+  end
+
 
 end
