@@ -7,7 +7,7 @@ class AccountsController < ApplicationController
 	# POST /signin
 	def signin
 		@user = User.find_by(email: params[:email])
-		
+
 		# if user is not found, raise a 400 error
 		raise BadRequestError.new('user does not exist.') unless not @user.nil?
 		
@@ -28,6 +28,7 @@ class AccountsController < ApplicationController
 	# POST /signout
 	def signout
 		@session.destroy
+		head :no_content
 	end
 
 	# POST /signup
@@ -40,7 +41,7 @@ class AccountsController < ApplicationController
 		end
 	end
 
-  # GET /me
+  	# GET /me
 	def me
 		render :partial => 'users/session', :locals => { :session => @session }
 	end

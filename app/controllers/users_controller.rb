@@ -1,14 +1,16 @@
 class UsersController < ApplicationController
 
-  # before_action :restrict_access, only: [:create, :update, :destory]
+  before_action :restrict_access, only: [:create, :update, :destory]
   before_action :set_user, only: [:show, :update, :destroy]
-  before_action :load_customer, only: [:add_keyword, :delete_keyword]
+  before_action :load_customer, only: [:add_keyword, :delete_keyword, :set_logo]
 
   # GET /users
   # GET /users.json
   def index
     @users = User.all
-
+    Image.all.each do |i|
+      puts i.user
+    end
     render 'users/users', :locals => { :users => @users }
   end
 
@@ -40,6 +42,12 @@ class UsersController < ApplicationController
     head :no_content
   end
 
+  # POST /users/1/logo
+  def set_logo
+    raise UnprocessableEntityError.new(@customer.errors) unless @customer.set_logo(params[:logo])
+    render partial: "users/user", :locals => { :user => @user }
+  end
+
   # keywords functions
   # POST /users/1/keywords
   def add_keyword
@@ -57,11 +65,18 @@ class UsersController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_user
       @user = User.find(params[:id])
+      # raise a notfound error, if @user is empty
+      raise NotfoundError.new('User', { :id => params[:id] }.to_s) unless @user
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def user_params
+      # puts params.require(:user)
       params.require(:user).permit(:name, :phone, :email, :address, :description)
+    end
+
+    def user_logo
+      params.require(:user).permit(:logo)
     end
 
     # load customer resources

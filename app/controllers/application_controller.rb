@@ -34,7 +34,7 @@ class ApplicationController < ActionController::API
 	  	@session = Session.find_by(access_token: loads_apikey)
 	  	
 	  	# raise an unauthorized error if no session created or session expired
-	  	raise UnauthorizedRrror.new unless not @session.nil? and not @session.expire?
+	  	raise UnauthenticatedError.new unless not @session.nil? and not @session.expire?
 
 	  	# otherwise refresh seesion and retrive the user
 	  	@session.refresh
@@ -50,6 +50,12 @@ class ApplicationController < ActionController::API
 	  # render errors 
 	  def render_error(error)
 	  	render :json => error, :status => error.status
+	  end
+
+	  # get current user
+	  # create a guest if no user is found
+	  def current_user
+	  	@current_user ||= User.new({ :role => 'guest' })
 	  end
 
 end

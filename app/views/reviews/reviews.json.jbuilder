@@ -1,5 +1,5 @@
 json.array!(reviews) do |review|
 
-	json.partial! :partial => 'reviews/review', :local => { :review => review }
+	json.partial! :partial => 'reviews/review', :locals => { :review => review }
 
 end

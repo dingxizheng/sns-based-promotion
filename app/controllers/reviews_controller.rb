@@ -7,15 +7,13 @@ class ReviewsController < ApplicationController
   # GET /reviews
   # GET /reviews.json
   def index
-    if not @reviewee.nil?
+    if @reviewee
       render 'reviews/reviews', :locals => { :reviews => @reviewee.reviews }
-    end
-
-    if not @reviewer.nil?
+    elsif @reviewer
       render 'reviews/reviews', :locals => { :reviews => @reviewer.opinions }
+    else 
+      render 'reviews/reviews', :locals => { :reviews => Review.all }
     end
-
-    render 'reviews/reviews', :locals => { :reviews => Review.all }
 
   end
 
@@ -37,7 +35,6 @@ class ReviewsController < ApplicationController
   # PATCH/PUT /reviews/1
   # PATCH/PUT /reviews/1.json
   def update
-
     raise UnprocessableEntityError.new(@review.errors) unless @review.update(params[:review])     
     render :partial => 'reviews/review', :locals => { :review => @review }
 

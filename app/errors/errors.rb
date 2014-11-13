@@ -39,8 +39,8 @@ module Errors
 		end
 	end
 
-	# unauthorized error
-	class UnauthorizedRrror < GampError
+	# Unauthenticated error
+	class UnauthenticatedError < GampError
 		def initialize
 			@code = 401
 			@error = 'valid credential required to proform this action.'
@@ -73,6 +73,14 @@ module Errors
 		def initialize(path)
 			@code = 404
 			@error = 'the resource requested: \'' + path + '\' could not be found.'
+		end
+	end
+
+	# not found error
+	class NotfoundError < GampError
+		def initialize(classname, query)
+			@code = 404
+			@error =  classname + ': \'' + query + '\' could not be found.'
 		end
 	end
 
