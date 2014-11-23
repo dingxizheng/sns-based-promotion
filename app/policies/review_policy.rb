@@ -12,7 +12,7 @@ class ReviewPolicy < ApplicationPolicy
 
   def create?
     # only admin has the premision to add a promotion
-    user.has_any_role? :admin
+    user.id != record.reviewee.id
   end
 
   def update?
