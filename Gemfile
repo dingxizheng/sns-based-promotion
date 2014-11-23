@@ -30,13 +30,6 @@ gem 'sunspot_mongoid2'
 
 gem 'pundit'
 
-gem 'rolify', github: 'EppO/rolify'
+gem 'rolify'
 
-# Use unicorn as the app server
-# gem 'unicorn'
-
-# Deploy with Capistrano
-# gem 'capistrano', :group => :development
-
-# To use debugger
-# gem 'ruby-debug19', :require => 'ruby-debug'
+gem 'geocoder'

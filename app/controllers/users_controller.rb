@@ -13,7 +13,7 @@ class UsersController < ApplicationController
   # GET /users/1
   # GET /users/1.json
   def show
-    render partial: "users/user", :locals => { :user => @user } 
+    render partial: "users/user", :locals => { :user => @user }
   end
 
   # POST /users
@@ -64,22 +64,22 @@ class UsersController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_user
-      user_id = params[:id] || params[:user_id]
-      @user = User.find(user_id)
-      # raise a notfound error, if @user is empty
-      raise NotfoundError.new('User', { :id => user_id }.to_s ) unless @user
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_user
+    user_id = params[:id] || params[:user_id]
+    @user = User.find(user_id)
+    # raise a notfound error, if @user is empty
+    raise NotfoundError.new('User', { :id => user_id }.to_s ) unless @user
+  end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def user_params
-      # puts params.require(:user)
-      params.require(:user).permit(:name, :phone, :email, :address, :description, :password)
-    end
+  # Never trust parameters from the scary internet, only allow the white list through.
+  def user_params
+    # puts params.require(:user)
+    params.require(:user).permit(:name, :phone, :email, :address, :description, :password)
+  end
 
-    def user_logo
-      params.require(:user).permit(:logo)
-    end
+  def user_logo
+    params.require(:user).permit(:logo)
+  end
 
 end

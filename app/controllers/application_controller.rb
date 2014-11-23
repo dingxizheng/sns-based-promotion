@@ -17,6 +17,10 @@ class ApplicationController < ActionController::API
 	# rescue from authorized exception
 	rescue_from Pundit::NotAuthorizedError, :with => :permission_denied
 
+	# handle routing error and raise a routing exception
+	def handle_404
+		raise RoutingError.new(params[:path])
+	end
 
 	# private methods
 	protected
@@ -54,11 +58,7 @@ class ApplicationController < ActionController::API
 		render_error(InternalError.new(error.message))
 	end
 
-	# handle routing error and raise a routing exception
-	def handle_404
-		raise RoutingError.new(params[:path])
-	end
-
+	# if permission denied, send a noauthorized error with code 403
 	def permission_denied(error)
 		render_error(NotauthorizedError.new)
 	end

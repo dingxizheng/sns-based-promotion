@@ -1,10 +1,4 @@
 GIT
-  remote: git://github.com/EppO/rolify.git
-  revision: 34e708a8ba1b2c182ba5372c79c2964223fa7347
-  specs:
-    rolify (3.4.1)
-
-GIT
   remote: git://github.com/mongoid/mongoid.git
   revision: f4f489e45adb0059fae6854d8a29ebb79cc6c8fd
   specs:
@@ -100,6 +94,7 @@ GEM
       rake (>= 0.8.7)
       thor (>= 0.18.1, < 2.0)
     rake (10.3.2)
+    rolify (3.4.1)
     rsolr (1.0.10)
       builder (>= 2.1.2)
     sprockets (2.12.3)
@@ -143,7 +138,7 @@ DEPENDENCIES
   pundit
   rails
   rails-api
-  rolify!
+  rolify
   sunspot_mongoid2
   sunspot_rails
   sunspot_solr

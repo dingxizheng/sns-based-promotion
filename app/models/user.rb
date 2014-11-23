@@ -4,11 +4,15 @@ class User
   include Mongoid::Document
   include Mongoid::Timestamps
   include Sunspot::Mongoid2
+  include Geocoder::Model::Mongoid
+  
+  geocoded_by :address 
+  after_validation :geocode 
 
   rolify
 
    # filters
-  before_create :encrypt_password
+  before_create :encrypt_password, :set_default_role
 
   # fields
   field :name, type: String
@@ -18,6 +22,7 @@ class User
   field :address, type: String
   field :description, type: String
   field :keywords, type: Array, default: []
+  field :coordinates, type: Array
    
   # relations
   has_many :reviews, inverse_of: :customer, class_name: 'Review'
@@ -57,7 +62,7 @@ class User
     end
   end
 
-  # see if passworkd matches or not
+  # see if password matches or not
   def password_match?(password)
   	self.password == Digest::SHA2.hexdigest(password)
   end
@@ -71,6 +76,16 @@ class User
       return false
     end
     return true
+  end
+
+  # set user as normal user
+  def set_default_role
+    self.add_role :user
+  end
+
+  # is admin
+  def is_admin?
+    self.has_role? :admin
   end
 
   private

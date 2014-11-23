@@ -6,6 +6,12 @@ json.keywords user.keywords
 
 json.extract! user, :name, :email, :address, :phone, :created_at, :updated_at
 
+json.coordinates user.coordinates
+
+json.roles(user.roles) do |role|
+	json.role role.name
+end
+
 if not user.logo.nil?
 	json.logo do
 		json.image_url user.logo.image_url
