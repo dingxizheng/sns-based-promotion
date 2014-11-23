@@ -30,6 +30,8 @@ gem 'sunspot_mongoid2'
 
 gem 'pundit'
 
+gem 'rolify', github: 'EppO/rolify'
+
 # Use unicorn as the app server
 # gem 'unicorn'
 

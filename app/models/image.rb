@@ -17,7 +17,9 @@ class Image
   # relations
   belongs_to :user
 
-  # save data from request
+  # save data from request 
+  # in our case we don't store any images on local
+  # all images uploaded will be forwarded to ultraimg.com
   def store(data_from_request)
     puts data_from_request.original_filename
     file_name = data_from_request.original_filename  if  (data_from_request != '')    

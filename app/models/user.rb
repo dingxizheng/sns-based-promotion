@@ -5,6 +5,8 @@ class User
   include Mongoid::Timestamps
   include Sunspot::Mongoid2
 
+  rolify
+
    # filters
   before_create :encrypt_password
 
@@ -16,8 +18,7 @@ class User
   field :address, type: String
   field :description, type: String
   field :keywords, type: Array, default: []
-  field :roles, type: Array, default: ['login']
-  
+   
   # relations
   has_many :reviews, inverse_of: :customer, class_name: 'Review'
   has_many :opinions, inverse_of: :reviewer, class_name: 'Review'
@@ -40,7 +41,7 @@ class User
       :with => /\(?([0-9]{3})\)?([ .-]?)([0-9]{3})\2([0-9]{4})/,
       :allow_blank => true
 
-
+  # return id object to id string
   def get_id
     self.id.to_s
   end
@@ -63,6 +64,7 @@ class User
 
   # set logo
   def set_logo(upload)
+    # create a new image record
     logo = Image.new({ :user_id => self.get_id })
     if not logo.store(upload) or not logo.save
       self.errors.add :logo, upload.original_filename + ': could not set logo.'

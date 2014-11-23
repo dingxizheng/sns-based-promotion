@@ -39,11 +39,18 @@ module Errors
 		end
 	end
 
+	class NotauthorizedError < GampError
+		def initialize
+			@code = 403
+			@error = 'you are not authorized'
+		end
+	end
+
 	# Unauthenticated error
 	class UnauthenticatedError < GampError
 		def initialize
 			@code = 401
-			@error = 'valid credential required to proform this action.'
+			@error = 'valid credential required to preform this action.'
 		end
 	end
 

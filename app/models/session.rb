@@ -2,6 +2,8 @@ class Session
   include Mongoid::Document
   include Mongoid::Timestamps
 
+  resourcify
+
   # filters
   before_create :generate_access_token
  

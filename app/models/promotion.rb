@@ -2,6 +2,8 @@ class Promotion
   include Mongoid::Document
   include Mongoid::Timestamps
 
+  resourcify
+
   # fields
   field :title, type: String
   field :body, type: String

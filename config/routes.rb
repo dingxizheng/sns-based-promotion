@@ -1,14 +1,12 @@
 GampApi::Application.routes.draw do
 
-  resources :reviews, except: [:new, :edit]
-  
+  resources :reviews, except: [:new, :edit] 
+
   resources :promotions, except: [:new, :edit]
   
   resources :users, except: [:new, :edit] do 
     resources :promotions, except: [:new, :edit]
-    resources :reviews, except: [:new, :edit]
-    # keywords routes
-    # get 'keywords' => 'users#get_keywords'
+    resources :reviews, except: [:new, :edit] 
     post 'keywords' => 'users#add_keyword'
     delete 'keywords/:keyword' => 'users#delete_keyword'
     post 'logo' => 'users#set_logo'

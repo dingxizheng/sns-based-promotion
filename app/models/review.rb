@@ -2,6 +2,8 @@ class Review
   include Mongoid::Document
   include Mongoid::Timestamps
 
+  resourcify
+
   # fields
   field :body, type: String
 

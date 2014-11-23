@@ -2,19 +2,13 @@ class ReviewsController < ApplicationController
 
   before_action :restrict_access, only: [:create, :update, :destory]
   before_action :set_review, only: [:show, :update, :destroy]
-  before_action :load_reviewer
+  before_action :set_user, except: []
 
   # GET /reviews
   # GET /reviews.json
   def index
-    if @reviewee
-      render 'reviews/reviews', :locals => { :reviews => @reviewee.reviews }
-    elsif @reviewer
-      render 'reviews/reviews', :locals => { :reviews => @reviewer.opinions }
-    else 
-      render 'reviews/reviews', :locals => { :reviews => Review.all }
-    end
-
+    @reviews = PromotionPolicy::Scope.new(@user, Review).resolve
+    render 'reviews/reviews', :locals => { :reviews => @reviews }
   end
 
   # GET /reviews/1
@@ -27,6 +21,8 @@ class ReviewsController < ApplicationController
   # POST /reviews.json
   def create
     @review = @reviewer.opinions.build(review_params)
+    authorize @review
+    moderatorize review.reviewer, @review
     raise UnprocessableEntityError.new(@review.errors) unless @review.save
     render :partial => 'reviews/review', :locals => { :review => @review }, status: :created
 
@@ -35,6 +31,7 @@ class ReviewsController < ApplicationController
   # PATCH/PUT /reviews/1
   # PATCH/PUT /reviews/1.json
   def update
+    authorize @review
     raise UnprocessableEntityError.new(@review.errors) unless @review.update(params[:review])     
     render :partial => 'reviews/review', :locals => { :review => @review }
 
@@ -43,6 +40,7 @@ class ReviewsController < ApplicationController
   # DELETE /reviews/1
   # DELETE /reviews/1.json
   def destroy
+    authorize @review
     @review.destroy
     head :no_content
   end
@@ -51,21 +49,22 @@ class ReviewsController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_review
       @review = Review.find(params[:id])
+      raise NotfoundError.new('Review', { :id => params[:id] }.to_s ) unless @review
     end
 
     # only permit the trusted paramsters
     def review_params
-      params.require(:review).permit(:body, :customer_id)
+      params.require(:review).permit(:body, :reviewer_id)
     end
 
     # load customer resources
-    def load_reviewer
+    def set_user
       if params[:user_id]
-        @reviewee = User.find(params[:user_id])
+        @user = User.find(params[:user_id])
+        raise NotfoundError.new('User', { :id => params[:user_id] }.to_s ) unless @review
       else
-        @reviewer = @current_user
+        @user = current_user
       end
-      @reviewer = @current_user
     end
 
 end
