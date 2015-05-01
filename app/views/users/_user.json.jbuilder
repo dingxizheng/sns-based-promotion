@@ -4,13 +4,11 @@ json.url user_url(user)
 
 json.keywords user.keywords
 
-json.extract! user, :name, :email, :address, :phone, :created_at, :updated_at
+json.extract! user, :name, :email, :address, :phone, :description, :created_at, :updated_at
 
 json.coordinates user.coordinates
 
-json.roles(user.roles) do |role|
-	json.role role.name
-end
+json.roles user.roles.pluck :name
 
 if not user.logo.nil?
 	json.logo do
@@ -19,9 +17,9 @@ if not user.logo.nil?
 	end
 end
 
-if user.session and not user.session.expire?
-	json.session do
-		json.apitoken user.session.access_token
-		json.expire_at user.session.expire_at
+json.photos do
+	json.array! user.photos do |p|
+		json.image_url p.image_url
+		json.thumb_url p.thumb_url
 	end
 end

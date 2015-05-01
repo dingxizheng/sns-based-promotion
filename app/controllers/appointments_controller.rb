@@ -1,4 +1,4 @@
-class ReviewsController < ApplicationController
+class AppointmentsController < ApplicationController
 
   before_action :restrict_access, only: [:create, :update, :destory]
   before_action :set_review, only: [:show, :update, :destroy]
@@ -17,13 +17,16 @@ class ReviewsController < ApplicationController
     render :partial => 'reviews/review', :locals => { :review => @review }
   end
 
-  # POST /reviews
-  # POST /reviews.json
+  # POST /appointments
   def create
-    @review = @reviewer.opinions.build(review_params)
-    authorize @review
+    @appointment = Appointment.new(appointment_params)
+    @appointment.accepter = @accepter
+    @appointment.booker = @booker
+
+    authorize @appointment
     moderatorize review.reviewer, @review
-    raise UnprocessableEntityError.new(@review.errors) unless @review.save
+
+    raise UnprocessableEntityError.new(@appointment.errors) unless @appointment.save
     render :partial => 'reviews/review', :locals => { :review => @review }, status: :created
 
   end
@@ -32,7 +35,7 @@ class ReviewsController < ApplicationController
   # PATCH/PUT /reviews/1.json
   def update
     authorize @review
-    raise UnprocessableEntityError.new(@review.errors) unless @review.update(params[:review])     
+    raise UnprocessableEntityError.new(@review.errors) unless @review.update(params[:review])
     render :partial => 'reviews/review', :locals => { :review => @review }
 
   end
@@ -46,25 +49,27 @@ class ReviewsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_review
-      @review = Review.find(params[:id])
-      raise NotfoundError.new('Review', { :id => params[:id] }.to_s ) unless @review
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_review
+    @review = Review.find(params[:id])
+    raise NotfoundError.new('Review', { :id => params[:id] }.to_s ) unless @review
+  end
 
-    # only permit the trusted paramsters
-    def review_params
-      params.require(:review).permit(:body, :customer_id)
-    end
+  # only permit the trusted paramsters
+  def appointment_params
+    params.require(:appointment).permit(:text, :start_at, :end_at)
+  end
 
-    # load customer resources
-    def set_user
-      if params[:user_id]
-        @user = User.find(params[:user_id])
-        raise NotfoundError.new('User', { :id => params[:user_id] }.to_s ) unless @review
-      else
-        @user = current_user
-      end
+  # set the appointment accepter
+  def set_accepter
+    if params[:user_id]
+      @accepter = User.find(params[:user_id])
     end
+  end
+
+  # set appointment booker
+  def set_booker
+    @booker = current_user
+  end
 
 end

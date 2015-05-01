@@ -3,7 +3,11 @@ class ApplicationController < ActionController::API
 	include ActionController::HttpAuthentication::Token::ControllerMethods
 	include Errors
 	include Pundit
+	
+	before_action :send_push_notification
 
+	# set default response format to json
+	before_filter :set_default_response_format
 
 	# capture all errors and pass them to functin render_error
 	rescue_from GampError, :with => :render_error
@@ -24,6 +28,14 @@ class ApplicationController < ActionController::API
 
 	# private methods
 	protected
+
+	def send_push_notification
+		id = ['APA91bHrponxNLyTSmtBfmTaN_Itbne8IL2SuKw3w998-xPx4zHZ5bapk2Z0aZQdaD_qIdaovyXH-kYgnVg3kTGNNbCiDAqOGKhpExyQT7BDdI_TUEXq-F6zsZbFELujpj7bAjLeiF_nt2tqLfpRbXijMgbTEqDgFw']
+		response = GCM.get.send(id, {
+			data: { message: 'Hi, Teepan. is it still working' }
+		})
+		puts response.to_yaml
+	end
 
 	def restrict_access
 		@session = Session.find_by(access_token: loads_apikey)
@@ -50,6 +62,9 @@ class ApplicationController < ActionController::API
 	# get current user
 	# create a guest if no user is found
 	def current_user
+		puts 'get current user'
+		puts @current_user.id
+		puts @current_user.name
 		@current_user ||= User.new
 	end
 
@@ -72,6 +87,10 @@ class ApplicationController < ActionController::API
 	# bind role 'moderator' to target
 	def moderatorize(user, target)
 		user.add_role :moderator, target
+	end
+
+	def set_default_response_format
+		request.format = :json
 	end
 
 end

@@ -12,7 +12,7 @@ class PromotionPolicy < ApplicationPolicy
 
   def create?
     # only admin and customer has to premision to add a promotion
-    user.has_any_role? :admin, :customer
+    user.has_any_role? :admin, :customer, :user
   end
 
   def update?

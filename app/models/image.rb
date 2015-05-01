@@ -33,8 +33,8 @@ class Image
     require 'net/http'
     uri = URI('http://ultraimg.com/api/1/upload/?key=3374fa58c672fcaad8dab979f7687397')
     res = Net::HTTP.post_form(uri, 'source' => str)
-
-    puts res.body
+    
+    puts 'file upload response:'
 
     if res.code.eql? 200
       self.errors.add :file_name, file_name + ' could not be processed.'
@@ -43,7 +43,6 @@ class Image
     end
     
     require 'json'
-
     data = JSON.parse(res.body)    
     self.extension = data["image"]["extension"]
     self.size = data["image"]["size"]

@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
 
-  before_action :restrict_access, only: [:create, :update, :destory]
-  before_action :set_user, only: [:show, :update, :destroy]
+  before_action :restrict_access, only: [:create, :update, :destory, :set_logo, :add_keyword, :delete_keyword]
+  before_action :set_user, only: [:show, :update, :destroy, :set_logo, :add_keyword, :delete_keyword]
 
   # GET /users
   # GET /users.json

@@ -33,3 +33,5 @@ gem 'pundit'
 gem 'rolify'
 
 gem 'geocoder'
+
+gem 'gcm'

@@ -14,12 +14,13 @@ class AccountsController < ApplicationController
 		# if password does not match, raise a 400 error
 		raise BadRequestError.new('invalid password.') unless @user.password_match?(params[:password])
 
+		@user.session.destroy unless not @user.session.presence
+
 		# otherwise create a new seession
 		session = Session.new
 		session.save
+		session.refresh
 		@user.session = session
-		# response with apitoken
-		# render :json => { :apitoken => session.access_token }
 
 		render :partial => 'users/session', :locals => { :session => session }
 
@@ -53,7 +54,7 @@ class AccountsController < ApplicationController
 	# private methods
 	private
 	  def signup_params
-      params.require(:user).permit(:name, :email, :password)
-    end
+        params.require(:user).permit(:name, :email, :password)
+      end
 
 end

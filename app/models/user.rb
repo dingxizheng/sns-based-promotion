@@ -30,6 +30,12 @@ class User
   has_many :promotions
   has_one  :session
   has_one  :logo, class_name: 'Image'
+  has_many :photos, class_name: 'Image'
+
+  # appointments
+  has_many :booked_appointments, inverse_of: :booker, class_name: 'Appointment'
+  has_many :accepted_appointments, inverse_of: :accepter, class_name: 'Appointment'
+  has_many :timeslots
 
   # sunspot
   searchable do
@@ -75,6 +81,19 @@ class User
       self.errors.add :logo, upload.original_filename + ': could not set logo.'
       return false
     end
+    self.logo = logo
+    return true
+  end
+
+  # add a new photo
+  def add_photo(upload)
+    # create a new image record
+    image = Image.new({ :user_id => self.get_id })
+    if not image.store(upload) or not image.save
+      self.errors.add :photos, upload.original_filename + ': could not add image.'
+      return false
+    end
+    self.photos.push(image);
     return true
   end
 
