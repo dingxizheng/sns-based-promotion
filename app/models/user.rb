@@ -40,7 +40,11 @@ class User
   # sunspot
   searchable do
     
-    text :name, :email, :description, :keywords, :address
+    text :name, :email, :description, :keywords, :address, :phone
+
+    latlon(:location){
+      Sunspot::Util::Coordinates.new(lat , lon)
+    }
 
   end
 
@@ -51,6 +55,14 @@ class User
       :message => "must be a valid telephone number.",
       :with => /\(?([0-9]{3})\)?([ .-]?)([0-9]{3})\2([0-9]{4})/,
       :allow_blank => true
+
+  def lon
+    if not self.coordinates.nil? then self.coordinates[0] else 0 end
+  end
+ 
+  def lat
+    if not self.coordinates.nil? then self.coordinates[1] else 0 end 
+  end
 
   # return id object to id string
   def get_id
