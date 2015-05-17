@@ -2,7 +2,7 @@ class PromotionPolicy < ApplicationPolicy
 
   class Scope < Scope
     def resolve
-      if user.is_admin?
+      if user.nil? or user.is_admin?
         scope.all
       else
         user.promotions

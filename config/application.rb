@@ -29,5 +29,7 @@ module GampApi
     # config.i18n.default_locale = :de
 
     # config.autoload_paths += Dir["#{config.root}/app/errors/**/"]
+    
+    # config.force_ssl = true
   end
 end

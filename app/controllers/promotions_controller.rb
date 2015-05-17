@@ -8,7 +8,8 @@ class PromotionsController < ApplicationController
   # GET /promotions
   # GET /promotions.json
   def index
-    @promotions = PromotionPolicy::Scope.new(@owner, Promotion).resolve
+    promotions_before_query = PromotionPolicy::Scope.new(@owner, Promotion).resolve
+    @promotions = query_by_conditions(promotions_before_query, request.query_parameters.except!(params_to_skip))
     render 'promotions/promotions', :locals => { :promotions => @promotions }
   end
 
@@ -46,6 +47,7 @@ class PromotionsController < ApplicationController
 
 
   private
+
     # Use callbacks to share common setup or constraints between actions.
     def set_promotion
       @promotion = Promotion.find(params[:id])
@@ -54,7 +56,7 @@ class PromotionsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def promotion_params
-      params.require(:promotion).permit(:title, :body, :start_at, :expire_at)
+      params.require(:promotion).permit(:title, :description, :catagory_id, :start_at, :expire_at)
     end
 
     # load owner
@@ -63,9 +65,9 @@ class PromotionsController < ApplicationController
         @owner = User.find(params[:user_id])
         raise NotfoundError.new('User', { :id => params[:user_id] }.to_s ) unless @owner
       else
-        @owner = current_user
+        # if user_id is not provided, set it as nil by default
+        @owner = nil
       end
-      puts @owner.to_yaml
     end
 
 end

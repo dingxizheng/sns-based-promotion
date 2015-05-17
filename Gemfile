@@ -35,3 +35,5 @@ gem 'rolify'
 gem 'geocoder'
 
 gem 'gcm'
+
+gem 'thin'

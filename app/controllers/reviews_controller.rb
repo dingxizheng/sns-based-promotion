@@ -8,6 +8,7 @@ class ReviewsController < ApplicationController
   # GET /reviews.json
   def index
     @reviews = PromotionPolicy::Scope.new(@user, Review).resolve
+    # @reviews = query_by_conditions(@reviews, request.query_parameters.except!(params_to_skip))
     render 'reviews/reviews', :locals => { :reviews => @reviews }
   end
 

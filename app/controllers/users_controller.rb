@@ -3,10 +3,11 @@ class UsersController < ApplicationController
   before_action :restrict_access, only: [:create, :update, :destory, :set_logo, :add_keyword, :delete_keyword]
   before_action :set_user, only: [:show, :update, :destroy, :set_logo, :add_keyword, :delete_keyword]
 
+
   # GET /users
   # GET /users.json
   def index
-    @users = User.all
+    @users = query_by_conditions(User, request.query_parameters.except!(params_to_skip))
     render 'users/users', :locals => { :users => @users }
   end
 
@@ -53,13 +54,15 @@ class UsersController < ApplicationController
   def add_keyword
     authorize @user
     raise UnprocessableEntityError.new(@user.errors) unless @user.add_keyword(params[:keyword])
-    render :json => { :keyword => params[:keyword] }
+    Sunspot.index! [@user]
+    head :no_content
   end
 
   # DELETE /users/1/keywords/:keyword
   def delete_keyword
     authorize @user
     @user.pull(keywords: params[:keyword])
+    Sunspot.index! [@user]
     head :no_content
   end
 

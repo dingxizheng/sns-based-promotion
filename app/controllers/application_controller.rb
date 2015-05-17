@@ -3,6 +3,7 @@ class ApplicationController < ActionController::API
 	include ActionController::HttpAuthentication::Token::ControllerMethods
 	include Errors
 	include Pundit
+
 	
 	before_action :send_push_notification
 
@@ -28,6 +29,50 @@ class ApplicationController < ActionController::API
 
 	# private methods
 	protected
+
+	# params should be skipped in condition query
+	def params_to_skip 
+		[:apitoken]
+	end
+
+
+	# build mongoid query
+	# 1. id=123,,345,,678  ===> id in [123, 345, 678]
+	# 2. created=<=1023456 ===> created <= 1023456  
+	def query_by_conditions(scope, query_parameters)
+		tempResult = scope
+		sortBy = query_parameters[:sortBy]
+		query_parameters.except!(:sortBy).each do |key, value|
+			field = key.to_sym
+
+			if value.start_with? '<='
+				tempResult = tempResult.lte(field => value[2..-1])
+			elsif value.start_with? '<'
+				tempResult = tempResult.lt(field => value[1..-1])
+			elsif value.start_with? '>='
+				tempResult = tempResult.gte(field => value[2..-1])
+			elsif value.start_with? '>'
+				tempResult = tempResult.gt(field => value[1..-1])
+			elsif value.start_with? '!='
+				tempResult = tempResult.nin(field => value[2..-1].split(',,'))
+			else
+				tempResult = tempResult.in(field => value.split(',,'))
+			end	
+		end
+
+		if sortBy.present? 
+			order_by_params = sortBy.split(',,').map do |item|
+				if item.start_with? '-'
+					[item[1..-1].to_sym, -1]
+				else
+					[item.to_sym, 1]
+				end
+			end
+			return tempResult.all.order_by(order_by_params)
+		else
+			return tempResult.all
+		end
+	end
 
 	def send_push_notification
 		id = ['APA91bHrponxNLyTSmtBfmTaN_Itbne8IL2SuKw3w998-xPx4zHZ5bapk2Z0aZQdaD_qIdaovyXH-kYgnVg3kTGNNbCiDAqOGKhpExyQT7BDdI_TUEXq-F6zsZbFELujpj7bAjLeiF_nt2tqLfpRbXijMgbTEqDgFw']

@@ -49,22 +49,42 @@
 # user.add_role :customer
 # user.save
 
-require 'json'
-file = File.read('db/data.json')
-users = JSON.parse(file)
+# keywords = ['nike', 'france', 'cheap', 'damn', 'one two', 'china', '678', 'good', 'bad', 'england', 'king']
+# # keywords = ['nike', 'france', 'cheap', 'damn', 'one two', 'china', '678', 'good', 'bad', 'england', 'king']
+# # 
+# addresses = [
+# 	'1 Glencove Dr. Markham, On. Canada',
+# 	'16 Morbank Dr. Scarborough, On. Canada',
+# 	'19 Country Blvd. Tunder Bay, On. Canada',
+# 	'3300 Midland Ave Toronto, ON M1V 4A1',
+# 	'25 Sheppard Ave W Toronto, ON M2N',
+# 	'North Elgin Centre 11005 Yonge St Richmond Hill, ON L4C 0K7'
+# ]
 
-for u in users
-	add = u['address'] + ', ' + u['city'] + ', ' + u['region'] + ', ' + u['country']
-	user = {
-		name: u['name'],
-		email: u['email'],
-		phone: u['phone'],
-		address: add,
-		description: u['descritpion'],
-		password: 'root'
-	}
+# for u in User.all
+# 	u.address = addresses[rand(0...6)]
+# 	u.save
+# end
 
-	user_ = User.new(user)
-	user_.add_role :customer
-	user_.save
-end
+# require 'json'
+# file = File.read('db/data.json')
+# users = JSON.parse(file)
+
+# for u in users
+# 	add = u['address'] + ', ' + u['city'] + ', ' + u['region'] + ', ' + u['country']
+# 	user = {
+# 		name: u['name'],
+# 		email: u['email'],
+# 		phone: u['phone'],
+# 		address: add,
+# 		description: u['descritpion'],
+# 		password: 'root'
+# 	}
+
+# 	user_ = User.new(user)
+# 	user_.add_role :customer
+# 	user_.save
+# end
+
+
+load 'db/import_catagory.rb' 

@@ -3,7 +3,6 @@ class AccountsController < ApplicationController
 	before_action :restrict_access, only: [:signout, :me]
 	before_action :signup_params, only: [:signup_with_email]
 
-
 	# POST /signin
 	def signin
 		@user = User.find_by(email: params[:email])
