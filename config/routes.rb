@@ -2,13 +2,24 @@ GampApi::Application.routes.draw do
 
   resources :reviews, except: [:new, :edit] 
 
-  resources :promotions, except: [:new, :edit]
+  resources :promotions, except: [:new, :edit] do 
+    post 'approve' => 'promotions#approve'
+    post 'reject' => 'promotions#reject'
+    post 'rate' => 'promotions#rate'
+  end
 
   resources :catagorys, except: [:new, :edit, :show]
   
   resources :users, except: [:new, :edit] do 
-    resources :promotions, except: [:new, :edit]
+
+    resources :promotions, except: [:new, :edit] do 
+      post 'approve' => 'promotions#approve'
+      post 'reject' => 'promotions#reject'
+      post 'rate' => 'promotions#rate'
+    end
+
     resources :reviews, except: [:new, :edit] 
+
     post 'keywords' => 'users#add_keyword'
     delete 'keywords/:keyword' => 'users#delete_keyword'
     post 'logo' => 'users#set_logo'

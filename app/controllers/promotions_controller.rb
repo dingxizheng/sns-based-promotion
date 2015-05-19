@@ -1,15 +1,15 @@
 class PromotionsController < ApplicationController
 
   # always put this at top
-  before_action :restrict_access, only: [:create, :update, :destory]
-  before_action :set_promotion, only: [:show, :update, :destroy]
+  before_action :restrict_access, only: [:create, :update, :destory, :approve, :reject]
+  before_action :set_promotion, only: [:show, :update, :destroy, :approve, :reject, :rate]
   before_action :set_owner, except:[]
   
   # GET /promotions
   # GET /promotions.json
   def index
     promotions_before_query = PromotionPolicy::Scope.new(@owner, Promotion).resolve
-    @promotions = query_by_conditions(promotions_before_query, request.query_parameters.except!(params_to_skip))
+    @promotions = query_by_conditions(promotions_before_query, request.query_parameters)
     render 'promotions/promotions', :locals => { :promotions => @promotions }
   end
 
@@ -37,6 +37,16 @@ class PromotionsController < ApplicationController
     render :partial => 'promotions/promotion', :locals => { :promotion => @promotion }
   end
 
+  # POST /promotions/1/rate
+  def rate
+    identity = request.remote_ip
+    type = 'ip'
+    identity = current_user.get_id if not current_user.guest
+    type = 'id' if not current_user.guest
+    @promotion.rate Float(params[:rating]), identity, type
+    render :partial => 'promotions/promotion', :locals => { :promotion => @promotion }
+  end
+
   # DELETE /promotions/1
   # DELETE /promotions/1.json
   def destroy
@@ -45,13 +55,26 @@ class PromotionsController < ApplicationController
     head :no_content
   end
 
+  # POST /promotions/1/approve
+  def approve
+    authorize @promotion
+    @promotion.approve
+    render :partial => 'promotions/promotion', :locals => { :promotion => @promotion }
+  end
+
+  # POST /promotions/1/reject
+  def reject
+    authorize @promotion
+    @promotion.reject params[:reason]
+    render :partial => 'promotions/promotion', :locals => { :promotion => @promotion }
+  end
 
   private
 
     # Use callbacks to share common setup or constraints between actions.
     def set_promotion
-      @promotion = Promotion.find(params[:id])
-      raise NotfoundError.new('Promotion', { :id => params[:id] }.to_s ) unless @promotion
+      @promotion = Promotion.find(params[:id] || params[:promotion_id])
+      raise NotfoundError.new('Promotion', { :id => params[:id] || params[:promotion_id] }.to_s ) unless @promotion
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
@@ -66,7 +89,7 @@ class PromotionsController < ApplicationController
         raise NotfoundError.new('User', { :id => params[:user_id] }.to_s ) unless @owner
       else
         # if user_id is not provided, set it as nil by default
-        @owner = nil
+        @owner = User.new({ :guest => true })
       end
     end
 

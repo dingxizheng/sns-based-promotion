@@ -2,7 +2,9 @@ class PromotionPolicy < ApplicationPolicy
 
   class Scope < Scope
     def resolve
-      if user.nil? or user.is_admin?
+      if user.guest
+        scope.nin(:status => ['submitted', 'rejected'])
+      elsif user.is_admin?
         scope.all
       else
         user.promotions
@@ -21,6 +23,14 @@ class PromotionPolicy < ApplicationPolicy
 
   def destory?
     user.has_role? :moderator, record
+  end
+
+  def approve?
+    user.is_admin?
+  end
+
+  def reject?
+    user.is_admin?
   end
 
 end

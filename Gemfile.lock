@@ -1,6 +1,6 @@
 GIT
   remote: git://github.com/mongoid/mongoid.git
-  revision: e1db083b2a5ffdc317b327ae4c708f26f3a9f5b0
+  revision: 467d10f4d0fdd708e6419c04c45e4263341459fc
   specs:
     mongoid (4.0.2)
       activemodel (~> 4.0)
@@ -69,7 +69,7 @@ GEM
     geocoder (1.2.8)
     globalid (0.3.5)
       activesupport (>= 4.1.0)
-    httparty (0.13.3)
+    httparty (0.13.4)
       json (~> 1.8)
       multi_xml (>= 0.5.2)
     i18n (0.7.0)
@@ -127,9 +127,9 @@ GEM
     rolify (4.0.0)
     rsolr (1.0.12)
       builder (>= 2.1.2)
-    sprockets (3.0.3)
+    sprockets (3.1.0)
       rack (~> 1.0)
-    sprockets-rails (2.3.0)
+    sprockets-rails (2.3.1)
       actionpack (>= 3.0)
       activesupport (>= 3.0)
       sprockets (>= 2.8, < 4.0)

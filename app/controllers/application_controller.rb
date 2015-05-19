@@ -5,7 +5,7 @@ class ApplicationController < ActionController::API
 	include Pundit
 
 	
-	before_action :send_push_notification
+	before_action :send_push_notification, :get_geo_location, :load_loggedin_user
 
 	# set default response format to json
 	before_filter :set_default_response_format
@@ -30,19 +30,38 @@ class ApplicationController < ActionController::API
 	# private methods
 	protected
 
-	# params should be skipped in condition query
-	def params_to_skip 
-		[:apitoken]
+	# get geo information form request
+	def get_geo_location
+		Rails.application.config.request_location = nil;
+		# get the location info from the request
+		if (true if Float(params[:lat]) rescue false) and (true if Float(params[:long]) rescue false)
+			Rails.application.config.request_location = {
+				:lat => params[:lat],
+				:long => params[:long]
+			}
+		# get the location info from request ip
+		elsif request.safe_location.latitude != 0 and request.safe_location.longitude != 0
+			Rails.application.config.request_location = {
+				:lat => request.safe_location.latitude,
+				:long => request.safe_location.longitude
+			}
+		end
+		# lat=48.42595667440752&long=-89.24361891656248
 	end
 
+	# params should be skipped in condition query
+	def params_to_skip 
+		[:apitoken, :lat, :long]
+	end
 
 	# build mongoid query
 	# 1. id=123,,345,,678  ===> id in [123, 345, 678]
 	# 2. created=<=1023456 ===> created <= 1023456  
 	def query_by_conditions(scope, query_parameters)
+		puts query_parameters
 		tempResult = scope
 		sortBy = query_parameters[:sortBy]
-		query_parameters.except!(:sortBy).each do |key, value|
+		query_parameters.except!(*([:sortBy] + params_to_skip)).each do |key, value|
 			field = key.to_sym
 
 			if value.start_with? '<='
@@ -57,7 +76,8 @@ class ApplicationController < ActionController::API
 				tempResult = tempResult.nin(field => value[2..-1].split(',,'))
 			else
 				tempResult = tempResult.in(field => value.split(',,'))
-			end	
+			end
+
 		end
 
 		if sortBy.present? 
@@ -83,15 +103,18 @@ class ApplicationController < ActionController::API
 	end
 
 	def restrict_access
-		@session = Session.find_by(access_token: loads_apikey)
-
 		# raise an unauthorized error if no session created or session expired
 		raise UnauthenticatedError.new unless not @session.nil? and not @session.expire?
+	end
 
-		# otherwise refresh seesion and retrive the user
-		@session.refresh
-		@current_user = @session.user
-
+	def load_loggedin_user
+		@session = Session.find_by(access_token: loads_apikey)
+		@session.refresh if not @session.nil? and not @session.expire?
+		if not @session.nil? and not @session.expire?
+			@current_user = @session.user
+		else
+			@current_user = nil
+		end
 	end
 
 	# get the apitoken from the request
@@ -107,10 +130,7 @@ class ApplicationController < ActionController::API
 	# get current user
 	# create a guest if no user is found
 	def current_user
-		puts 'get current user'
-		puts @current_user.id
-		puts @current_user.name
-		@current_user ||= User.new
+		@current_user ||= User.new({ :guest => true })
 	end
 
 	# handle syntax errors and response with 500 status message

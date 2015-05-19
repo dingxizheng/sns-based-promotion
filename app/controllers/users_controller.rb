@@ -7,7 +7,8 @@ class UsersController < ApplicationController
   # GET /users
   # GET /users.json
   def index
-    @users = query_by_conditions(User, request.query_parameters.except!(params_to_skip))
+    @users = query_by_conditions(User, request.query_parameters)
+    # @users = User.all
     render 'users/users', :locals => { :users => @users }
   end
 

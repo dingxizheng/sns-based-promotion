@@ -23,7 +23,8 @@ class User
   field :description, type: String
   field :keywords, type: Array, default: []
   field :coordinates, type: Array
-   
+  field :guest, type: Boolean, default: false
+  
   # relations
   has_many :reviews, inverse_of: :customer, class_name: 'Review'
   has_many :opinions, inverse_of: :reviewer, class_name: 'Review'

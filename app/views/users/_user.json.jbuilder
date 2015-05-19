@@ -10,6 +10,10 @@ json.coordinates user.coordinates
 
 json.roles user.roles.pluck :name
 
+if Rails.application.config.request_location.present?
+	json.distance user.distance_from([Rails.application.config.request_location[:lat], Rails.application.config.request_location[:long]]) * 1.60934
+end
+
 if not user.logo.nil?
 	json.logo do
 		json.image_url user.logo.image_url
