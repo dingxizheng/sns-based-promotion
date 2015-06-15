@@ -10,15 +10,12 @@ gem 'bson'
 # gem 'moped', github: 'mongoid/moped'
 gem 'moped'
 
-# mongoid 
 # gem 'mongoid', '~> 4', github: 'mongoid/mongoid'
 gem 'mongoid', '~> 4'
 
 gem 'bson_ext'
 
 gem 'validates_phone_number', '~> 2.0.1'
-
-# To use Jbuilder templates for JSON
 
 gem 'jbuilder'
 
