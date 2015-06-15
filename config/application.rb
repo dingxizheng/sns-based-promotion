@@ -30,6 +30,8 @@ module GampApi
 
     # config.autoload_paths += Dir["#{config.root}/app/errors/**/"]
     
+    config.active_job.queue_adapter = :delayed_job
+    
     # config.force_ssl = true
   end
 end

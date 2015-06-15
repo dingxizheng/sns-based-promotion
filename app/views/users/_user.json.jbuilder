@@ -6,6 +6,8 @@ json.keywords user.keywords
 
 json.extract! user, :name, :email, :address, :phone, :description, :created_at, :updated_at
 
+json.subscripted user.subscripted?
+
 json.coordinates user.coordinates
 
 json.roles user.roles.pluck :name

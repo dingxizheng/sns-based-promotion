@@ -8,7 +8,6 @@ class UsersController < ApplicationController
   # GET /users.json
   def index
     @users = query_by_conditions(User, request.query_parameters)
-    # @users = User.all
     render 'users/users', :locals => { :users => @users }
   end
 
@@ -34,6 +33,14 @@ class UsersController < ApplicationController
     raise UnprocessableEntityError.new(@user.errors) unless @user.update(user_params)
     render partial: "users/user", :locals => { :user => @user }
   end
+
+  # # POST /users/1
+  # def reset_password
+  #   authorize @user
+  #   password = @user.reset_password
+  #   raise UnprocessableEntityError.new(@user.errors) unless @user.save
+  #   render {:password => password}
+  # end
 
   # DELETE /users/1
   # DELETE /users/1.json

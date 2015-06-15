@@ -98,11 +98,12 @@ module Errors
 			@code = 500
 			@error = 'oops! something went wrong on server.'
 			@devmessage = message
+			puts message
 		end
 
 		def to_hash
 			hash = self.class.superclass.instance_method(:to_hash).bind(self).call
-			hash[:devmessage] = @devmessage
+			# hash[:devmessage] = @devmessage
 			hash
 		end
 	end

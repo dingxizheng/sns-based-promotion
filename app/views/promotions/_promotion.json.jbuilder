@@ -3,8 +3,10 @@ json.url promotion_url( promotion )
 json.id promotion.get_id
 json.extract! promotion, :title, :description, :status, :rating, :rates, :created_at, :updated_at, :expire_at, :start_at
 
+json.subscripted promotion.customer.subscripted?
+
 if promotion.is_rejected?
-	json.rejected_reason promotion.rejected_reason
+	json.reject_reason promotion.reject_reason
 end
 
 if Rails.application.config.request_location.present?
@@ -28,6 +30,7 @@ json.customer do
 	json.url user_url(promotion.customer)
 	json.name promotion.customer.name
 	json.email promotion.customer.email
+	json.phone promotion.customer.phone
 	json.address promotion.customer.address
 
 	if not promotion.customer.logo.nil?

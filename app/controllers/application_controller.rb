@@ -40,7 +40,7 @@ class ApplicationController < ActionController::API
 				:long => params[:long]
 			}
 		# get the location info from request ip
-		elsif request.safe_location.latitude != 0 and request.safe_location.longitude != 0
+		elsif request.safe_location.latitude != 0 or request.safe_location.longitude != 0
 			Rails.application.config.request_location = {
 				:lat => request.safe_location.latitude,
 				:long => request.safe_location.longitude
@@ -49,9 +49,9 @@ class ApplicationController < ActionController::API
 		# lat=48.42595667440752&long=-89.24361891656248
 	end
 
-	# params should be skipped in condition query
+	# params should be skipped in conditional query
 	def params_to_skip 
-		[:apitoken, :lat, :long]
+		[:apitoken, :lat, :long, :page, :per_page]
 	end
 
 	# build mongoid query
@@ -61,6 +61,9 @@ class ApplicationController < ActionController::API
 		puts query_parameters
 		tempResult = scope
 		sortBy = query_parameters[:sortBy]
+		page = query_parameters[:page]
+		per_page = query_parameters[:per_page]
+
 		query_parameters.except!(*([:sortBy] + params_to_skip)).each do |key, value|
 			field = key.to_sym
 
@@ -88,7 +91,11 @@ class ApplicationController < ActionController::API
 					[item.to_sym, 1]
 				end
 			end
-			return tempResult.all.order_by(order_by_params)
+			tempResult = tempResult.order_by(order_by_params)
+		end
+
+		if page.present? and per_page.present?
+			return tempResult.page(page).per(per_page)
 		else
 			return tempResult.all
 		end

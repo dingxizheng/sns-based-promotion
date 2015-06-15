@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+    <h3>membership request from <span style="color: blue"><%= @subscription.user.name  %></span></h3>
+    <p>
+      Hi, <%= 'xizheng' %>
+    </p>
+    <p><span style="color: blue"><%= @subscription.user.name  %></span> has requested the <br>
+    <%= @subscription.product[:name] %>
+    </p>
+    <p>
+      <div>cusotmer: <%= @subscription.user.name %></div>
+      <div>email: <%= @subscription.user.email %></div>
+      <div>phone: <%= @subscription.user.phone %></div>
+    </p>
+    <p>
+      <a href="<%= @approve_link %>">click this to approve the request</a>
+    </p>
+    <p>
+      <a href="<%= @cancel_link %>">click this to reject the request</a>
+    </p>  
+    </body>
+</html>

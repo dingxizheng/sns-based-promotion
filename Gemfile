@@ -20,8 +20,6 @@ gem 'validates_phone_number', '~> 2.0.1'
 
 gem 'jbuilder'
 
-gem 'geocoder'
-
 gem 'sunspot_rails'
 
 gem 'sunspot_solr' # optional pre-packaged Solr distribution for use in development
@@ -33,6 +31,10 @@ gem 'pundit'
 gem 'rolify'
 
 gem 'geocoder'
+
+gem 'delayed_job_mongoid'
+
+gem 'kaminari'
 
 gem 'gcm'
 

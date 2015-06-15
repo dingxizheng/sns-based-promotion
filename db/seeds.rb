@@ -87,4 +87,8 @@
 # end
 
 
-load 'db/import_catagory.rb' 
+# load 'db/import_catagory.rb' 
+# load 'db/import_promotions.rb'
+#load 'db/import_products.rb'
+load 'db/populate_subscriptions.rb'
+

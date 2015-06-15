@@ -13,6 +13,10 @@ class UserPolicy < ApplicationPolicy
   	user.is_admin?
   end
 
+  def reset_password?
+    user.is_admin?
+  end
+
   def set_logo?
   	user.is_admin? or user.id == record.id
   end

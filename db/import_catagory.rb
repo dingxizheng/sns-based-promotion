@@ -10,7 +10,6 @@ catagories = [{ :name => "Beauty & Wellness", :icon => "public/icons/wellness-be
 { :name => "Others", :icon => "public/icons/other-misc.png"}]
 
 
-
 catagories.each do |c|
 
 	puts c

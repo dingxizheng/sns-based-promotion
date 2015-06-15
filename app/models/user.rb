@@ -11,7 +11,7 @@ class User
 
   rolify
 
-   # filters
+  # filters
   before_create :encrypt_password, :set_default_role
 
   # fields
@@ -32,6 +32,7 @@ class User
   has_one  :session
   has_one  :logo, class_name: 'Image'
   has_many :photos, class_name: 'Image'
+  has_many :subscriptions
 
   # appointments
   has_many :booked_appointments, inverse_of: :booker, class_name: 'Appointment'
@@ -39,14 +40,24 @@ class User
   has_many :timeslots
 
   # sunspot
-  searchable do
-    
+  searchable do   
     text :name, :email, :description, :keywords, :address, :phone
 
-    latlon(:location){
+    string :id do 
+      get_id
+    end
+
+    boolean :subscripted do
+      subscripted?
+    end
+
+    string :roles, :multiple => true do
+    	roles.map{ |r| r.name }.uniq
+    end
+
+    latlon(:location) {
       Sunspot::Util::Coordinates.new(lat , lon)
     }
-
   end
 
   # validaters
@@ -56,6 +67,10 @@ class User
       :message => "must be a valid telephone number.",
       :with => /\(?([0-9]{3})\)?([ .-]?)([0-9]{3})\2([0-9]{4})/,
       :allow_blank => true
+
+  def subscripted?
+    self.subscriptions.any? { |s| s.activate? }
+  end
 
   def lon
     if not self.coordinates.nil? then self.coordinates[0] else 0 end
@@ -113,6 +128,11 @@ class User
   # set user as normal user
   def set_default_role
     self.add_role :user
+  end
+
+  def reset_password
+    self.password = ('0'..'z').to_a.shuffle.first(5).join
+    self.encrypt_password
   end
 
   # is admin

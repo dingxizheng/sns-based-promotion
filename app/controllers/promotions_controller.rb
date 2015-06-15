@@ -41,8 +41,8 @@ class PromotionsController < ApplicationController
   def rate
     identity = request.remote_ip
     type = 'ip'
-    identity = current_user.get_id if not current_user.guest
-    type = 'id' if not current_user.guest
+    identity = current_user.get_id unless current_user.guest
+    type = 'id' unless current_user.guest
     @promotion.rate Float(params[:rating]), identity, type
     render :partial => 'promotions/promotion', :locals => { :promotion => @promotion }
   end
@@ -59,6 +59,7 @@ class PromotionsController < ApplicationController
   def approve
     authorize @promotion
     @promotion.approve
+    raise UnprocessableEntityError.new(@promotion.errors) unless @promotion.save
     render :partial => 'promotions/promotion', :locals => { :promotion => @promotion }
   end
 
@@ -66,6 +67,7 @@ class PromotionsController < ApplicationController
   def reject
     authorize @promotion
     @promotion.reject params[:reason]
+    raise UnprocessableEntityError.new(@promotion.errors) unless @promotion.save
     render :partial => 'promotions/promotion', :locals => { :promotion => @promotion }
   end
 
@@ -89,7 +91,7 @@ class PromotionsController < ApplicationController
         raise NotfoundError.new('User', { :id => params[:user_id] }.to_s ) unless @owner
       else
         # if user_id is not provided, set it as nil by default
-        @owner = User.new({ :guest => true })
+        @owner = @current_user || User.new({ :guest => true })
       end
     end
 
