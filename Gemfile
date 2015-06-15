@@ -7,10 +7,12 @@ gem 'rails-api'
 
 gem 'bson'
 
-gem 'moped', github: 'mongoid/moped'
+# gem 'moped', github: 'mongoid/moped'
+gem 'moped'
 
 # mongoid 
-gem 'mongoid', '~> 4', github: 'mongoid/mongoid'
+# gem 'mongoid', '~> 4', github: 'mongoid/mongoid'
+gem 'mongoid', '~> 4'
 
 gem 'bson_ext'
 
