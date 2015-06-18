@@ -5,11 +5,13 @@ development:
     default:
       # Defines the name of the default database that Mongoid can connect to.
       # (required).
-      database: gamp_api_development
+      database: vicinity_development
       # Provides the hosts the default session can connect to. Must be an array
       # of host:port pairs. (required)
       hosts:
-        - localhost:27017
+        - ec2-52-26-67-69.us-west-2.compute.amazonaws.com:27017
+      username: vicinity
+      password: vicinity
       options:
         # Change the default write concern. (default = { w: 1 })
         # write:
