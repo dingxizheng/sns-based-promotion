@@ -3,6 +3,8 @@ class Promotion
   include Mongoid::Timestamps
   include Sunspot::Mongoid2
 
+  after_create :send_email
+
   resourcify
 
   # fields
@@ -101,6 +103,10 @@ class Promotion
 
   def get_id
   	self.id.to_s
+  end
+
+  def send_email
+    PromotionMailer.notify_admin(self).deliver_now!
   end
 
 end

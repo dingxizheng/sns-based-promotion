@@ -2,7 +2,7 @@ class PromotionsController < ApplicationController
 
   # always put this at top
   before_action :restrict_access, only: [:create, :update, :destory, :approve, :reject]
-  before_action :set_promotion, only: [:show, :update, :destroy, :approve, :reject, :rate]
+  before_action :set_promotion, except: [:index]
   before_action :set_owner, except:[]
   
   # GET /promotions
@@ -69,6 +69,30 @@ class PromotionsController < ApplicationController
     @promotion.reject params[:reason]
     raise UnprocessableEntityError.new(@promotion.errors) unless @promotion.save
     render :partial => 'promotions/promotion', :locals => { :promotion => @promotion }
+  end
+
+  # GET /promotions/1/approvebyadmintoken
+  def approve_by_admin_token
+    if Token.find(params[:admin_token]).present?
+      @promotion.approve
+      raise UnprocessableEntityError.new(@promotion.errors) unless @promotion.save
+      Token.find(params[:admin_token]).destroy
+      render :text => 'request has been approved successfully!';
+    else
+      render :text => 'token expired! the request has been approved already!';
+    end
+  end
+
+  # GET /promotions/1/cancelbyadmintoken
+  def cancel_by_admin_token
+    if Token.find(params[:admin_token]).present?
+      @promotion.reject 'no reason'
+      Token.find(params[:admin_token]).destroy
+      raise UnprocessableEntityError.new(@promotion.errors) unless @promotion.save
+      render :text => 'request has been cancelled successfully!';
+    else
+      render :text => 'token expired! the request has been cancelled already!';
+    end
   end
 
   private

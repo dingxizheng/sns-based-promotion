@@ -1,4 +1,8 @@
 class ApplicationMailer < ActionMailer::Base
   default from: "donotreply@example.com"
-  # layout 'mailer'
+
+  def admin_users
+  	['dingxizheng@gmail.com']
+  end 
+
 end

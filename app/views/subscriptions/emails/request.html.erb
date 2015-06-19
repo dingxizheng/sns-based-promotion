@@ -8,10 +8,10 @@
     <p>
       Hi, <%= 'xizheng' %>
     </p>
-    <p><span style="color: blue"><%= @subscription.user.name  %></span> has requested the <br>
-    <%= @subscription.product[:name] %>
-    </p>
     <p>
+      <div><span style="color: blue"><%= @subscription.user.name  %></span> has requested the <br>
+        <%= @subscription.product[:name] %>
+      </div>
       <div>cusotmer: <%= @subscription.user.name %></div>
       <div>email: <%= @subscription.user.email %></div>
       <div>phone: <%= @subscription.user.phone %></div>

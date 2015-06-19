@@ -7,7 +7,8 @@ class User
   include Geocoder::Model::Mongoid
   
   geocoded_by :address 
-  after_validation :geocode 
+  after_validation :geocode
+  after_create :send_email
 
   rolify
 
@@ -138,6 +139,12 @@ class User
   # is admin
   def is_admin?
     self.has_role? :admin
+  end
+
+  # send email after a user creation
+  def send_email
+    UserMailer.welcome(self).deliver_later!(wait: 10.seconds)
+    UserMailer.new_user(self).deliver_later!(wait: 10.seconds)
   end
 
   private

@@ -8,6 +8,8 @@ GampApi::Application.routes.draw do
     post 'approve' => 'promotions#approve'
     post 'reject' => 'promotions#reject'
     post 'rate' => 'promotions#rate'
+    get  'approvebyadmintoken' => 'promotions#approve_by_admin_token'
+    get  'cancelbyadmintoken' => 'promotions#cancel_by_admin_token'
   end
 
   resources :catagorys, except: [:new, :edit, :show]

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+    <h3>new promotion request from <span style="color: blue"><%= @promotion.customer.name  %></span></h3>
+    <p>
+      Hi, Administrator
+    </p>
+    <p>
+    <div><span style="color: blue"><%= @promotion.customer.name  %></span> has added a new promotion <br>
+      <%= @promotion.title %>
+    </div>
+    <div>description: <%= @promotion.description %></div>
+    <div>start at: <%= @promotion.start_at.strftime('%d.%m.%y %H:%M') %></div>
+    <div>expire at: <%= @promotion.expire_at.strftime('%d.%m.%y %H:%M') %></div>
+  </p>
+  <p>
+    <div>customer: <%= @promotion.customer.name %></div>
+    <div>email: <%= @promotion.customer.email %></div>
+    <div>phone: <%= @promotion.customer.phone %></div>
+    <div>address: <%= @promotion.customer.address %></div>
+    <div>paid customer?: <%= @promotion.subscripted? %></div>
+  </p>
+  <p>
+    <a href="<%= @approve_link %>">click this to approve the request</a>
+  </p>
+  <p>
+    <a href="<%= @cancel_link %>">click this to reject the request</a>
+  </p>
+</body>
+</html>

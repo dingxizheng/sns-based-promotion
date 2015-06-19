@@ -34,11 +34,8 @@ class AccountsController < ApplicationController
 	# POST /signup
 	def signup_with_email
 		@user = User.new(signup_params)
-		if @user.save
-			render json: @user, status: :created, location: @user
-		else
-			render json: @user.errors, status: :unprocessable_entity
-		end
+		raise UnprocessableEntityError.new(@user.errors) unless @user.save
+    	render partial: "users/user", :locals => { :user => @user }, status: :created
 	end
 
   	# GET /me

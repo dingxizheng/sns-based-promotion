@@ -27,16 +27,10 @@ class SubscriptionsController < ApplicationController
     # set the product from product id
     @subscription.product = Product.find(product_id[:product_id]).get_hash
 
-    # generate admin token
-    @subscription.admin_token_for_approval = ('0'..'z').to_a.shuffle.first(10).join
-    @subscription.admin_token_for_cancellation = ('0'..'z').to_a.shuffle.first(10).join
-
     # # set price
     # @subscription.payment = Payment.new({ :amount => @subscription.product[:price] })
 
     raise UnprocessableEntityError.new(@subscription.errors) unless @subscription.save
-
-    SubscriptionMailer.notify_admin(@subscription).deliver_now
     
     render :partial => 'subscriptions/subscription', :locals => { :subscription => @subscription }
   end
@@ -44,10 +38,10 @@ class SubscriptionsController < ApplicationController
   # approve the membership request by using a one time admin token
   # GET /subscriptions/1/approvebyadmintoken
   def approve_by_admin_token
-    if (params[:admin_token] == @subscription.admin_token_for_approval)
+    if Token.find(params[:admin_token]).present?
       @subscription.approve
-      @subscription.admin_token_for_approval = ''
       raise UnprocessableEntityError.new(@subscription.errors) unless @subscription.save
+      Token.find(params[:admin_token]).destroy
       @subscription.start_to_set_expire_status
       @subscription.start_to_set_activate_status
       render :text => 'request has been approved successfully!';
@@ -58,9 +52,9 @@ class SubscriptionsController < ApplicationController
 
   # GET /subscriptions/1/cancelbyadmintoken
   def cancel_by_admin_token
-    if (params[:admin_token] == @subscription.admin_token_for_cancellation)
+    if Token.find(params[:admin_token]).present?
       @subscription.cancel
-      @subscription.admin_token_for_cancellation = ''
+      Token.find(params[:admin_token]).destroy
       raise UnprocessableEntityError.new(@subscription.errors) unless @subscription.save
       render :text => 'request has been cancelled successfully!';
     else

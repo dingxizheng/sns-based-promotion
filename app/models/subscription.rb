@@ -3,6 +3,7 @@ class Subscription
   include Mongoid::Timestamps
 
   before_save :set_expire_and_status
+  after_create :send_email
 
   # after_create :set_expire_status, :set_activate_status
 
@@ -10,8 +11,6 @@ class Subscription
   field :product,     type: Hash
   field :start_at,    type: DateTime, default: DateTime.now
   field :expire_at,   type: DateTime
-  field :admin_token_for_cancellation, type: String
-  field :admin_token_for_approval, type: String
 
   belongs_to :user
   has_one    :payment
@@ -110,6 +109,10 @@ class Subscription
       self.set_activated_status
       self.delay(:run_at => self.when_to_activate_subscription).set_activated_status
     end
+  end
+
+  def send_email
+    SubscriptionMailer.notify_admin(self).deliver_later!(wait: 10.seconds)
   end
 
 end
