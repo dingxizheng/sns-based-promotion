@@ -1,9 +1,18 @@
 
 json.url promotion_url( promotion )
 json.id promotion.get_id
-json.extract! promotion, :title, :description, :status, :rating, :rates, :created_at, :updated_at, :expire_at, :start_at
+json.extract! promotion, :title, :description, :status, :created_at, :updated_at, :expire_at, :start_at
+
+json.rates promotion.rate_count
+
+json.rating promotion.rating || 0
 
 json.subscripted promotion.customer.subscripted?
+
+json.comments do
+	json.count promotion.reviews.count
+	json.url reviews_url(:promotion_id => promotion.get_id)
+end
 
 if promotion.is_rejected?
 	json.reject_reason promotion.reject_reason

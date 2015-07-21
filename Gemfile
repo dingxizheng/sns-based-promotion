@@ -11,7 +11,9 @@ gem 'bson'
 gem 'moped'
 
 # gem 'mongoid', '~> 4', github: 'mongoid/mongoid'
-gem 'mongoid', '~> 4'
+gem 'mongoid', '~> 4.0'
+
+# gem 'mongoid_rateable', '~> 0.3.3', :path => 'lib/modules'
 
 gem 'bson_ext'
 
@@ -34,6 +36,8 @@ gem 'geocoder'
 gem 'delayed_job_mongoid'
 
 gem 'kaminari'
+
+gem 'houston'
 
 gem 'gcm'
 

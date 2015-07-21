@@ -1,13 +1,14 @@
 class UsersController < ApplicationController
 
-  before_action :restrict_access, only: [:create, :update, :destory, :set_logo, :add_keyword, :delete_keyword]
-  before_action :set_user, only: [:show, :update, :destroy, :set_logo, :add_keyword, :delete_keyword]
+  before_action :restrict_access, only: [:create, :update, :destory, :set_logo, :add_keyword, :delete_keyword, :update_password]
+  before_action :set_user, only: [:show, :update, :destroy, :set_logo, :add_keyword, :delete_keyword, :reset_password, :reset_password_by_admin_token, :update_password]
 
 
   # GET /users
   # GET /users.json
   def index
-    @users = query_by_conditions(User, request.query_parameters)
+    result_by_distance = filter_and_sort_by_distance(User, request.query_parameters)
+    @users = query_by_conditions(result_by_distance, request.query_parameters)
     render 'users/users', :locals => { :users => @users }
   end
 
@@ -30,17 +31,46 @@ class UsersController < ApplicationController
   # PATCH/PUT /users/1.json
   def update
     authorize @user
-    raise UnprocessableEntityError.new(@user.errors) unless @user.update(user_params)
+    @user.hours = params[:user][:hours] unless params[:user][:hours].nil?
+    raise UnprocessableEntityError.new(@user.errors) unless @user.update(user_params)     
     render partial: "users/user", :locals => { :user => @user }
   end
 
-  # # POST /users/1
-  # def reset_password
-  #   authorize @user
-  #   password = @user.reset_password
-  #   raise UnprocessableEntityError.new(@user.errors) unless @user.save
-  #   render {:password => password}
-  # end
+  # POST /users/1/newpassword
+  def update_password
+    if @user.password_match?(params[:current_password])
+      @user.password = params[:new_password]
+      @user.encrypt_password
+      raise UnprocessableEntityError.new(@user.errors) unless @user.save
+    else 
+      raise GampError.new(500, 'the current password is not correct!')
+    end
+    render partial: "users/user", :locals => { :user => @user }
+  end
+
+  # POST /users/1/reset
+  def reset_password
+    UserMailer.reset_password(@user).deliver_now!
+    render partial: "users/user", :locals => { :user => @user }
+    # authorize @user
+    # password = @user.reset_password
+    # raise UnprocessableEntityError.new(@user.errors) unless @user.save
+    # render {:password => password}
+  end
+
+  # POST /users/1/resetpasswordbytoken
+  def reset_password_by_admin_token
+    if Token.find(params[:admin_token]).present?
+      password = @user.reset_password
+      UserMailer.new_password(@user, password).deliver_now!
+      @user.encrypt_password
+      raise UnprocessableEntityError.new(@user.errors) unless @user.save
+      Token.find(params[:admin_token]).destroy
+      render :text => 'password has been reset successfully!';
+    else
+      render :text => 'token expired! password has been reset already.';
+    end
+  end
 
   # DELETE /users/1
   # DELETE /users/1.json
@@ -86,7 +116,7 @@ class UsersController < ApplicationController
   # Never trust parameters from the scary internet, only allow the white list through.
   def user_params
     # puts params.require(:user)
-    params.require(:user).permit(:name, :phone, :email, :address, :description, :password)
+    params.require(:user).permit(:name, :phone, :email, :address, :description, :password, :hours)
   end
 
   def user_logo

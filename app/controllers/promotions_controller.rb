@@ -2,14 +2,19 @@ class PromotionsController < ApplicationController
 
   # always put this at top
   before_action :restrict_access, only: [:create, :update, :destory, :approve, :reject]
-  before_action :set_promotion, except: [:index]
+  before_action :set_promotion, except: [:index, :create]
   before_action :set_owner, except:[]
   
   # GET /promotions
   # GET /promotions.json
   def index
-    promotions_before_query = PromotionPolicy::Scope.new(@owner, Promotion).resolve
+    # fitler the results by distance provided
+    result_by_distance = filter_and_sort_by_distance(Promotion, request.query_parameters)
+    # filter the results by users' role
+    promotions_before_query = PromotionPolicy::Scope.new(@owner, result_by_distance).resolve
+    # filter the reuslts by query parameters
     @promotions = query_by_conditions(promotions_before_query, request.query_parameters)
+    # render the results
     render 'promotions/promotions', :locals => { :promotions => @promotions }
   end
 
@@ -39,11 +44,19 @@ class PromotionsController < ApplicationController
 
   # POST /promotions/1/rate
   def rate
-    identity = request.remote_ip
-    type = 'ip'
-    identity = current_user.get_id unless current_user.guest
-    type = 'id' unless current_user.guest
-    @promotion.rate Float(params[:rating]), identity, type
+
+    if current_user.guest
+      rater = Anonymity.where(ip: request.remote_ip).first_or_create!
+    else
+      rater = current_user
+    end
+
+    # raise an error if it has been rated before by the same user
+    raise DuplicateError.new('you already rated this one.')  unless not @promotion.rated_by? rater
+
+    @promotion.rate Float(params[:rating]), rater
+
+    raise UnprocessableEntityError.new(@promotion.errors) unless @promotion.save
     render :partial => 'promotions/promotion', :locals => { :promotion => @promotion }
   end
 
@@ -71,6 +84,18 @@ class PromotionsController < ApplicationController
     render :partial => 'promotions/promotion', :locals => { :promotion => @promotion }
   end
 
+  # POST /promotions/1/report
+  def report
+    PromotionMailer.reported_to_admin(@promotion, params[:reason]).deliver_now!
+    render :partial => 'promotions/promotion', :locals => { :promotion => @promotion }
+  end
+
+  # POST /promotions/1/notify
+  def notify
+    PromotionMailer.notification_request(@promotion).deliver_now!
+    render :partial => 'promotions/promotion', :locals => { :promotion => @promotion }
+  end
+
   # GET /promotions/1/approvebyadmintoken
   def approve_by_admin_token
     if Token.find(params[:admin_token]).present?
@@ -90,6 +115,49 @@ class PromotionsController < ApplicationController
       Token.find(params[:admin_token]).destroy
       raise UnprocessableEntityError.new(@promotion.errors) unless @promotion.save
       render :text => 'request has been cancelled successfully!';
+    else
+      render :text => 'token expired! the request has been cancelled already!';
+    end
+  end
+
+  # GET /promotions/1/notifybyadmintoken
+  def notify_by_admin_token
+    if Token.find(params[:admin_token]).present?
+
+      Thread.start {
+        # ios notifications
+        Device.where({:os => 'ios'}).each { |device|
+          notification = Houston::Notification.new(device: device.token)
+          notification.alert = @promotion.customer.name + ": " + @promotion.title + "\n" + @promotion.description
+          notification.sound = "sosumi.aiff"
+          notification.content_available = true
+          notification.custom_data = { 
+            promotion_id: @promotion.get_id, 
+            user_id: @promotion.customer.get_id
+          }
+          APNS.get.push(notification)
+        }
+
+        # android notifications
+        devices = Device.where({ :os => 'android' }).map { |device|
+          device.token
+        }
+
+        response = GCM.get.send(devices, {
+          data: { 
+            title: 'new promotion',
+            message: @promotion.customer.name + ": " + @promotion.title + "\n" + @promotion.description,
+            promotion_id: @promotion.get_id, 
+            user_id: @promotion.customer.get_id
+          },
+
+          collapse_key: 'vicinity_deals'
+        })
+
+        puts response
+      }
+
+      render :text => 'notification job has been submitted';
     else
       render :text => 'token expired! the request has been cancelled already!';
     end

@@ -9,7 +9,7 @@ class AccountsController < ApplicationController
 
 		# if user is not found, raise a 400 error
 		raise BadRequestError.new('user does not exist.') unless not @user.nil?
-		
+
 		# if password does not match, raise a 400 error
 		raise BadRequestError.new('invalid password.') unless @user.password_match?(params[:password])
 

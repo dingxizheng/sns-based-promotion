@@ -2,7 +2,9 @@ class ReviewPolicy < ApplicationPolicy
 
   class Scope < Scope
     def resolve
-      if user.is_admin?
+      if user.guest
+        scope.all
+      elsif user.is_admin?
         scope.all
       else
         user.reviews
@@ -10,9 +12,13 @@ class ReviewPolicy < ApplicationPolicy
     end
   end
 
+  # user can not comment him/her self nor the promotions belong to them
   def create?
-    # only admin has the premision to add a promotion
-    user.id != record.reviewee.id
+    if record.customer.present?
+      user.id != record.customer.id
+    else
+      user.id != record.promotion.customer.id
+    end
   end
 
   def update?

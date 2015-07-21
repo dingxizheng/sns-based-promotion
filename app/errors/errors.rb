@@ -91,6 +91,14 @@ module Errors
 		end
 	end
 
+	#  
+	class DuplicateError < GampError
+		def initialize(message)
+			@code = 409
+			@error = message
+		end
+	end
+
 	# internal server msssage.
 	# devmessage should not be shown to users
 	class InternalError < GampError

@@ -1,9 +1,17 @@
+Dir["#{Rails.root}/lib/modules/mongoid_rateable/*.rb"].each {|file| require file }
+
 class Promotion
   include Mongoid::Document
   include Mongoid::Timestamps
   include Sunspot::Mongoid2
+  include Mongoid::Rateable
+  include Geocoder::Model::Mongoid
+
+  geocoded_by :coordinates           # can also be an IP address
+  after_validation :geocode          # auto-fetch coordinates
 
   after_create :send_email
+  before_save  :set_coordinates
 
   resourcify
 
@@ -11,12 +19,17 @@ class Promotion
   field :title, type: String
   field :description, type: String
   field :status, type: String, default: 'submitted'
-  field :rating, type: Float, default: 0
-  field :rates,  type: Integer, default: 0 
-  field :rating_sum, type: Integer, default: 0
   field :reject_reason, type: String, default: 'unknown'
+  field :coordinates, type: Array
   field :start_at, type: DateTime, default: Time.now
   field :expire_at, type: DateTime, default: Time.now + 2.weeks
+
+  index({ coordinates: "2d" })
+
+  # mark this model as reteable
+  rate_config range: (0..5), raters: [User, Anonymity]
+
+  has_many :reviews, inverse_of: :promotion, class_name: 'Review'
 
   belongs_to :catagory
   belongs_to :customer, class_name: 'User', inverse_of: :promotions
@@ -41,47 +54,15 @@ class Promotion
   end
 
   def subscripted?
-    self.customer.subscriptions.any? { |s| s.activate? }
+    self.customer && self.customer.subscriptions.any? { |s| s.activate? }
   end
 
   def lon
-    self.customer.lon
+    if not self.coordinates.nil? then self.coordinates[0] else 0 end
   end
  
   def lat
-    self.customer.lat 
-  end
-
-  def rate(num, identity, type='id')
-    rated = Rater.rated?(identity, type)
-    # unrate
-    if rated.present? and not rated.expire?
-      self.rates -= 1
-      self.rating_sum -= rated.rating
-      if self.rates > 0
-        self.rating = self.rating_sum / self.rates
-      else
-        self.rating = 0
-        self.rating_sum = 0
-        self.rates = 0
-      end
-      rated.unrate
-    elsif rated.present? and rated.expire?
-      self.rates += 1
-      self.rating_sum += num
-      self.rating = self.rating_sum / self.rates
-      rated.rating = num
-      rated.refresh
-      rated.save
-    else
-      self.rates += 1
-      self.rating_sum += num
-      self.rating = self.rating_sum / self.rates
-      
-      rated = Rater.new({ :rating => num, :user => identity, :type => type })
-      rated.save
-    end
-    self.save
+    if not self.coordinates.nil? then self.coordinates[1] else 0 end 
   end
 
   def approve
@@ -107,6 +88,10 @@ class Promotion
 
   def send_email
     PromotionMailer.notify_admin(self).deliver_now!
+  end
+
+  def set_coordinates
+    self.coordinates = self.customer.coordinates
   end
 
 end

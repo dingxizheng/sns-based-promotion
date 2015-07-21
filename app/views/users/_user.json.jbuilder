@@ -12,7 +12,9 @@ json.coordinates user.coordinates
 
 json.roles user.roles.pluck :name
 
-if Rails.application.config.request_location.present?
+json.hours user.hours
+
+if Rails.application.config.request_location.present? and  user.has_role? :customer
 	json.distance user.distance_from([Rails.application.config.request_location[:lat], Rails.application.config.request_location[:long]]) * 1.60934
 end
 

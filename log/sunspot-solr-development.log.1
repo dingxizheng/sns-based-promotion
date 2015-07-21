@@ -6959,3 +6959,339 @@ Jun 15, 2015 12:48:16 AM org.apache.solr.core.SolrCore execute
 INFO: [development] webapp=/solr path=/select params={q=xding&defType=edismax&qf=name_text^10+keywords_text^5+email_text+description_text+address_text+phone_text&fl=*+score&start=0&fq=type:User&fq=id_s:[*+TO+*]&fq=roles_sm:customer&fq={!geofilt+sfield%3Dlocation_ll+pt%3D37.785834,-122.406417+d%3D10000}&rows=7&wt=ruby} hits=1 status=0 QTime=1 
 Jun 15, 2015 12:48:17 AM org.apache.solr.core.SolrCore execute
 INFO: [development] webapp=/solr path=/select params={q=xding&defType=edismax&qf=name_text^10+keywords_text^5+email_text+description_text+address_text+phone_text&fl=*+score&start=7&fq=type:User&fq=id_s:[*+TO+*]&fq=roles_sm:customer&fq={!geofilt+sfield%3Dlocation_ll+pt%3D37.785834,-122.406417+d%3D10000}&rows=7&wt=ruby} hits=1 status=0 QTime=1 
+Jun 21, 2015 9:39:15 PM org.apache.solr.core.SolrCore execute
+INFO: [development] webapp=/solr path=/select params={q=car&defType=edismax&qf=title_text^8+description_text&fl=*+score&start=0&fq=type:Promotion&fq=id_s:[*+TO+*]&fq=subscripted_b:true&fq=-status_s:(submitted+OR+rejected)&rows=30&wt=ruby} hits=0 status=0 QTime=60 
+Jun 21, 2015 9:39:16 PM org.apache.solr.core.SolrCore execute
+INFO: [development] webapp=/solr path=/select params={q=car&defType=edismax&qf=title_text^8+description_text&fl=*+score&start=0&fq=type:Promotion&fq=id_s:[*+TO+*]&fq=-status_s:(submitted+OR+rejected)&rows=7&wt=ruby} hits=1 status=0 QTime=9 
+Jun 21, 2015 9:39:16 PM org.apache.solr.core.SolrCore execute
+INFO: [development] webapp=/solr path=/select params={q=car&defType=edismax&qf=title_text^8+description_text&fl=*+score&start=7&fq=type:Promotion&fq=id_s:[*+TO+*]&fq=-status_s:(submitted+OR+rejected)&rows=7&wt=ruby} hits=1 status=0 QTime=1 
+Jun 22, 2015 2:41:21 AM org.apache.solr.core.SolrCore execute
+INFO: [development] webapp=/solr path=/select params={q=car&defType=edismax&qf=name_text^10+keywords_text^5+title_text^8+email_text+description_text+address_text+phone_text&fl=*+score&start=0&fq=type:(User+OR+Promotion)&fq=id_s:[*+TO+*]&fq=subscripted_b:true&fq=((class_name:User+AND+roles_sm:customer)+OR+(class_name:Promotion+AND+-status_s:(submitted+OR+rejected)))&rows=30&wt=ruby} hits=0 status=0 QTime=84 
+Jun 22, 2015 2:41:22 AM org.apache.solr.core.SolrCore execute
+INFO: [development] webapp=/solr path=/select params={q=car&defType=edismax&qf=name_text^10+keywords_text^5+title_text^8+email_text+description_text+address_text+phone_text&fl=*+score&start=0&fq=type:(User+OR+Promotion)&fq=id_s:[*+TO+*]&fq=((class_name:User+AND+roles_sm:customer)+OR+(class_name:Promotion+AND+-status_s:(submitted+OR+rejected)))&rows=7&wt=ruby} hits=2 status=0 QTime=4 
+Jun 22, 2015 2:41:23 AM org.apache.solr.core.SolrCore execute
+INFO: [development] webapp=/solr path=/select params={q=car&defType=edismax&qf=name_text^10+keywords_text^5+title_text^8+email_text+description_text+address_text+phone_text&fl=*+score&start=7&fq=type:(User+OR+Promotion)&fq=id_s:[*+TO+*]&fq=((class_name:User+AND+roles_sm:customer)+OR+(class_name:Promotion+AND+-status_s:(submitted+OR+rejected)))&rows=7&wt=ruby} hits=2 status=0 QTime=1 
+Jun 22, 2015 4:50:03 AM org.apache.solr.core.SolrCore execute
+INFO: [development] webapp=/solr path=/select params={q=car&defType=edismax&qf=name_text^10+keywords_text^5+email_text+description_text+address_text+phone_text&fl=*+score&start=0&fq=type:User&fq=id_s:[*+TO+*]&fq=subscripted_b:true&fq=roles_sm:customer&rows=30&wt=ruby} hits=0 status=0 QTime=28 
+Jun 22, 2015 4:50:04 AM org.apache.solr.core.SolrCore execute
+INFO: [development] webapp=/solr path=/select params={q=car&defType=edismax&qf=name_text^10+keywords_text^5+email_text+description_text+address_text+phone_text&fl=*+score&start=0&fq=type:User&fq=id_s:[*+TO+*]&fq=roles_sm:customer&rows=7&wt=ruby} hits=1 status=0 QTime=10 
+Jun 22, 2015 4:50:04 AM org.apache.solr.core.SolrCore execute
+INFO: [development] webapp=/solr path=/select params={q=car&defType=edismax&qf=name_text^10+keywords_text^5+email_text+description_text+address_text+phone_text&fl=*+score&start=7&fq=type:User&fq=id_s:[*+TO+*]&fq=roles_sm:customer&rows=7&wt=ruby} hits=1 status=0 QTime=2 
+Jun 22, 2015 4:53:37 AM org.apache.solr.core.SolrCore execute
+INFO: [development] webapp=/solr path=/select params={q=car&defType=edismax&qf=name_text^10+keywords_text^5+email_text+description_text+address_text+phone_text&fl=*+score&start=0&fq=type:User&fq=id_s:[*+TO+*]&fq=subscripted_b:true&fq=roles_sm:customer&rows=30&wt=ruby} hits=0 status=0 QTime=2 
+Jun 22, 2015 4:53:38 AM org.apache.solr.core.SolrCore execute
+INFO: [development] webapp=/solr path=/select params={q=car&defType=edismax&qf=name_text^10+keywords_text^5+email_text+description_text+address_text+phone_text&fl=*+score&start=0&fq=type:User&fq=id_s:[*+TO+*]&fq=roles_sm:customer&rows=7&wt=ruby} hits=1 status=0 QTime=0 
+Jun 22, 2015 4:53:39 AM org.apache.solr.core.SolrCore execute
+INFO: [development] webapp=/solr path=/select params={q=car&defType=edismax&qf=name_text^10+keywords_text^5+email_text+description_text+address_text+phone_text&fl=*+score&start=7&fq=type:User&fq=id_s:[*+TO+*]&fq=roles_sm:customer&rows=7&wt=ruby} hits=1 status=0 QTime=0 
+Jun 22, 2015 4:55:48 AM org.apache.solr.core.SolrCore execute
+INFO: [development] webapp=/solr path=/select params={q=car&defType=edismax&qf=name_text^10+keywords_text^5+title_text^8+email_text+description_text+address_text+phone_text&fl=*+score&start=0&fq=type:(User+OR+Promotion)&fq=id_s:[*+TO+*]&fq=subscripted_b:true&fq=((class_name:User+AND+roles_sm:customer)+OR+(class_name:Promotion+AND+-status_s:(submitted+OR+rejected)))&rows=30&wt=ruby} hits=0 status=0 QTime=2 
+Jun 22, 2015 4:55:49 AM org.apache.solr.core.SolrCore execute
+INFO: [development] webapp=/solr path=/select params={q=car&defType=edismax&qf=name_text^10+keywords_text^5+title_text^8+email_text+description_text+address_text+phone_text&fl=*+score&start=0&fq=type:(User+OR+Promotion)&fq=id_s:[*+TO+*]&fq=((class_name:User+AND+roles_sm:customer)+OR+(class_name:Promotion+AND+-status_s:(submitted+OR+rejected)))&rows=7&wt=ruby} hits=2 status=0 QTime=1 
+Jun 22, 2015 4:55:50 AM org.apache.solr.core.SolrCore execute
+INFO: [development] webapp=/solr path=/select params={q=car&defType=edismax&qf=name_text^10+keywords_text^5+title_text^8+email_text+description_text+address_text+phone_text&fl=*+score&start=7&fq=type:(User+OR+Promotion)&fq=id_s:[*+TO+*]&fq=((class_name:User+AND+roles_sm:customer)+OR+(class_name:Promotion+AND+-status_s:(submitted+OR+rejected)))&rows=7&wt=ruby} hits=2 status=0 QTime=0 
+Jun 22, 2015 4:56:03 AM org.apache.solr.core.SolrCore execute
+INFO: [development] webapp=/solr path=/select params={q=car&defType=edismax&qf=name_text^10+keywords_text^5+email_text+description_text+address_text+phone_text&fl=*+score&start=0&fq=type:User&fq=id_s:[*+TO+*]&fq=subscripted_b:true&fq=roles_sm:customer&rows=30&wt=ruby} hits=0 status=0 QTime=1 
+Jun 22, 2015 4:56:04 AM org.apache.solr.core.SolrCore execute
+INFO: [development] webapp=/solr path=/select params={q=car&defType=edismax&qf=name_text^10+keywords_text^5+email_text+description_text+address_text+phone_text&fl=*+score&start=0&fq=type:User&fq=id_s:[*+TO+*]&fq=roles_sm:customer&rows=7&wt=ruby} hits=1 status=0 QTime=1 
+Jun 22, 2015 4:56:04 AM org.apache.solr.core.SolrCore execute
+INFO: [development] webapp=/solr path=/select params={q=car&defType=edismax&qf=name_text^10+keywords_text^5+email_text+description_text+address_text+phone_text&fl=*+score&start=7&fq=type:User&fq=id_s:[*+TO+*]&fq=roles_sm:customer&rows=7&wt=ruby} hits=1 status=0 QTime=2 
+Jun 22, 2015 4:56:07 AM org.apache.solr.core.SolrCore execute
+INFO: [development] webapp=/solr path=/select params={q=car&defType=edismax&qf=title_text^8+description_text&fl=*+score&start=0&fq=type:Promotion&fq=id_s:[*+TO+*]&fq=subscripted_b:true&fq=-status_s:(submitted+OR+rejected)&rows=30&wt=ruby} hits=0 status=0 QTime=2 
+Jun 22, 2015 4:56:07 AM org.apache.solr.core.SolrCore execute
+INFO: [development] webapp=/solr path=/select params={q=car&defType=edismax&qf=title_text^8+description_text&fl=*+score&start=0&fq=type:Promotion&fq=id_s:[*+TO+*]&fq=-status_s:(submitted+OR+rejected)&rows=7&wt=ruby} hits=1 status=0 QTime=0 
+Jun 22, 2015 4:56:08 AM org.apache.solr.core.SolrCore execute
+INFO: [development] webapp=/solr path=/select params={q=car&defType=edismax&qf=title_text^8+description_text&fl=*+score&start=7&fq=type:Promotion&fq=id_s:[*+TO+*]&fq=-status_s:(submitted+OR+rejected)&rows=7&wt=ruby} hits=1 status=0 QTime=4 
+Jun 22, 2015 1:26:46 PM org.apache.solr.core.SolrCore execute
+INFO: [development] webapp=/solr path=/select params={q=car&defType=edismax&qf=name_text^10+keywords_text^5+email_text+description_text+address_text+phone_text&fl=*+score&start=0&fq=type:User&fq=id_s:[*+TO+*]&fq=subscripted_b:true&fq=roles_sm:customer&rows=30&wt=ruby} hits=0 status=0 QTime=22 
+Jun 22, 2015 1:26:47 PM org.apache.solr.core.SolrCore execute
+INFO: [development] webapp=/solr path=/select params={q=car&defType=edismax&qf=name_text^10+keywords_text^5+email_text+description_text+address_text+phone_text&fl=*+score&start=0&fq=type:User&fq=id_s:[*+TO+*]&fq=roles_sm:customer&rows=7&wt=ruby} hits=1 status=0 QTime=7 
+Jun 22, 2015 1:26:47 PM org.apache.solr.core.SolrCore execute
+INFO: [development] webapp=/solr path=/select params={q=car&defType=edismax&qf=name_text^10+keywords_text^5+email_text+description_text+address_text+phone_text&fl=*+score&start=7&fq=type:User&fq=id_s:[*+TO+*]&fq=roles_sm:customer&rows=7&wt=ruby} hits=1 status=0 QTime=1 
+Jun 22, 2015 1:27:34 PM org.apache.solr.core.SolrCore execute
+INFO: [development] webapp=/solr path=/select params={q=car&defType=edismax&qf=name_text^10+keywords_text^5+email_text+description_text+address_text+phone_text&fl=*+score&start=0&fq=type:User&fq=id_s:[*+TO+*]&fq=subscripted_b:true&fq=roles_sm:customer&rows=30&wt=ruby} hits=0 status=0 QTime=1 
+Jun 22, 2015 1:27:34 PM org.apache.solr.core.SolrCore execute
+INFO: [development] webapp=/solr path=/select params={q=car&defType=edismax&qf=name_text^10+keywords_text^5+email_text+description_text+address_text+phone_text&fl=*+score&start=0&fq=type:User&fq=id_s:[*+TO+*]&fq=roles_sm:customer&rows=7&wt=ruby} hits=1 status=0 QTime=2 
+Jun 22, 2015 1:27:34 PM org.apache.solr.core.SolrCore execute
+INFO: [development] webapp=/solr path=/select params={q=car&defType=edismax&qf=name_text^10+keywords_text^5+email_text+description_text+address_text+phone_text&fl=*+score&start=7&fq=type:User&fq=id_s:[*+TO+*]&fq=roles_sm:customer&rows=7&wt=ruby} hits=1 status=0 QTime=0 
+Jun 22, 2015 1:36:24 PM org.apache.solr.core.SolrCore execute
+INFO: [development] webapp=/solr path=/select params={q=car&defType=edismax&qf=name_text^10+keywords_text^5+title_text^8+email_text+description_text+address_text+phone_text&fl=*+score&start=0&fq=type:(User+OR+Promotion)&fq=id_s:[*+TO+*]&fq=subscripted_b:true&fq=((class_name:User+AND+roles_sm:customer)+OR+(class_name:Promotion+AND+-status_s:(submitted+OR+rejected)))&fq={!geofilt+sfield%3Dlocation_ll+pt%3D37.785834,-122.406417+d%3D95.5}&rows=30&wt=ruby} hits=0 status=0 QTime=262 
+Jun 22, 2015 1:36:24 PM org.apache.solr.core.SolrCore execute
+INFO: [development] webapp=/solr path=/select params={q=car&defType=edismax&qf=name_text^10+keywords_text^5+title_text^8+email_text+description_text+address_text+phone_text&fl=*+score&start=0&fq=type:(User+OR+Promotion)&fq=id_s:[*+TO+*]&fq=((class_name:User+AND+roles_sm:customer)+OR+(class_name:Promotion+AND+-status_s:(submitted+OR+rejected)))&fq={!geofilt+sfield%3Dlocation_ll+pt%3D37.785834,-122.406417+d%3D95.5}&rows=7&wt=ruby} hits=0 status=0 QTime=6 
+Jun 22, 2015 1:36:31 PM org.apache.solr.core.SolrCore execute
+INFO: [development] webapp=/solr path=/select params={q=car&defType=edismax&qf=name_text^10+keywords_text^5+title_text^8+email_text+description_text+address_text+phone_text&fl=*+score&start=0&fq=type:(User+OR+Promotion)&fq=id_s:[*+TO+*]&fq=subscripted_b:true&fq=((class_name:User+AND+roles_sm:customer)+OR+(class_name:Promotion+AND+-status_s:(submitted+OR+rejected)))&rows=30&wt=ruby} hits=0 status=0 QTime=1 
+Jun 22, 2015 1:36:31 PM org.apache.solr.core.SolrCore execute
+INFO: [development] webapp=/solr path=/select params={q=car&defType=edismax&qf=name_text^10+keywords_text^5+title_text^8+email_text+description_text+address_text+phone_text&fl=*+score&start=0&fq=type:(User+OR+Promotion)&fq=id_s:[*+TO+*]&fq=((class_name:User+AND+roles_sm:customer)+OR+(class_name:Promotion+AND+-status_s:(submitted+OR+rejected)))&rows=7&wt=ruby} hits=2 status=0 QTime=2 
+Jun 22, 2015 1:36:32 PM org.apache.solr.core.SolrCore execute
+INFO: [development] webapp=/solr path=/select params={q=car&defType=edismax&qf=name_text^10+keywords_text^5+title_text^8+email_text+description_text+address_text+phone_text&fl=*+score&start=7&fq=type:(User+OR+Promotion)&fq=id_s:[*+TO+*]&fq=((class_name:User+AND+roles_sm:customer)+OR+(class_name:Promotion+AND+-status_s:(submitted+OR+rejected)))&rows=7&wt=ruby} hits=2 status=0 QTime=2 
+Jun 22, 2015 1:40:45 PM org.apache.solr.core.SolrCore execute
+INFO: [development] webapp=/solr path=/select params={q=car&defType=edismax&qf=name_text^10+keywords_text^5+email_text+description_text+address_text+phone_text&fl=*+score&start=0&fq=type:User&fq=id_s:[*+TO+*]&fq=subscripted_b:true&fq=roles_sm:customer&rows=30&wt=ruby} hits=0 status=0 QTime=1 
+Jun 22, 2015 1:40:45 PM org.apache.solr.core.SolrCore execute
+INFO: [development] webapp=/solr path=/select params={q=car&defType=edismax&qf=name_text^10+keywords_text^5+email_text+description_text+address_text+phone_text&fl=*+score&start=0&fq=type:User&fq=id_s:[*+TO+*]&fq=roles_sm:customer&rows=7&wt=ruby} hits=1 status=0 QTime=0 
+Jun 22, 2015 1:40:46 PM org.apache.solr.core.SolrCore execute
+INFO: [development] webapp=/solr path=/select params={q=car&defType=edismax&qf=name_text^10+keywords_text^5+email_text+description_text+address_text+phone_text&fl=*+score&start=7&fq=type:User&fq=id_s:[*+TO+*]&fq=roles_sm:customer&rows=7&wt=ruby} hits=1 status=0 QTime=2 
+Jun 22, 2015 1:40:54 PM org.apache.solr.core.SolrCore execute
+INFO: [development] webapp=/solr path=/select params={q=china&defType=edismax&qf=name_text^10+keywords_text^5+email_text+description_text+address_text+phone_text&fl=*+score&start=0&fq=type:User&fq=id_s:[*+TO+*]&fq=subscripted_b:true&fq=roles_sm:customer&rows=30&wt=ruby} hits=1 status=0 QTime=6 
+Jun 22, 2015 1:40:54 PM org.apache.solr.core.SolrCore execute
+INFO: [development] webapp=/solr path=/select params={q=china&defType=edismax&qf=name_text^10+keywords_text^5+email_text+description_text+address_text+phone_text&fl=*+score&start=0&fq=type:User&fq=-id_s:(5543f520457269e0ab440000)&fq=roles_sm:customer&rows=7&wt=ruby} hits=18 status=0 QTime=17 
+Jun 22, 2015 1:41:15 PM org.apache.solr.core.SolrCore execute
+INFO: [development] webapp=/solr path=/select params={q=fina&defType=edismax&qf=name_text^10+keywords_text^5+title_text^8+email_text+description_text+address_text+phone_text&fl=*+score&start=0&fq=type:(User+OR+Promotion)&fq=id_s:[*+TO+*]&fq=subscripted_b:true&fq=((class_name:User+AND+roles_sm:customer)+OR+(class_name:Promotion+AND+-status_s:(submitted+OR+rejected)))&rows=30&wt=ruby} hits=2 status=0 QTime=2 
+Jun 22, 2015 1:41:15 PM org.apache.solr.core.SolrCore execute
+INFO: [development] webapp=/solr path=/select params={q=fina&defType=edismax&qf=name_text^10+keywords_text^5+title_text^8+email_text+description_text+address_text+phone_text&fl=*+score&start=0&fq=type:(User+OR+Promotion)&fq=-id_s:(55617ec6457269b950d30000+OR+55617ec5457269b950be0000)&fq=((class_name:User+AND+roles_sm:customer)+OR+(class_name:Promotion+AND+-status_s:(submitted+OR+rejected)))&rows=7&wt=ruby} hits=9 status=0 QTime=1 
+Jun 22, 2015 1:42:10 PM org.apache.solr.core.SolrCore execute
+INFO: [development] webapp=/solr path=/select params={q=shoes&defType=edismax&qf=name_text^10+keywords_text^5+title_text^8+email_text+description_text+address_text+phone_text&fl=*+score&start=0&fq=type:(User+OR+Promotion)&fq=id_s:[*+TO+*]&fq=subscripted_b:true&fq=((class_name:User+AND+roles_sm:customer)+OR+(class_name:Promotion+AND+-status_s:(submitted+OR+rejected)))&rows=30&wt=ruby} hits=0 status=0 QTime=4 
+Jun 22, 2015 1:42:10 PM org.apache.solr.core.SolrCore execute
+INFO: [development] webapp=/solr path=/select params={q=shoes&defType=edismax&qf=name_text^10+keywords_text^5+title_text^8+email_text+description_text+address_text+phone_text&fl=*+score&start=0&fq=type:(User+OR+Promotion)&fq=-id_s:(55617ec6457269b950d30000+OR+55617ec5457269b950be0000)&fq=((class_name:User+AND+roles_sm:customer)+OR+(class_name:Promotion+AND+-status_s:(submitted+OR+rejected)))&rows=7&wt=ruby} hits=0 status=0 QTime=1 
+Jun 22, 2015 1:42:11 PM org.apache.solr.core.SolrCore execute
+INFO: [development] webapp=/solr path=/select params={q=shoes&defType=edismax&qf=name_text^10+keywords_text^5+title_text^8+email_text+description_text+address_text+phone_text&fl=*+score&start=0&fq=type:(User+OR+Promotion)&fq=id_s:[*+TO+*]&fq=((class_name:User+AND+roles_sm:customer)+OR+(class_name:Promotion+AND+-status_s:(submitted+OR+rejected)))&rows=7&wt=ruby} hits=0 status=0 QTime=1 
+Jun 22, 2015 1:42:17 PM org.apache.solr.core.SolrCore execute
+INFO: [development] webapp=/solr path=/select params={q=shoes&defType=edismax&qf=name_text^10+keywords_text^5+title_text^8+email_text+description_text+address_text+phone_text&fl=*+score&start=0&fq=type:(User+OR+Promotion)&fq=id_s:[*+TO+*]&fq=subscripted_b:true&fq=((class_name:User+AND+roles_sm:customer)+OR+(class_name:Promotion+AND+-status_s:(submitted+OR+rejected)))&rows=30&wt=ruby} hits=0 status=0 QTime=0 
+Jun 22, 2015 1:42:17 PM org.apache.solr.core.SolrCore execute
+INFO: [development] webapp=/solr path=/select params={q=shoes&defType=edismax&qf=name_text^10+keywords_text^5+title_text^8+email_text+description_text+address_text+phone_text&fl=*+score&start=0&fq=type:(User+OR+Promotion)&fq=id_s:[*+TO+*]&fq=((class_name:User+AND+roles_sm:customer)+OR+(class_name:Promotion+AND+-status_s:(submitted+OR+rejected)))&rows=7&wt=ruby} hits=0 status=0 QTime=0 
+Jun 22, 2015 1:44:13 PM org.apache.solr.core.SolrCore execute
+INFO: [development] webapp=/solr path=/select params={q=cheap&defType=edismax&qf=name_text^10+keywords_text^5+email_text+description_text+address_text+phone_text&fl=*+score&start=0&fq=type:User&fq=id_s:[*+TO+*]&fq=subscripted_b:true&fq=roles_sm:customer&rows=30&wt=ruby} hits=2 status=0 QTime=18 
+Jun 22, 2015 1:44:13 PM org.apache.solr.core.SolrCore execute
+INFO: [development] webapp=/solr path=/select params={q=cheap&defType=edismax&qf=name_text^10+keywords_text^5+email_text+description_text+address_text+phone_text&fl=*+score&start=0&fq=type:User&fq=-id_s:(5543f524457269e0ab580000+OR+5543f520457269e0ab440000)&fq=roles_sm:customer&rows=7&wt=ruby} hits=13 status=0 QTime=7 
+Jun 22, 2015 1:44:17 PM org.apache.solr.core.SolrCore execute
+INFO: [development] webapp=/solr path=/select params={q=bad&defType=edismax&qf=name_text^10+keywords_text^5+email_text+description_text+address_text+phone_text&fl=*+score&start=0&fq=type:User&fq=id_s:[*+TO+*]&fq=subscripted_b:true&fq=roles_sm:customer&rows=30&wt=ruby} hits=5 status=0 QTime=2 
+Jun 22, 2015 1:44:18 PM org.apache.solr.core.SolrCore execute
+INFO: [development] webapp=/solr path=/select params={q=bad&defType=edismax&qf=name_text^10+keywords_text^5+email_text+description_text+address_text+phone_text&fl=*+score&start=0&fq=type:User&fq=-id_s:(5543f525457269e0ab5f0000+OR+5543f511457269e0ab000000+OR+5543f513457269e0ab0a0000+OR+5543f524457269e0ab580000+OR+5543f522457269e0ab4e0000)&fq=roles_sm:customer&rows=7&wt=ruby} hits=15 status=0 QTime=2 
+Jun 22, 2015 1:44:20 PM org.apache.solr.core.SolrCore execute
+INFO: [development] webapp=/solr path=/select params={q=bad&defType=edismax&qf=name_text^10+keywords_text^5+email_text+description_text+address_text+phone_text&fl=*+score&start=7&fq=type:User&fq=-id_s:(5543f525457269e0ab5f0000+OR+5543f511457269e0ab000000+OR+5543f513457269e0ab0a0000+OR+5543f524457269e0ab580000+OR+5543f522457269e0ab4e0000)&fq=roles_sm:customer&rows=7&wt=ruby} hits=15 status=0 QTime=1 
+Jun 22, 2015 1:44:21 PM org.apache.solr.core.SolrCore execute
+INFO: [development] webapp=/solr path=/select params={q=bad&defType=edismax&qf=name_text^10+keywords_text^5+email_text+description_text+address_text+phone_text&fl=*+score&start=14&fq=type:User&fq=-id_s:(5543f525457269e0ab5f0000+OR+5543f511457269e0ab000000+OR+5543f513457269e0ab0a0000+OR+5543f524457269e0ab580000+OR+5543f522457269e0ab4e0000)&fq=roles_sm:customer&rows=7&wt=ruby} hits=15 status=0 QTime=1 
+Jun 22, 2015 1:44:22 PM org.apache.solr.core.SolrCore execute
+INFO: [development] webapp=/solr path=/select params={q=bad&defType=edismax&qf=name_text^10+keywords_text^5+email_text+description_text+address_text+phone_text&fl=*+score&start=21&fq=type:User&fq=-id_s:(5543f525457269e0ab5f0000+OR+5543f511457269e0ab000000+OR+5543f513457269e0ab0a0000+OR+5543f524457269e0ab580000+OR+5543f522457269e0ab4e0000)&fq=roles_sm:customer&rows=7&wt=ruby} hits=15 status=0 QTime=3 
+Jun 22, 2015 1:44:47 PM org.apache.solr.update.processor.LogUpdateProcessor finish
+INFO: [development] webapp=/solr path=/update params={wt=ruby} {add=[Promotion 55617ec4457269b950550000 (1504701409281441792)]} 0 35
+Jun 22, 2015 1:44:48 PM org.apache.solr.update.DirectUpdateHandler2 commit
+INFO: start commit{,optimize=false,openSearcher=true,waitSearcher=true,expungeDeletes=false,softCommit=false,prepareCommit=false}
+Jun 22, 2015 1:44:48 PM org.apache.solr.core.SolrDeletionPolicy onCommit
+INFO: SolrDeletionPolicy.onCommit: commits:num=2
+	commit{dir=NRTCachingDirectory(org.apache.lucene.store.NIOFSDirectory@/Users/mover/Documents/projects/gamp-api/solr/development/data/index lockFactory=org.apache.lucene.store.NativeFSLockFactory@25fb5d52; maxCacheMB=48.0 maxMergeSizeMB=4.0),segFN=segments_27,generation=79,filenames=[_35.si, _2u.fdt, segments_27, _2u.fdx, _34.si, _34.cfs, _35.cfe, _2u.nvm, _2u.fnm, _2u.si, _2u_Lucene41_0.pos, _2u_Lucene41_0.doc, _2u_Lucene41_0.tim, _2u_Lucene41_0.tip, _2u.nvd, _35.cfs, _2u_2.del, _34.cfe]
+	commit{dir=NRTCachingDirectory(org.apache.lucene.store.NIOFSDirectory@/Users/mover/Documents/projects/gamp-api/solr/development/data/index lockFactory=org.apache.lucene.store.NativeFSLockFactory@25fb5d52; maxCacheMB=48.0 maxMergeSizeMB=4.0),segFN=segments_28,generation=80,filenames=[_35.si, _36.cfs, _2u.fdt, segments_28, _36.si, _2u.fdx, _34.si, _34.cfs, _2u_3.del, _35.cfe, _2u.nvm, _2u.fnm, _2u.si, _36.cfe, _2u_Lucene41_0.pos, _2u_Lucene41_0.doc, _2u_Lucene41_0.tim, _2u_Lucene41_0.tip, _2u.nvd, _35.cfs, _34.cfe]
+Jun 22, 2015 1:44:48 PM org.apache.solr.core.SolrDeletionPolicy updateCommits
+INFO: newest commit = 80[_35.si, _36.cfs, _2u.fdt, segments_28, _36.si, _2u.fdx, _34.si, _34.cfs, _2u_3.del, _35.cfe, _2u.nvm, _2u.fnm, _2u.si, _36.cfe, _2u_Lucene41_0.pos, _2u_Lucene41_0.doc, _2u_Lucene41_0.tim, _2u_Lucene41_0.tip, _2u.nvd, _35.cfs, _34.cfe]
+Jun 22, 2015 1:44:48 PM org.apache.solr.search.SolrIndexSearcher <init>
+INFO: Opening Searcher@3173bc66 main
+Jun 22, 2015 1:44:48 PM org.apache.solr.handler.component.SpellCheckComponent$SpellCheckerListener buildSpellIndex
+INFO: Building spell index for spell checker: default
+Jun 22, 2015 1:44:48 PM org.apache.solr.update.DirectUpdateHandler2 commit
+INFO: end_commit_flush
+Jun 22, 2015 1:44:48 PM org.apache.solr.handler.component.SpellCheckComponent$SpellCheckerListener buildSpellIndex
+INFO: Building spell index for spell checker: example
+Jun 22, 2015 1:44:48 PM org.apache.solr.core.SolrCore registerSearcher
+INFO: [development] Registered new searcher Searcher@3173bc66 main{StandardDirectoryReader(segments_28:400:nrt _2u(4.2):C1112/14 _34(4.2):c1 _35(4.2):c12 _36(4.2):c1)}
+Jun 22, 2015 1:44:48 PM org.apache.solr.update.processor.LogUpdateProcessor finish
+INFO: [development] webapp=/solr path=/update params={wt=ruby} {commit=} 0 966
+Jun 22, 2015 1:46:39 PM org.apache.solr.core.SolrCore execute
+INFO: [development] webapp=/solr path=/select params={q=car&defType=edismax&qf=name_text^10+keywords_text^5+email_text+description_text+address_text+phone_text&fl=*+score&start=0&fq=type:User&fq=id_s:[*+TO+*]&fq=subscripted_b:true&fq=roles_sm:customer&rows=30&wt=ruby} hits=0 status=0 QTime=4 
+Jun 22, 2015 1:46:39 PM org.apache.solr.core.SolrCore execute
+INFO: [development] webapp=/solr path=/select params={q=car&defType=edismax&qf=name_text^10+keywords_text^5+email_text+description_text+address_text+phone_text&fl=*+score&start=0&fq=type:User&fq=id_s:[*+TO+*]&fq=roles_sm:customer&rows=7&wt=ruby} hits=1 status=0 QTime=3 
+Jun 22, 2015 1:46:40 PM org.apache.solr.core.SolrCore execute
+INFO: [development] webapp=/solr path=/select params={q=car&defType=edismax&qf=name_text^10+keywords_text^5+email_text+description_text+address_text+phone_text&fl=*+score&start=7&fq=type:User&fq=id_s:[*+TO+*]&fq=roles_sm:customer&rows=7&wt=ruby} hits=1 status=0 QTime=0 
+Jun 22, 2015 1:46:47 PM org.apache.solr.core.SolrCore execute
+INFO: [development] webapp=/solr path=/select params={q=car&defType=edismax&qf=title_text^8+description_text&fl=*+score&start=0&fq=type:Promotion&fq=id_s:[*+TO+*]&fq=subscripted_b:true&fq=-status_s:(submitted+OR+rejected)&rows=30&wt=ruby} hits=0 status=0 QTime=8 
+Jun 22, 2015 1:46:47 PM org.apache.solr.core.SolrCore execute
+INFO: [development] webapp=/solr path=/select params={q=car&defType=edismax&qf=title_text^8+description_text&fl=*+score&start=0&fq=type:Promotion&fq=id_s:[*+TO+*]&fq=-status_s:(submitted+OR+rejected)&rows=7&wt=ruby} hits=1 status=0 QTime=3 
+Jun 22, 2015 1:46:48 PM org.apache.solr.core.SolrCore execute
+INFO: [development] webapp=/solr path=/select params={q=car&defType=edismax&qf=title_text^8+description_text&fl=*+score&start=7&fq=type:Promotion&fq=id_s:[*+TO+*]&fq=-status_s:(submitted+OR+rejected)&rows=7&wt=ruby} hits=1 status=0 QTime=1 
+Jun 22, 2015 1:47:15 PM org.apache.solr.core.SolrCore execute
+INFO: [development] webapp=/solr path=/select params={q=car&defType=edismax&qf=title_text^8+description_text&fl=*+score&start=0&fq=type:Promotion&fq=id_s:[*+TO+*]&fq=subscripted_b:true&fq=-status_s:(submitted+OR+rejected)&fq={!geofilt+sfield%3Dlocation_ll+pt%3D37.785834,-122.406417+d%3D95.5}&rows=30&wt=ruby} hits=0 status=0 QTime=3 
+Jun 22, 2015 1:47:15 PM org.apache.solr.core.SolrCore execute
+INFO: [development] webapp=/solr path=/select params={q=car&defType=edismax&qf=title_text^8+description_text&fl=*+score&start=0&fq=type:Promotion&fq=id_s:[*+TO+*]&fq=-status_s:(submitted+OR+rejected)&fq={!geofilt+sfield%3Dlocation_ll+pt%3D37.785834,-122.406417+d%3D95.5}&rows=7&wt=ruby} hits=0 status=0 QTime=1 
+Jun 22, 2015 1:47:22 PM org.apache.solr.core.SolrCore execute
+INFO: [development] webapp=/solr path=/select params={q=car&defType=edismax&qf=title_text^8+description_text&fl=*+score&start=0&fq=type:Promotion&fq=id_s:[*+TO+*]&fq=subscripted_b:true&fq=-status_s:(submitted+OR+rejected)&rows=30&wt=ruby} hits=0 status=0 QTime=1 
+Jun 22, 2015 1:47:23 PM org.apache.solr.core.SolrCore execute
+INFO: [development] webapp=/solr path=/select params={q=car&defType=edismax&qf=title_text^8+description_text&fl=*+score&start=0&fq=type:Promotion&fq=id_s:[*+TO+*]&fq=-status_s:(submitted+OR+rejected)&rows=7&wt=ruby} hits=1 status=0 QTime=1 
+Jun 22, 2015 1:47:23 PM org.apache.solr.core.SolrCore execute
+INFO: [development] webapp=/solr path=/select params={q=car&defType=edismax&qf=title_text^8+description_text&fl=*+score&start=7&fq=type:Promotion&fq=id_s:[*+TO+*]&fq=-status_s:(submitted+OR+rejected)&rows=7&wt=ruby} hits=1 status=0 QTime=2 
+Jun 22, 2015 1:47:29 PM org.apache.solr.core.SolrCore execute
+INFO: [development] webapp=/solr path=/select params={q=car&defType=edismax&qf=title_text^8+description_text&fl=*+score&start=0&fq=type:Promotion&fq=id_s:[*+TO+*]&fq=subscripted_b:true&fq=-status_s:(submitted+OR+rejected)&fq={!geofilt+sfield%3Dlocation_ll+pt%3D37.785834,-122.406417+d%3D95.5}&rows=30&wt=ruby} hits=0 status=0 QTime=1 
+Jun 22, 2015 1:47:30 PM org.apache.solr.core.SolrCore execute
+INFO: [development] webapp=/solr path=/select params={q=car&defType=edismax&qf=title_text^8+description_text&fl=*+score&start=0&fq=type:Promotion&fq=id_s:[*+TO+*]&fq=-status_s:(submitted+OR+rejected)&fq={!geofilt+sfield%3Dlocation_ll+pt%3D37.785834,-122.406417+d%3D95.5}&rows=7&wt=ruby} hits=0 status=0 QTime=1 
+Jun 22, 2015 1:47:37 PM org.apache.solr.core.SolrCore execute
+INFO: [development] webapp=/solr path=/select params={q=car&defType=edismax&qf=title_text^8+description_text&fl=*+score&start=0&fq=type:Promotion&fq=id_s:[*+TO+*]&fq=subscripted_b:true&fq=-status_s:(submitted+OR+rejected)&rows=30&wt=ruby} hits=0 status=0 QTime=1 
+Jun 22, 2015 1:47:37 PM org.apache.solr.core.SolrCore execute
+INFO: [development] webapp=/solr path=/select params={q=car&defType=edismax&qf=title_text^8+description_text&fl=*+score&start=0&fq=type:Promotion&fq=id_s:[*+TO+*]&fq=-status_s:(submitted+OR+rejected)&rows=7&wt=ruby} hits=1 status=0 QTime=1 
+Jun 22, 2015 1:47:37 PM org.apache.solr.core.SolrCore execute
+INFO: [development] webapp=/solr path=/select params={q=car&defType=edismax&qf=title_text^8+description_text&fl=*+score&start=7&fq=type:Promotion&fq=id_s:[*+TO+*]&fq=-status_s:(submitted+OR+rejected)&rows=7&wt=ruby} hits=1 status=0 QTime=0 
+Jun 22, 2015 1:48:54 PM org.apache.solr.core.SolrCore execute
+INFO: [development] webapp=/solr path=/select params={q=one&defType=edismax&qf=name_text^10+keywords_text^5+title_text^8+email_text+description_text+address_text+phone_text&fl=*+score&start=0&fq=type:(User+OR+Promotion)&fq=id_s:[*+TO+*]&fq=subscripted_b:true&fq=((class_name:User+AND+roles_sm:customer)+OR+(class_name:Promotion+AND+-status_s:(submitted+OR+rejected)))&rows=30&wt=ruby} hits=11 status=0 QTime=25 
+Jun 22, 2015 1:48:55 PM org.apache.solr.core.SolrCore execute
+INFO: [development] webapp=/solr path=/select params={q=one&defType=edismax&qf=name_text^10+keywords_text^5+title_text^8+email_text+description_text+address_text+phone_text&fl=*+score&start=0&fq=type:(User+OR+Promotion)&fq=-id_s:(5543f511457269e0ab000000+OR+5543f51b457269e0ab2d0000+OR+5543f518457269e0ab200000+OR+5543f522457269e0ab4e0000+OR+5543f513457269e0ab0a0000+OR+5543f520457269e0ab440000+OR+5543f525457269e0ab5f0000+OR+5543f511457269e0ab020000+OR+5543f514457269e0ab110000+OR+5543f524457269e0ab580000+OR+5543f512457269e0ab080000)&fq=((class_name:User+AND+roles_sm:customer)+OR+(class_name:Promotion+AND+-status_s:(submitted+OR+rejected)))&rows=7&wt=ruby} hits=91 status=0 QTime=6 
+Jun 22, 2015 1:48:58 PM org.apache.solr.core.SolrCore execute
+INFO: [development] webapp=/solr path=/select params={q=one&defType=edismax&qf=name_text^10+keywords_text^5+title_text^8+email_text+description_text+address_text+phone_text&fl=*+score&start=7&fq=type:(User+OR+Promotion)&fq=-id_s:(5543f511457269e0ab000000+OR+5543f51b457269e0ab2d0000+OR+5543f518457269e0ab200000+OR+5543f522457269e0ab4e0000+OR+5543f513457269e0ab0a0000+OR+5543f520457269e0ab440000+OR+5543f525457269e0ab5f0000+OR+5543f511457269e0ab020000+OR+5543f514457269e0ab110000+OR+5543f524457269e0ab580000+OR+5543f512457269e0ab080000)&fq=((class_name:User+AND+roles_sm:customer)+OR+(class_name:Promotion+AND+-status_s:(submitted+OR+rejected)))&rows=7&wt=ruby} hits=91 status=0 QTime=1 
+Jun 22, 2015 1:49:06 PM org.apache.solr.core.SolrCore execute
+INFO: [development] webapp=/solr path=/select params={q=one+or+fina&defType=edismax&qf=name_text^10+keywords_text^5+title_text^8+email_text+description_text+address_text+phone_text&fl=*+score&start=0&fq=type:(User+OR+Promotion)&fq=id_s:[*+TO+*]&fq=subscripted_b:true&fq=((class_name:User+AND+roles_sm:customer)+OR+(class_name:Promotion+AND+-status_s:(submitted+OR+rejected)))&rows=30&wt=ruby} hits=13 status=0 QTime=6 
+Jun 22, 2015 1:49:07 PM org.apache.solr.core.SolrCore execute
+INFO: [development] webapp=/solr path=/select params={q=one+or+fina&defType=edismax&qf=name_text^10+keywords_text^5+title_text^8+email_text+description_text+address_text+phone_text&fl=*+score&start=0&fq=type:(User+OR+Promotion)&fq=-id_s:(5543f511457269e0ab000000+OR+5543f51b457269e0ab2d0000+OR+5543f518457269e0ab200000+OR+5543f522457269e0ab4e0000+OR+5543f513457269e0ab0a0000+OR+5543f520457269e0ab440000+OR+5543f525457269e0ab5f0000+OR+5543f511457269e0ab020000+OR+5543f514457269e0ab110000+OR+5543f524457269e0ab580000+OR+5543f512457269e0ab080000)&fq=((class_name:User+AND+roles_sm:customer)+OR+(class_name:Promotion+AND+-status_s:(submitted+OR+rejected)))&rows=7&wt=ruby} hits=102 status=0 QTime=1 
+Jun 22, 2015 1:49:07 PM org.apache.solr.core.SolrCore execute
+INFO: [development] webapp=/solr path=/select params={q=one+or+fina&defType=edismax&qf=name_text^10+keywords_text^5+title_text^8+email_text+description_text+address_text+phone_text&fl=*+score&start=0&fq=type:(User+OR+Promotion)&fq=-id_s:(5543f511457269e0ab000000+OR+5543f51b457269e0ab2d0000+OR+55617ec6457269b950d30000+OR+55617ec5457269b950be0000+OR+5543f518457269e0ab200000+OR+5543f522457269e0ab4e0000+OR+5543f513457269e0ab0a0000+OR+5543f520457269e0ab440000+OR+5543f525457269e0ab5f0000+OR+5543f511457269e0ab020000+OR+5543f514457269e0ab110000+OR+5543f524457269e0ab580000+OR+5543f512457269e0ab080000)&fq=((class_name:User+AND+roles_sm:customer)+OR+(class_name:Promotion+AND+-status_s:(submitted+OR+rejected)))&rows=7&wt=ruby} hits=100 status=0 QTime=7 
+Jun 22, 2015 1:49:18 PM org.apache.solr.core.SolrCore execute
+INFO: [development] webapp=/solr path=/select params={q=one+and+china&defType=edismax&qf=name_text^10+keywords_text^5+title_text^8+email_text+description_text+address_text+phone_text&fl=*+score&start=0&fq=type:(User+OR+Promotion)&fq=id_s:[*+TO+*]&fq=subscripted_b:true&fq=((class_name:User+AND+roles_sm:customer)+OR+(class_name:Promotion+AND+-status_s:(submitted+OR+rejected)))&rows=30&wt=ruby} hits=1 status=0 QTime=5 
+Jun 22, 2015 1:49:18 PM org.apache.solr.core.SolrCore execute
+INFO: [development] webapp=/solr path=/select params={q=one+and+china&defType=edismax&qf=name_text^10+keywords_text^5+title_text^8+email_text+description_text+address_text+phone_text&fl=*+score&start=0&fq=type:(User+OR+Promotion)&fq=-id_s:(5543f511457269e0ab000000+OR+5543f51b457269e0ab2d0000+OR+55617ec6457269b950d30000+OR+55617ec5457269b950be0000+OR+5543f518457269e0ab200000+OR+5543f522457269e0ab4e0000+OR+5543f513457269e0ab0a0000+OR+5543f520457269e0ab440000+OR+5543f525457269e0ab5f0000+OR+5543f511457269e0ab020000+OR+5543f514457269e0ab110000+OR+5543f524457269e0ab580000+OR+5543f512457269e0ab080000)&fq=((class_name:User+AND+roles_sm:customer)+OR+(class_name:Promotion+AND+-status_s:(submitted+OR+rejected)))&rows=7&wt=ruby} hits=18 status=0 QTime=5 
+Jun 22, 2015 1:49:18 PM org.apache.solr.core.SolrCore execute
+INFO: [development] webapp=/solr path=/select params={q=one+and+china&defType=edismax&qf=name_text^10+keywords_text^5+title_text^8+email_text+description_text+address_text+phone_text&fl=*+score&start=0&fq=type:(User+OR+Promotion)&fq=-id_s:(5543f520457269e0ab440000)&fq=((class_name:User+AND+roles_sm:customer)+OR+(class_name:Promotion+AND+-status_s:(submitted+OR+rejected)))&rows=7&wt=ruby} hits=18 status=0 QTime=2 
+Jun 22, 2015 1:49:20 PM org.apache.solr.core.SolrCore execute
+INFO: [development] webapp=/solr path=/select params={q=one+and+china&defType=edismax&qf=name_text^10+keywords_text^5+title_text^8+email_text+description_text+address_text+phone_text&fl=*+score&start=14&fq=type:(User+OR+Promotion)&fq=-id_s:(5543f520457269e0ab440000)&fq=((class_name:User+AND+roles_sm:customer)+OR+(class_name:Promotion+AND+-status_s:(submitted+OR+rejected)))&rows=7&wt=ruby} hits=18 status=0 QTime=0 
+Jun 22, 2015 1:49:21 PM org.apache.solr.core.SolrCore execute
+INFO: [development] webapp=/solr path=/select params={q=one+and+china&defType=edismax&qf=name_text^10+keywords_text^5+title_text^8+email_text+description_text+address_text+phone_text&fl=*+score&start=21&fq=type:(User+OR+Promotion)&fq=-id_s:(5543f520457269e0ab440000)&fq=((class_name:User+AND+roles_sm:customer)+OR+(class_name:Promotion+AND+-status_s:(submitted+OR+rejected)))&rows=7&wt=ruby} hits=18 status=0 QTime=3 
+Jun 22, 2015 1:49:37 PM org.apache.solr.core.SolrCore execute
+INFO: [development] webapp=/solr path=/select params={q=one+or+cheap&defType=edismax&qf=name_text^10+keywords_text^5+title_text^8+email_text+description_text+address_text+phone_text&fl=*+score&start=0&fq=type:(User+OR+Promotion)&fq=id_s:[*+TO+*]&fq=subscripted_b:true&fq=((class_name:User+AND+roles_sm:customer)+OR+(class_name:Promotion+AND+-status_s:(submitted+OR+rejected)))&rows=30&wt=ruby} hits=11 status=0 QTime=10 
+Jun 22, 2015 1:49:37 PM org.apache.solr.core.SolrCore execute
+INFO: [development] webapp=/solr path=/select params={q=one+or+cheap&defType=edismax&qf=name_text^10+keywords_text^5+title_text^8+email_text+description_text+address_text+phone_text&fl=*+score&start=0&fq=type:(User+OR+Promotion)&fq=-id_s:(5543f524457269e0ab580000+OR+5543f520457269e0ab440000+OR+5543f511457269e0ab000000+OR+5543f51b457269e0ab2d0000+OR+5543f518457269e0ab200000+OR+5543f522457269e0ab4e0000+OR+5543f513457269e0ab0a0000+OR+5543f525457269e0ab5f0000+OR+5543f511457269e0ab020000+OR+5543f514457269e0ab110000+OR+5543f512457269e0ab080000)&fq=((class_name:User+AND+roles_sm:customer)+OR+(class_name:Promotion+AND+-status_s:(submitted+OR+rejected)))&rows=7&wt=ruby} hits=91 status=0 QTime=4 
+Jun 22, 2015 1:49:43 PM org.apache.solr.core.SolrCore execute
+INFO: [development] webapp=/solr path=/select params={q=cheap&defType=edismax&qf=name_text^10+keywords_text^5+title_text^8+email_text+description_text+address_text+phone_text&fl=*+score&start=0&fq=type:(User+OR+Promotion)&fq=id_s:[*+TO+*]&fq=subscripted_b:true&fq=((class_name:User+AND+roles_sm:customer)+OR+(class_name:Promotion+AND+-status_s:(submitted+OR+rejected)))&rows=30&wt=ruby} hits=2 status=0 QTime=2 
+Jun 22, 2015 1:49:43 PM org.apache.solr.core.SolrCore execute
+INFO: [development] webapp=/solr path=/select params={q=cheap&defType=edismax&qf=name_text^10+keywords_text^5+title_text^8+email_text+description_text+address_text+phone_text&fl=*+score&start=0&fq=type:(User+OR+Promotion)&fq=-id_s:(5543f524457269e0ab580000+OR+5543f520457269e0ab440000+OR+5543f511457269e0ab000000+OR+5543f51b457269e0ab2d0000+OR+5543f518457269e0ab200000+OR+5543f522457269e0ab4e0000+OR+5543f513457269e0ab0a0000+OR+5543f525457269e0ab5f0000+OR+5543f511457269e0ab020000+OR+5543f514457269e0ab110000+OR+5543f512457269e0ab080000)&fq=((class_name:User+AND+roles_sm:customer)+OR+(class_name:Promotion+AND+-status_s:(submitted+OR+rejected)))&rows=7&wt=ruby} hits=13 status=0 QTime=2 
+Jun 22, 2015 1:49:43 PM org.apache.solr.core.SolrCore execute
+INFO: [development] webapp=/solr path=/select params={q=cheap&defType=edismax&qf=name_text^10+keywords_text^5+title_text^8+email_text+description_text+address_text+phone_text&fl=*+score&start=0&fq=type:(User+OR+Promotion)&fq=-id_s:(5543f524457269e0ab580000+OR+5543f520457269e0ab440000)&fq=((class_name:User+AND+roles_sm:customer)+OR+(class_name:Promotion+AND+-status_s:(submitted+OR+rejected)))&rows=7&wt=ruby} hits=13 status=0 QTime=1 
+Jun 22, 2015 1:50:01 PM org.apache.solr.update.processor.LogUpdateProcessor finish
+INFO: [development] webapp=/solr path=/update params={wt=ruby} {add=[Promotion 55617ecf457269b950100300 (1504701737748922368)]} 0 28
+Jun 22, 2015 1:50:01 PM org.apache.solr.update.DirectUpdateHandler2 commit
+INFO: start commit{,optimize=false,openSearcher=true,waitSearcher=true,expungeDeletes=false,softCommit=false,prepareCommit=false}
+Jun 22, 2015 1:50:01 PM org.apache.solr.core.SolrDeletionPolicy onCommit
+INFO: SolrDeletionPolicy.onCommit: commits:num=2
+	commit{dir=NRTCachingDirectory(org.apache.lucene.store.NIOFSDirectory@/Users/mover/Documents/projects/gamp-api/solr/development/data/index lockFactory=org.apache.lucene.store.NativeFSLockFactory@25fb5d52; maxCacheMB=48.0 maxMergeSizeMB=4.0),segFN=segments_28,generation=80,filenames=[_35.si, _36.cfs, _2u.fdt, segments_28, _36.si, _2u.fdx, _34.si, _34.cfs, _2u_3.del, _35.cfe, _2u.nvm, _2u.fnm, _2u.si, _36.cfe, _2u_Lucene41_0.pos, _2u_Lucene41_0.doc, _2u_Lucene41_0.tim, _2u_Lucene41_0.tip, _2u.nvd, _35.cfs, _34.cfe]
+	commit{dir=NRTCachingDirectory(org.apache.lucene.store.NIOFSDirectory@/Users/mover/Documents/projects/gamp-api/solr/development/data/index lockFactory=org.apache.lucene.store.NativeFSLockFactory@25fb5d52; maxCacheMB=48.0 maxMergeSizeMB=4.0),segFN=segments_29,generation=81,filenames=[_37_Lucene41_0.tip, _38.cfs, _37.nvd, _37.si, _38.si, segments_29, _37_Lucene41_0.pos, _37_Lucene41_0.doc, _37_Lucene41_0.tim, _37.nvm, _37.fnm, _37_1.del, _38.cfe, _37.fdx, _37.fdt]
+Jun 22, 2015 1:50:01 PM org.apache.solr.core.SolrDeletionPolicy updateCommits
+INFO: newest commit = 81[_37_Lucene41_0.tip, _38.cfs, _37.nvd, _37.si, _38.si, segments_29, _37_Lucene41_0.pos, _37_Lucene41_0.doc, _37_Lucene41_0.tim, _37.nvm, _37.fnm, _37_1.del, _38.cfe, _37.fdx, _37.fdt]
+Jun 22, 2015 1:50:01 PM org.apache.solr.search.SolrIndexSearcher <init>
+INFO: Opening Searcher@721d7fd8 main
+Jun 22, 2015 1:50:01 PM org.apache.solr.handler.component.SpellCheckComponent$SpellCheckerListener buildSpellIndex
+INFO: Building spell index for spell checker: default
+Jun 22, 2015 1:50:01 PM org.apache.solr.update.DirectUpdateHandler2 commit
+INFO: end_commit_flush
+Jun 22, 2015 1:50:01 PM org.apache.solr.handler.component.SpellCheckComponent$SpellCheckerListener buildSpellIndex
+INFO: Building spell index for spell checker: example
+Jun 22, 2015 1:50:01 PM org.apache.solr.core.SolrCore registerSearcher
+INFO: [development] Registered new searcher Searcher@721d7fd8 main{StandardDirectoryReader(segments_29:404:nrt _37(4.2):C1112/1 _38(4.2):c1)}
+Jun 22, 2015 1:50:01 PM org.apache.solr.update.processor.LogUpdateProcessor finish
+INFO: [development] webapp=/solr path=/update params={wt=ruby} {commit=} 0 683
+Jun 22, 2015 1:52:26 PM org.apache.solr.update.processor.LogUpdateProcessor finish
+INFO: [development] webapp=/solr path=/update params={wt=ruby} {add=[Promotion 55617ec3457269b950120000 (1504701890226552832)]} 0 32
+Jun 22, 2015 1:52:26 PM org.apache.solr.update.DirectUpdateHandler2 commit
+INFO: start commit{,optimize=false,openSearcher=true,waitSearcher=true,expungeDeletes=false,softCommit=false,prepareCommit=false}
+Jun 22, 2015 1:52:26 PM org.apache.solr.core.SolrDeletionPolicy onCommit
+INFO: SolrDeletionPolicy.onCommit: commits:num=2
+	commit{dir=NRTCachingDirectory(org.apache.lucene.store.NIOFSDirectory@/Users/mover/Documents/projects/gamp-api/solr/development/data/index lockFactory=org.apache.lucene.store.NativeFSLockFactory@25fb5d52; maxCacheMB=48.0 maxMergeSizeMB=4.0),segFN=segments_29,generation=81,filenames=[_37_Lucene41_0.tip, _38.cfs, _37.nvd, _37.si, _38.si, segments_29, _37_Lucene41_0.pos, _37_Lucene41_0.doc, _37_Lucene41_0.tim, _37.nvm, _37.fnm, _37_1.del, _38.cfe, _37.fdx, _37.fdt]
+	commit{dir=NRTCachingDirectory(org.apache.lucene.store.NIOFSDirectory@/Users/mover/Documents/projects/gamp-api/solr/development/data/index lockFactory=org.apache.lucene.store.NativeFSLockFactory@25fb5d52; maxCacheMB=48.0 maxMergeSizeMB=4.0),segFN=segments_2a,generation=82,filenames=[_37_Lucene41_0.tip, _38.cfs, _37.nvd, _37.si, _38.si, _39.cfe, _37_Lucene41_0.pos, _37_Lucene41_0.doc, _37_Lucene41_0.tim, _37.nvm, _37.fnm, segments_2a, _39.cfs, _37_2.del, _38.cfe, _39.si, _37.fdx, _37.fdt]
+Jun 22, 2015 1:52:26 PM org.apache.solr.core.SolrDeletionPolicy updateCommits
+INFO: newest commit = 82[_37_Lucene41_0.tip, _38.cfs, _37.nvd, _37.si, _38.si, _39.cfe, _37_Lucene41_0.pos, _37_Lucene41_0.doc, _37_Lucene41_0.tim, _37.nvm, _37.fnm, segments_2a, _39.cfs, _37_2.del, _38.cfe, _39.si, _37.fdx, _37.fdt]
+Jun 22, 2015 1:52:26 PM org.apache.solr.search.SolrIndexSearcher <init>
+INFO: Opening Searcher@42e4a4d7 main
+Jun 22, 2015 1:52:26 PM org.apache.solr.handler.component.SpellCheckComponent$SpellCheckerListener buildSpellIndex
+INFO: Building spell index for spell checker: default
+Jun 22, 2015 1:52:26 PM org.apache.solr.update.DirectUpdateHandler2 commit
+INFO: end_commit_flush
+Jun 22, 2015 1:52:27 PM org.apache.solr.handler.component.SpellCheckComponent$SpellCheckerListener buildSpellIndex
+INFO: Building spell index for spell checker: example
+Jun 22, 2015 1:52:27 PM org.apache.solr.core.SolrCore registerSearcher
+INFO: [development] Registered new searcher Searcher@42e4a4d7 main{StandardDirectoryReader(segments_2a:407:nrt _37(4.2):C1112/2 _38(4.2):c1 _39(4.2):c1)}
+Jun 22, 2015 1:52:27 PM org.apache.solr.update.processor.LogUpdateProcessor finish
+INFO: [development] webapp=/solr path=/update params={wt=ruby} {commit=} 0 505
+Jun 22, 2015 1:58:36 PM org.apache.solr.core.SolrCore execute
+INFO: [development] webapp=/solr path=/select params={q=cheap&defType=edismax&qf=title_text^8+description_text&fl=*+score&start=0&fq=type:Promotion&fq=id_s:[*+TO+*]&fq=subscripted_b:true&fq=-status_s:(submitted+OR+rejected)&rows=30&wt=ruby} hits=0 status=0 QTime=54 
+Jun 22, 2015 1:58:36 PM org.apache.solr.core.SolrCore execute
+INFO: [development] webapp=/solr path=/select params={q=cheap&defType=edismax&qf=title_text^8+description_text&fl=*+score&start=0&fq=type:Promotion&fq=id_s:[*+TO+*]&fq=-status_s:(submitted+OR+rejected)&rows=7&wt=ruby} hits=0 status=0 QTime=1 
+Jun 22, 2015 1:58:44 PM org.apache.solr.core.SolrCore execute
+INFO: [development] webapp=/solr path=/select params={q=car&defType=edismax&qf=title_text^8+description_text&fl=*+score&start=0&fq=type:Promotion&fq=id_s:[*+TO+*]&fq=subscripted_b:true&fq=-status_s:(submitted+OR+rejected)&rows=30&wt=ruby} hits=0 status=0 QTime=3 
+Jun 22, 2015 1:58:44 PM org.apache.solr.core.SolrCore execute
+INFO: [development] webapp=/solr path=/select params={q=car&defType=edismax&qf=title_text^8+description_text&fl=*+score&start=0&fq=type:Promotion&fq=id_s:[*+TO+*]&fq=-status_s:(submitted+OR+rejected)&rows=7&wt=ruby} hits=1 status=0 QTime=1 
+Jun 22, 2015 1:58:44 PM org.apache.solr.core.SolrCore execute
+INFO: [development] webapp=/solr path=/select params={q=car&defType=edismax&qf=title_text^8+description_text&fl=*+score&start=7&fq=type:Promotion&fq=id_s:[*+TO+*]&fq=-status_s:(submitted+OR+rejected)&rows=7&wt=ruby} hits=1 status=0 QTime=1 
+Jun 22, 2015 1:59:07 PM org.apache.solr.core.SolrCore execute
+INFO: [development] webapp=/solr path=/select params={q=car&defType=edismax&qf=title_text^8+description_text&fl=*+score&start=0&fq=type:Promotion&fq=id_s:[*+TO+*]&fq=subscripted_b:true&fq=-status_s:(submitted+OR+rejected)&rows=30&wt=ruby} hits=0 status=0 QTime=0 
+Jun 22, 2015 1:59:08 PM org.apache.solr.core.SolrCore execute
+INFO: [development] webapp=/solr path=/select params={q=car&defType=edismax&qf=title_text^8+description_text&fl=*+score&start=0&fq=type:Promotion&fq=id_s:[*+TO+*]&fq=-status_s:(submitted+OR+rejected)&rows=7&wt=ruby} hits=1 status=0 QTime=1 
+Jun 22, 2015 1:59:08 PM org.apache.solr.core.SolrCore execute
+INFO: [development] webapp=/solr path=/select params={q=car&defType=edismax&qf=title_text^8+description_text&fl=*+score&start=7&fq=type:Promotion&fq=id_s:[*+TO+*]&fq=-status_s:(submitted+OR+rejected)&rows=7&wt=ruby} hits=1 status=0 QTime=1 
+Jun 22, 2015 2:05:46 PM org.apache.solr.update.processor.LogUpdateProcessor finish
+INFO: [development] webapp=/solr path=/update params={wt=ruby} {add=[Promotion 55774b754572697f6a080000 (1504702729476374528)]} 0 17
+Jun 22, 2015 2:05:46 PM org.apache.solr.update.DirectUpdateHandler2 commit
+INFO: start commit{,optimize=false,openSearcher=true,waitSearcher=true,expungeDeletes=false,softCommit=false,prepareCommit=false}
+Jun 22, 2015 2:05:47 PM org.apache.solr.core.SolrDeletionPolicy onCommit
+INFO: SolrDeletionPolicy.onCommit: commits:num=2
+	commit{dir=NRTCachingDirectory(org.apache.lucene.store.NIOFSDirectory@/Users/mover/Documents/projects/gamp-api/solr/development/data/index lockFactory=org.apache.lucene.store.NativeFSLockFactory@25fb5d52; maxCacheMB=48.0 maxMergeSizeMB=4.0),segFN=segments_2a,generation=82,filenames=[_37_Lucene41_0.tip, _38.cfs, _37.nvd, _37.si, _38.si, _39.cfe, _37_Lucene41_0.pos, _37_Lucene41_0.doc, _37_Lucene41_0.tim, _37.nvm, _37.fnm, segments_2a, _39.cfs, _37_2.del, _38.cfe, _39.si, _37.fdx, _37.fdt]
+	commit{dir=NRTCachingDirectory(org.apache.lucene.store.NIOFSDirectory@/Users/mover/Documents/projects/gamp-api/solr/development/data/index lockFactory=org.apache.lucene.store.NativeFSLockFactory@25fb5d52; maxCacheMB=48.0 maxMergeSizeMB=4.0),segFN=segments_2b,generation=83,filenames=[_3a.si, _37_Lucene41_0.tip, _38.cfs, _37.nvd, _37.si, _38.si, _3a.cfe, _39.cfe, _37_Lucene41_0.pos, _3a.cfs, _37_3.del, segments_2b, _37_Lucene41_0.doc, _37_Lucene41_0.tim, _37.nvm, _37.fnm, _39.cfs, _38.cfe, _39.si, _37.fdx, _37.fdt]
+Jun 22, 2015 2:05:47 PM org.apache.solr.core.SolrDeletionPolicy updateCommits
+INFO: newest commit = 83[_3a.si, _37_Lucene41_0.tip, _38.cfs, _37.nvd, _37.si, _38.si, _3a.cfe, _39.cfe, _37_Lucene41_0.pos, _3a.cfs, _37_3.del, segments_2b, _37_Lucene41_0.doc, _37_Lucene41_0.tim, _37.nvm, _37.fnm, _39.cfs, _38.cfe, _39.si, _37.fdx, _37.fdt]
+Jun 22, 2015 2:05:47 PM org.apache.solr.search.SolrIndexSearcher <init>
+INFO: Opening Searcher@83bf572 main
+Jun 22, 2015 2:05:47 PM org.apache.solr.handler.component.SpellCheckComponent$SpellCheckerListener buildSpellIndex
+INFO: Building spell index for spell checker: default
+Jun 22, 2015 2:05:47 PM org.apache.solr.update.DirectUpdateHandler2 commit
+INFO: end_commit_flush
+Jun 22, 2015 2:05:47 PM org.apache.solr.handler.component.SpellCheckComponent$SpellCheckerListener buildSpellIndex
+INFO: Building spell index for spell checker: example
+Jun 22, 2015 2:05:47 PM org.apache.solr.core.SolrCore registerSearcher
+INFO: [development] Registered new searcher Searcher@83bf572 main{StandardDirectoryReader(segments_2b:411:nrt _37(4.2):C1112/3 _38(4.2):c1 _39(4.2):c1 _3a(4.2):c1)}
+Jun 22, 2015 2:05:47 PM org.apache.solr.update.processor.LogUpdateProcessor finish
+INFO: [development] webapp=/solr path=/update params={wt=ruby} {commit=} 0 533
+Jun 22, 2015 2:08:15 PM org.apache.solr.core.SolrCore execute
+INFO: [development] webapp=/solr path=/select params={q=fina&defType=edismax&qf=title_text^8+description_text&fl=*+score&start=0&fq=type:Promotion&fq=id_s:[*+TO+*]&fq=subscripted_b:true&fq=-status_s:(submitted+OR+rejected)&rows=30&wt=ruby} hits=2 status=0 QTime=8 
+Jun 22, 2015 2:08:16 PM org.apache.solr.core.SolrCore execute
+INFO: [development] webapp=/solr path=/select params={q=fina&defType=edismax&qf=title_text^8+description_text&fl=*+score&start=0&fq=type:Promotion&fq=-id_s:(55617ec6457269b950d30000+OR+55617ec5457269b950be0000)&fq=-status_s:(submitted+OR+rejected)&rows=7&wt=ruby} hits=9 status=0 QTime=1 
+Jun 22, 2015 2:08:19 PM org.apache.solr.core.SolrCore execute
+INFO: [development] webapp=/solr path=/select params={q=fina&defType=edismax&qf=title_text^8+description_text&fl=*+score&start=7&fq=type:Promotion&fq=-id_s:(55617ec6457269b950d30000+OR+55617ec5457269b950be0000)&fq=-status_s:(submitted+OR+rejected)&rows=7&wt=ruby} hits=9 status=0 QTime=2 
+Jun 22, 2015 2:08:28 PM org.apache.solr.core.SolrCore execute
+INFO: [development] webapp=/solr path=/select params={q=fina+or+car&defType=edismax&qf=name_text^10+keywords_text^5+title_text^8+email_text+description_text+address_text+phone_text&fl=*+score&start=0&fq=type:(User+OR+Promotion)&fq=id_s:[*+TO+*]&fq=subscripted_b:true&fq=((class_name:User+AND+roles_sm:customer)+OR+(class_name:Promotion+AND+-status_s:(submitted+OR+rejected)))&rows=30&wt=ruby} hits=2 status=0 QTime=3 
+Jun 22, 2015 2:08:28 PM org.apache.solr.core.SolrCore execute
+INFO: [development] webapp=/solr path=/select params={q=fina+or+car&defType=edismax&qf=name_text^10+keywords_text^5+title_text^8+email_text+description_text+address_text+phone_text&fl=*+score&start=0&fq=type:(User+OR+Promotion)&fq=-id_s:(55617ec6457269b950d30000+OR+55617ec5457269b950be0000)&fq=((class_name:User+AND+roles_sm:customer)+OR+(class_name:Promotion+AND+-status_s:(submitted+OR+rejected)))&rows=7&wt=ruby} hits=11 status=0 QTime=6 
+Jun 22, 2015 2:10:14 PM org.apache.solr.core.SolrCore execute
+INFO: [development] webapp=/solr path=/select params={q=car&defType=edismax&qf=title_text^8+description_text&fl=*+score&start=0&fq=type:Promotion&fq=id_s:[*+TO+*]&fq=subscripted_b:true&fq=-status_s:(submitted+OR+rejected)&rows=30&wt=ruby} hits=0 status=0 QTime=21 
+Jun 22, 2015 2:10:14 PM org.apache.solr.core.SolrCore execute
+INFO: [development] webapp=/solr path=/select params={q=car&defType=edismax&qf=title_text^8+description_text&fl=*+score&start=0&fq=type:Promotion&fq=id_s:[*+TO+*]&fq=-status_s:(submitted+OR+rejected)&rows=7&wt=ruby} hits=1 status=0 QTime=4 
+Jun 22, 2015 2:10:14 PM org.apache.solr.core.SolrCore execute
+INFO: [development] webapp=/solr path=/select params={q=car&defType=edismax&qf=title_text^8+description_text&fl=*+score&start=7&fq=type:Promotion&fq=id_s:[*+TO+*]&fq=-status_s:(submitted+OR+rejected)&rows=7&wt=ruby} hits=1 status=0 QTime=1 
+Jun 22, 2015 2:10:51 PM org.apache.solr.core.SolrCore execute
+INFO: [development] webapp=/solr path=/select params={q=fina&defType=edismax&qf=title_text^8+description_text&fl=*+score&start=0&fq=type:Promotion&fq=id_s:[*+TO+*]&fq=subscripted_b:true&fq=-status_s:(submitted+OR+rejected)&rows=30&wt=ruby} hits=2 status=0 QTime=1 
+Jun 22, 2015 2:10:52 PM org.apache.solr.core.SolrCore execute
+INFO: [development] webapp=/solr path=/select params={q=fina&defType=edismax&qf=title_text^8+description_text&fl=*+score&start=0&fq=type:Promotion&fq=-id_s:(55617ec6457269b950d30000+OR+55617ec5457269b950be0000)&fq=-status_s:(submitted+OR+rejected)&rows=7&wt=ruby} hits=9 status=0 QTime=0 
+Jun 22, 2015 2:10:55 PM org.apache.solr.core.SolrCore execute
+INFO: [development] webapp=/solr path=/select params={q=fina&defType=edismax&qf=title_text^8+description_text&fl=*+score&start=7&fq=type:Promotion&fq=-id_s:(55617ec6457269b950d30000+OR+55617ec5457269b950be0000)&fq=-status_s:(submitted+OR+rejected)&rows=7&wt=ruby} hits=9 status=0 QTime=1 
+Jun 22, 2015 2:10:58 PM org.apache.solr.core.SolrCore execute
+INFO: [development] webapp=/solr path=/select params={q=fina&defType=edismax&qf=title_text^8+description_text&fl=*+score&start=14&fq=type:Promotion&fq=-id_s:(55617ec6457269b950d30000+OR+55617ec5457269b950be0000)&fq=-status_s:(submitted+OR+rejected)&rows=7&wt=ruby} hits=9 status=0 QTime=1 
+Jun 22, 2015 2:11:55 PM org.apache.solr.core.SolrCore execute
+INFO: [development] webapp=/solr path=/select params={q=fina+or+cheap&defType=edismax&qf=name_text^10+keywords_text^5+title_text^8+email_text+description_text+address_text+phone_text&fl=*+score&start=0&fq=type:(User+OR+Promotion)&fq=id_s:[*+TO+*]&fq=subscripted_b:true&fq=((class_name:User+AND+roles_sm:customer)+OR+(class_name:Promotion+AND+-status_s:(submitted+OR+rejected)))&rows=30&wt=ruby} hits=4 status=0 QTime=1 
+Jun 22, 2015 2:11:56 PM org.apache.solr.core.SolrCore execute
+INFO: [development] webapp=/solr path=/select params={q=fina+or+cheap&defType=edismax&qf=name_text^10+keywords_text^5+title_text^8+email_text+description_text+address_text+phone_text&fl=*+score&start=0&fq=type:(User+OR+Promotion)&fq=-id_s:(5543f524457269e0ab580000+OR+55617ec6457269b950d30000+OR+5543f520457269e0ab440000+OR+55617ec5457269b950be0000)&fq=((class_name:User+AND+roles_sm:customer)+OR+(class_name:Promotion+AND+-status_s:(submitted+OR+rejected)))&rows=7&wt=ruby} hits=22 status=0 QTime=5 
+Jun 22, 2015 2:12:35 PM org.apache.solr.core.SolrCore execute
+INFO: [development] webapp=/solr path=/select params={q=wlgjlwe&defType=edismax&qf=title_text^8+description_text&fl=*+score&start=0&fq=type:Promotion&fq=id_s:[*+TO+*]&fq=subscripted_b:true&fq=-status_s:(submitted+OR+rejected)&rows=30&wt=ruby} hits=0 status=0 QTime=1 
+Jun 22, 2015 2:12:35 PM org.apache.solr.core.SolrCore execute
+INFO: [development] webapp=/solr path=/select params={q=wlgjlwe&defType=edismax&qf=title_text^8+description_text&fl=*+score&start=0&fq=type:Promotion&fq=-id_s:(5543f524457269e0ab580000+OR+55617ec6457269b950d30000+OR+5543f520457269e0ab440000+OR+55617ec5457269b950be0000)&fq=-status_s:(submitted+OR+rejected)&rows=7&wt=ruby} hits=0 status=0 QTime=1 
+Jun 22, 2015 2:12:35 PM org.apache.solr.core.SolrCore execute
+INFO: [development] webapp=/solr path=/select params={q=wlgjlwe&defType=edismax&qf=title_text^8+description_text&fl=*+score&start=0&fq=type:Promotion&fq=id_s:[*+TO+*]&fq=-status_s:(submitted+OR+rejected)&rows=7&wt=ruby} hits=0 status=0 QTime=2 
+Jun 22, 2015 2:13:48 PM org.apache.solr.core.SolrCore execute
+INFO: [development] webapp=/solr path=/select params={q=wlgjlwe&defType=edismax&qf=name_text^10+keywords_text^5+title_text^8+email_text+description_text+address_text+phone_text&fl=*+score&start=0&fq=type:(User+OR+Promotion)&fq=id_s:[*+TO+*]&fq=subscripted_b:true&fq=((class_name:User+AND+roles_sm:customer)+OR+(class_name:Promotion+AND+-status_s:(submitted+OR+rejected)))&rows=30&wt=ruby} hits=0 status=0 QTime=3 
+Jun 22, 2015 2:13:48 PM org.apache.solr.core.SolrCore execute
+INFO: [development] webapp=/solr path=/select params={q=wlgjlwe&defType=edismax&qf=name_text^10+keywords_text^5+title_text^8+email_text+description_text+address_text+phone_text&fl=*+score&start=0&fq=type:(User+OR+Promotion)&fq=id_s:[*+TO+*]&fq=((class_name:User+AND+roles_sm:customer)+OR+(class_name:Promotion+AND+-status_s:(submitted+OR+rejected)))&rows=7&wt=ruby} hits=0 status=0 QTime=3 
+Jun 22, 2015 2:13:58 PM org.apache.solr.core.SolrCore execute
+INFO: [development] webapp=/solr path=/select params={q=car&defType=edismax&qf=name_text^10+keywords_text^5+title_text^8+email_text+description_text+address_text+phone_text&fl=*+score&start=0&fq=type:(User+OR+Promotion)&fq=id_s:[*+TO+*]&fq=subscripted_b:true&fq=((class_name:User+AND+roles_sm:customer)+OR+(class_name:Promotion+AND+-status_s:(submitted+OR+rejected)))&rows=30&wt=ruby} hits=0 status=0 QTime=1 
+Jun 22, 2015 2:13:58 PM org.apache.solr.core.SolrCore execute
+INFO: [development] webapp=/solr path=/select params={q=car&defType=edismax&qf=name_text^10+keywords_text^5+title_text^8+email_text+description_text+address_text+phone_text&fl=*+score&start=0&fq=type:(User+OR+Promotion)&fq=id_s:[*+TO+*]&fq=((class_name:User+AND+roles_sm:customer)+OR+(class_name:Promotion+AND+-status_s:(submitted+OR+rejected)))&rows=7&wt=ruby} hits=2 status=0 QTime=2 
+Jun 22, 2015 2:13:59 PM org.apache.solr.core.SolrCore execute
+INFO: [development] webapp=/solr path=/select params={q=car&defType=edismax&qf=name_text^10+keywords_text^5+title_text^8+email_text+description_text+address_text+phone_text&fl=*+score&start=7&fq=type:(User+OR+Promotion)&fq=id_s:[*+TO+*]&fq=((class_name:User+AND+roles_sm:customer)+OR+(class_name:Promotion+AND+-status_s:(submitted+OR+rejected)))&rows=7&wt=ruby} hits=2 status=0 QTime=1 
+Jun 22, 2015 3:41:36 PM org.apache.solr.update.processor.LogUpdateProcessor finish
+INFO: [development] webapp=/solr path=/update params={wt=ruby} {add=[Promotion 558864ee457269e43800000a (1504708758625845248)]} 0 15
+Jun 22, 2015 3:41:36 PM org.apache.solr.update.DirectUpdateHandler2 commit
+INFO: start commit{,optimize=false,openSearcher=true,waitSearcher=true,expungeDeletes=false,softCommit=false,prepareCommit=false}
+Jun 22, 2015 3:41:36 PM org.apache.solr.core.SolrDeletionPolicy onCommit
+INFO: SolrDeletionPolicy.onCommit: commits:num=2
+	commit{dir=NRTCachingDirectory(org.apache.lucene.store.NIOFSDirectory@/Users/mover/Documents/projects/gamp-api/solr/development/data/index lockFactory=org.apache.lucene.store.NativeFSLockFactory@25fb5d52; maxCacheMB=48.0 maxMergeSizeMB=4.0),segFN=segments_2b,generation=83,filenames=[_3a.si, _37_Lucene41_0.tip, _38.cfs, _37.nvd, _37.si, _38.si, _3a.cfe, _39.cfe, _37_Lucene41_0.pos, _3a.cfs, _37_3.del, segments_2b, _37_Lucene41_0.doc, _37_Lucene41_0.tim, _37.nvm, _37.fnm, _39.cfs, _38.cfe, _39.si, _37.fdx, _37.fdt]
+	commit{dir=NRTCachingDirectory(org.apache.lucene.store.NIOFSDirectory@/Users/mover/Documents/projects/gamp-api/solr/development/data/index lockFactory=org.apache.lucene.store.NativeFSLockFactory@25fb5d52; maxCacheMB=48.0 maxMergeSizeMB=4.0),segFN=segments_2c,generation=84,filenames=[_3c.cfe, _3b.fdt, _3b.fdx, _3c.si, _3b.nvd, _3b.si, segments_2c, _3c.cfs, _3b_Lucene41_0.tim, _3b_Lucene41_0.doc, _3b_Lucene41_0.tip, _3b.nvm, _3b.fnm, _3b_Lucene41_0.pos]
+Jun 22, 2015 3:41:36 PM org.apache.solr.core.SolrDeletionPolicy updateCommits
+INFO: newest commit = 84[_3c.cfe, _3b.fdt, _3b.fdx, _3c.si, _3b.nvd, _3b.si, segments_2c, _3c.cfs, _3b_Lucene41_0.tim, _3b_Lucene41_0.doc, _3b_Lucene41_0.tip, _3b.nvm, _3b.fnm, _3b_Lucene41_0.pos]
+Jun 22, 2015 3:41:36 PM org.apache.solr.search.SolrIndexSearcher <init>
+INFO: Opening Searcher@71343515 main
+Jun 22, 2015 3:41:36 PM org.apache.solr.handler.component.SpellCheckComponent$SpellCheckerListener buildSpellIndex
+INFO: Building spell index for spell checker: default
+Jun 22, 2015 3:41:36 PM org.apache.solr.update.DirectUpdateHandler2 commit
+INFO: end_commit_flush
+Jun 22, 2015 3:41:37 PM org.apache.solr.handler.component.SpellCheckComponent$SpellCheckerListener buildSpellIndex
+INFO: Building spell index for spell checker: example
+Jun 22, 2015 3:41:37 PM org.apache.solr.core.SolrCore registerSearcher
+INFO: [development] Registered new searcher Searcher@71343515 main{StandardDirectoryReader(segments_2c:414:nrt _3b(4.2):C1112 _3c(4.2):c1)}
+Jun 22, 2015 3:41:37 PM org.apache.solr.update.processor.LogUpdateProcessor finish
+INFO: [development] webapp=/solr path=/update params={wt=ruby} {commit=} 0 356

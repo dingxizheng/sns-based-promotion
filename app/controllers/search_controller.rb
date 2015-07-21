@@ -27,7 +27,7 @@ class SearchController < ApplicationController
 			end
 
 			if ['promotion', 'user'].any? { |i| model_names.include? i }
-				with(:location).in_radius(Rails.application.config.request_location[:lat], Rails.application.config.request_location[:long], params[:distance] || 10000) if Rails.application.config.request_location.present?
+				with(:location).in_radius(Rails.application.config.request_location[:lat], Rails.application.config.request_location[:long], params[:distance] || 10000) if Rails.application.config.request_location.present? and params[:distance]
 			end
 
 			fulltext params[:query] do			

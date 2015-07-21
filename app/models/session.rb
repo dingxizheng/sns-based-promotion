@@ -9,7 +9,7 @@ class Session
  
   # fields
   field :access_token, type: String
-  field :expire_at, type: DateTime, default: DateTime.now + 1.hours
+  field :expire_at, type: DateTime, default: DateTime.now + 24.hours
 
   # relations
   belongs_to :user
@@ -22,8 +22,9 @@ class Session
   	DateTime.now > self.expire_at
   end
 
+  # when a valid token is received, refresh the session
   def refresh
-    self.expire_at = DateTime.now + 1.hours
+    self.expire_at = DateTime.now + 24.hours
   end
  
   private

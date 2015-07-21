@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+    <p>
+      Hi, Administrator<br>
+      <%= @promotion.customer.name %> has requested for notifing all users of the following 
+      promotion
+    </p>
+    <p>
+    <h4>Promotion:</h4>
+    <div>title: <%= @promotion.title %></div>
+    <div>description: <%= @promotion.description %></div>
+    <div>start at: <%= @promotion.start_at.strftime('%d.%m.%y %H:%M') %></div>
+    <div>expire at: <%= @promotion.expire_at.strftime('%d.%m.%y %H:%M') %></div>
+    </p>
+
+    <p>
+    <h4>Customer:</h4>
+    <div>name: <%= @promotion.customer.name %></div>
+    <div>address: <%= @promotion.customer.address %></div>
+    <div>phone: <%= @promotion.customer.phone %></div>
+    <div>email: <%= @promotion.customer.email %></div>
+    </p>
+
+    <p>
+      <a href="<%= @approve_link %>">click here to send out the notification</a>
+    </p>
+</body>
+</html>

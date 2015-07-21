@@ -15,6 +15,8 @@ class User
   # filters
   before_create :encrypt_password, :set_default_role
 
+  before_save :set_role
+
   # fields
   field :name, type: String
   field :email, type: String
@@ -25,6 +27,15 @@ class User
   field :keywords, type: Array, default: []
   field :coordinates, type: Array
   field :guest, type: Boolean, default: false
+  field :hours, type: Hash, default: {
+    :Monday => { :from => '9:00', :to => '17:00' },
+    :Tuesday => { :from => '9:00', :to => '17:00' },
+    :Wednesday => { :from => '9:00', :to => '17:00' },
+    :Thursday => { :from => '9:00', :to => '17:00' },
+    :Friday => { :from => '9:00', :to => '17:00' }
+  }
+
+  index({ coordinates: "2d" })
   
   # relations
   has_many :reviews, inverse_of: :customer, class_name: 'Review'
@@ -106,7 +117,7 @@ class User
   def set_logo(upload)
     # create a new image record
     logo = Image.new({ :user_id => self.get_id })
-    if not logo.store(upload) or not logo.save
+    if not logo.store(upload) and not logo.save
       self.errors.add :logo, upload.original_filename + ': could not set logo.'
       return false
     end
@@ -118,7 +129,7 @@ class User
   def add_photo(upload)
     # create a new image record
     image = Image.new({ :user_id => self.get_id })
-    if not image.store(upload) or not image.save
+    if not image.store(upload) and not image.save
       self.errors.add :photos, upload.original_filename + ': could not add image.'
       return false
     end
@@ -131,9 +142,18 @@ class User
     self.add_role :user
   end
 
+  # if user has completed the profile, then mark it as a business user
+  def set_role
+    if not self.has_role? :customer
+      unless self.address.nil? or self.phone.nil? or self.description.nil?
+        self.add_role :customer
+      end
+    end
+  end
+
   def reset_password
-    self.password = ('0'..'z').to_a.shuffle.first(5).join
-    self.encrypt_password
+    self.password = ('0'..'9').to_a.shuffle.first(5).join
+    # self.encrypt_password
   end
 
   # is admin
@@ -143,14 +163,13 @@ class User
 
   # send email after a user creation
   def send_email
-    UserMailer.welcome(self).deliver_later!(wait: 10.seconds)
-    UserMailer.new_user(self).deliver_later!(wait: 10.seconds)
+    UserMailer.welcome(self).deliver_now!
+    UserMailer.new_user(self).deliver_now!
   end
-
-  private
-  	# encrypt password 
-  	def encrypt_password
-  		self.password = Digest::SHA2.hexdigest(self.password)
-  	end
+ 
+	# encrypt password 
+	def encrypt_password
+		self.password = Digest::SHA2.hexdigest(self.password)
+	end
 
 end

@@ -40,23 +40,44 @@ class ApplicationController < ActionController::API
 				:long => params[:long]
 			}
 		# get the location info from request ip
-		elsif request.safe_location.latitude != 0 or request.safe_location.longitude != 0
-			Rails.application.config.request_location = {
-				:lat => request.safe_location.latitude,
-				:long => request.safe_location.longitude
-			}
+		elsif request.safe_location.present?
+			if request.safe_location.latitude != 0 or request.safe_location.longitude != 0
+				Rails.application.config.request_location = {
+					:lat => request.safe_location.latitude,
+					:long => request.safe_location.longitude
+				}
+			end
 		end
 		# lat=48.42595667440752&long=-89.24361891656248
 	end
 
+	def get_location
+		Rails.application.config.request_location
+	end
+
 	# params should be skipped in conditional query
 	def params_to_skip 
-		[:apitoken, :lat, :long, :page, :per_page]
+		[:apitoken, :lat, :long, :page, :per_page, :within]
+	end
+
+	# filter the result by distance
+	def filter_and_sort_by_distance(scope, query_parameters)
+		if query_parameters[:within] and get_location
+			scope.near([get_location[:lat], get_location[:long]], Float(query_parameters[:within]), :units => :km)
+		else
+			scope
+		end
 	end
 
 	# build mongoid query
-	# 1. id=123,,345,,678  ===> id in [123, 345, 678]
-	# 2. created=<=1023456 ===> created <= 1023456  
+	# 1. id=123,,345,,678  
+	# 			===> id in [123, 345, 678]
+	# 2. created=<=1023456 
+	# 			===> created <= 1023456  
+	# 3. filtering by fields' existence 
+	# 			===> filed=!=null or filed=null
+	# 4. to query item within a distance to a certain point 
+	# 			===>  within=5 (within 5 kms)
 	def query_by_conditions(scope, query_parameters)
 		puts query_parameters
 		tempResult = scope
@@ -66,7 +87,7 @@ class ApplicationController < ActionController::API
 
 		query_parameters.except!(*([:sortBy] + params_to_skip)).each do |key, value|
 			field = key.to_sym
-
+			
 			if value.start_with? '<='
 				tempResult = tempResult.lte(field => value[2..-1])
 			elsif value.start_with? '<'
@@ -76,9 +97,17 @@ class ApplicationController < ActionController::API
 			elsif value.start_with? '>'
 				tempResult = tempResult.gt(field => value[1..-1])
 			elsif value.start_with? '!='
-				tempResult = tempResult.nin(field => value[2..-1].split(',,'))
+				if value == "!=null"
+					tempResult = tempResult.where(field.exists => false)
+				else
+					tempResult = tempResult.nin(field => value[2..-1].split(',,'))
+				end
 			else
-				tempResult = tempResult.in(field => value.split(',,'))
+				if value == "null"
+					tempResult = tempResult.where(field.exists => true)
+				else
+					tempResult = tempResult.in(field => value.split(',,'))
+				end
 			end
 
 		end
@@ -153,6 +182,7 @@ class ApplicationController < ActionController::API
 	# handle general error
 	def handle_general_error(error)
 		puts error.to_yaml
+		error.backtrace.each { |line| puts line }
 		render_error(InternalError.new(error.message));
 	end
 
