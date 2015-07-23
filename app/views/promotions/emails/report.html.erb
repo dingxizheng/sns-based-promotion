@@ -7,19 +7,28 @@
     <h3>you have a reported promotion</h3>
     <p>
       Hi, Administrator
+      you got a reported promotion to review
     </p>
+
     <p>
-    <h4>Promotion:</h4>
-    <br>
-    <div>title: <%= @promotion.title %></div>
-    <div>description: <%= @promotion.description %></div>
-    <div>start at: <%= @promotion.start_at.strftime('%d.%m.%y %H:%M') %></div>
-    <div>expire at: <%= @promotion.expire_at.strftime('%d.%m.%y %H:%M') %></div>
+      <h4>Promotion:</h4>
+      <div>title: <%= @promotion.title %></div>
+      <div>description: <%= @promotion.description %></div>
+      <div>start at: <%= @promotion.start_at.strftime('%d.%m.%y %H:%M') %></div>
+      <div>expire at: <%= @promotion.expire_at.strftime('%d.%m.%y %H:%M') %></div>
+    </p>
+
+    <p>
+      <h4>Customer:</h4>
+      <div>customer: <%= @promotion.customer.name %></div>
+      <div>email: <%= @promotion.customer.email %></div>
+      <div>phone: <%= @promotion.customer.phone %></div>
+      <div>address: <%= @promotion.customer.address %></div>
+      <div>paid customer?: <%= @promotion.subscripted? %></div>
     </p>
 
     <p>
     <h4>Reason:</h4>
-    <br>
     <div><%= @reason %></div>
     </p>
 

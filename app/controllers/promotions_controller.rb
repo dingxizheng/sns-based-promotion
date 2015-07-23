@@ -124,8 +124,12 @@ class PromotionsController < ApplicationController
   def notify_by_admin_token
     if Token.find(params[:admin_token]).present?
 
+      # since sending notifications is a time consuming task, 
+      # it will be wraped and executed in a seperate thread 
       Thread.start {
+        #####################################
         # ios notifications
+        #####################################
         Device.where({:os => 'ios'}).each { |device|
           notification = Houston::Notification.new(device: device.token)
           notification.alert = @promotion.customer.name + ": " + @promotion.title + "\n" + @promotion.description
@@ -138,19 +142,24 @@ class PromotionsController < ApplicationController
           APNS.get.push(notification)
         }
 
+        ####################################
         # android notifications
+        ####################################
+        #
+        # gather all the android devices
         devices = Device.where({ :os => 'android' }).map { |device|
           device.token
         }
 
+        # send notifications to all dndroid devices
         response = GCM.get.send(devices, {
+          # the date will be pushed to remote 
           data: { 
             title: 'new promotion',
             message: @promotion.customer.name + ": " + @promotion.title + "\n" + @promotion.description,
             promotion_id: @promotion.get_id, 
             user_id: @promotion.customer.get_id
           },
-
           collapse_key: 'vicinity_deals'
         })
 

@@ -21,7 +21,7 @@ class PromotionPolicy < ApplicationPolicy
     user.has_role? :moderator, record
   end
 
-  def destory?
+  def destroy?
     user.has_role? :moderator, record
   end
 

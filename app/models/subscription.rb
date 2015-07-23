@@ -112,7 +112,7 @@ class Subscription
   end
 
   def send_email
-    SubscriptionMailer.notify_admin(self).deliver_later!(wait: 10.seconds)
+    SubscriptionMailer.notify_admin(self).deliver_now!
   end
 
 end

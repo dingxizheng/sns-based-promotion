@@ -7,16 +7,18 @@
     <h3>new promotion request from <span style="color: blue"><%= @promotion.customer.name  %></span></h3>
     <p>
       Hi, Administrator
+      <br>
+      <span style="color: blue"><%= @promotion.customer.name  %></span> has added a new promotion <br>
     </p>
     <p>
-    <div><span style="color: blue"><%= @promotion.customer.name  %></span> has added a new promotion <br>
-      <%= @promotion.title %>
-    </div>
+    <h4>Promotion:</h4>
+    <div>title: <%= @promotion.title %></div>
     <div>description: <%= @promotion.description %></div>
     <div>start at: <%= @promotion.start_at.strftime('%d.%m.%y %H:%M') %></div>
     <div>expire at: <%= @promotion.expire_at.strftime('%d.%m.%y %H:%M') %></div>
   </p>
   <p>
+    <h4>Customer:</h4>
     <div>customer: <%= @promotion.customer.name %></div>
     <div>email: <%= @promotion.customer.email %></div>
     <div>phone: <%= @promotion.customer.phone %></div>

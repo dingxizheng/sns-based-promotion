@@ -5,7 +5,7 @@ class ApplicationController < ActionController::API
 	include Pundit
 
 	
-	before_action :send_push_notification, :get_geo_location, :load_loggedin_user
+	before_action :get_geo_location, :load_loggedin_user
 
 	# set default response format to json
 	before_filter :set_default_response_format
@@ -48,7 +48,6 @@ class ApplicationController < ActionController::API
 				}
 			end
 		end
-		# lat=48.42595667440752&long=-89.24361891656248
 	end
 
 	def get_location
@@ -79,7 +78,6 @@ class ApplicationController < ActionController::API
 	# 4. to query item within a distance to a certain point 
 	# 			===>  within=5 (within 5 kms)
 	def query_by_conditions(scope, query_parameters)
-		puts query_parameters
 		tempResult = scope
 		sortBy = query_parameters[:sortBy]
 		page = query_parameters[:page]
@@ -112,7 +110,10 @@ class ApplicationController < ActionController::API
 
 		end
 
+		# if 'sortBy' is contained in the query parameters
 		if sortBy.present? 
+			# multiple sortBy parameters must be seperated by ',,'
+			# for instance: 'sortBy=time,,name' ==> means sortBy 'time' and 'name'
 			order_by_params = sortBy.split(',,').map do |item|
 				if item.start_with? '-'
 					[item[1..-1].to_sym, -1]
@@ -123,6 +124,7 @@ class ApplicationController < ActionController::API
 			tempResult = tempResult.order_by(order_by_params)
 		end
 
+		# if pagenation is required, then return required page
 		if page.present? and per_page.present?
 			return tempResult.page(page).per(per_page)
 		else
@@ -130,19 +132,14 @@ class ApplicationController < ActionController::API
 		end
 	end
 
-	def send_push_notification
-		id = ['APA91bHrponxNLyTSmtBfmTaN_Itbne8IL2SuKw3w998-xPx4zHZ5bapk2Z0aZQdaD_qIdaovyXH-kYgnVg3kTGNNbCiDAqOGKhpExyQT7BDdI_TUEXq-F6zsZbFELujpj7bAjLeiF_nt2tqLfpRbXijMgbTEqDgFw']
-		response = GCM.get.send(id, {
-			data: { message: 'Hi, Teepan. is it still working' }
-		})
-		puts response.to_yaml
-	end
-
+	# raise an unauthorized error if no session created or session expired
+	# this function is called wherever is restricted for accessing
 	def restrict_access
-		# raise an unauthorized error if no session created or session expired
 		raise UnauthenticatedError.new unless not @session.nil? and not @session.expire?
 	end
 
+	# for every request, try to find the logged in user from the access token
+	# , and also refresh the session
 	def load_loggedin_user
 		@session = Session.find_by(access_token: loads_apikey)
 		@session.refresh if not @session.nil? and not @session.expire?
