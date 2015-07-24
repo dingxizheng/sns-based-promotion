@@ -95,7 +95,9 @@ class ApplicationController < ActionController::API
 
 			logger.tagged('QUERY') { logger.info "key: #{key} , value: #{value}"}
 			
-			if value.start_with? '<='
+			if value.nil?
+				pass
+			elsif value.start_with? '<='
 				tempResult = tempResult.lte(field => value[2..-1])
 			elsif value.start_with? '<'
 				tempResult = tempResult.lt(field => value[1..-1])
