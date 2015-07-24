@@ -96,7 +96,7 @@ class ApplicationController < ActionController::API
 			logger.tagged('QUERY') { logger.info "key: #{key} , value: #{value}"}
 			
 			if value.nil?
-				pass
+				logger.tagged('QUERY') { logger.info "query value is empty."}
 			elsif value.start_with? '<='
 				tempResult = tempResult.lte(field => value[2..-1])
 			elsif value.start_with? '<'
