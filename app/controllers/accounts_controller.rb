@@ -5,14 +5,11 @@ class AccountsController < ApplicationController
 
 	# POST /signin
 	def signin
-		@user = User.find_by(email: params[:email])
-
+		@user = User.find_by(email: params[:email]) 
 		# if user is not found, raise a 400 error
-		raise BadRequestError.new('user does not exist.') unless not @user.nil?
-
+		raise BadRequestError.new('user does not exist') unless not @user.nil?
 		# if password does not match, raise a 400 error
-		raise BadRequestError.new('invalid password.') unless @user.password_match?(params[:password])
-
+		raise BadRequestError.new('wrong password') unless @user.password_match?(params[:password])
 		@user.session.destroy unless not @user.session.presence
 
 		# otherwise create a new seession
@@ -20,7 +17,6 @@ class AccountsController < ApplicationController
 		session.save
 		session.refresh
 		@user.session = session
-
 		render :partial => 'users/session', :locals => { :session => session }
 
 	end
@@ -40,6 +36,7 @@ class AccountsController < ApplicationController
 
   	# GET /me
 	def me
+		# get current user's information
 		render :partial => 'users/session', :locals => { :session => @session }
 	end
 

@@ -51,6 +51,9 @@ GEM
       mongoid (>= 3.0, < 5)
     erubis (2.7.0)
     eventmachine (1.0.7)
+    exception_notification (4.1.1)
+      actionmailer (>= 3.0.4)
+      activesupport (>= 3.0.4)
     gcm (0.1.0)
       httparty
       json
@@ -166,6 +169,7 @@ DEPENDENCIES
   bson
   bson_ext
   delayed_job_mongoid
+  exception_notification
   gcm
   geocoder
   houston

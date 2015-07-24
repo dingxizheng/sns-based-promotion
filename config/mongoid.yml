@@ -6,8 +6,8 @@ development:
       hosts:
         - localhost:27017
         # - ec2-52-26-67-69.us-west-2.compute.amazonaws.com:27017
-      # username: vicinity
-      # password: vicinity
+      # username: <%= ENV['MONGO_USERNAME'] %>
+      # password: <%= ENV['MONGO_PASSWORD'] %>
       options:
         # Change the default write concern. (default = { w: 1 })
         # write:
@@ -56,9 +56,11 @@ development:
 test:
   sessions:
     default:
-      database: gamp_api_test
+      database: vicinity_test
       hosts:
-        - localhost:27017
+        - ec2-52-26-67-69.us-west-2.compute.amazonaws.com:27017
+      username: <%= ENV['MONGO_USERNAME'] %>
+      password: <%= ENV['MONGO_PASSWORD'] %>
       options:
         read: primary
         # In the test environment we lower the retries and retry interval to

@@ -4,7 +4,7 @@ class PromotionsController < ApplicationController
   before_action :restrict_access, only: [:create, :update, :destory, :approve, :reject]
   before_action :set_promotion, except: [:index, :create]
   before_action :set_owner, except:[]
-  
+
   # GET /promotions
   # GET /promotions.json
   def index
@@ -121,11 +121,16 @@ class PromotionsController < ApplicationController
   end
 
   # GET /promotions/1/notifybyadmintoken
+  #
+  # once the link in the email got clicked,
+  # this function will be executed.
   def notify_by_admin_token
+
+    # firstly, it checks if the current token passed with the request is valid or not
     if Token.find(params[:admin_token]).present?
 
-      # since sending notifications is a time consuming task, 
-      # it will be wraped and executed in a seperate thread 
+      # since sending notifications is a time consuming task,
+      # it will be wraped and executed in a seperate thread
       Thread.start {
         #####################################
         # ios notifications
@@ -135,32 +140,33 @@ class PromotionsController < ApplicationController
           notification.alert = @promotion.customer.name + ": " + @promotion.title + "\n" + @promotion.description
           notification.sound = "sosumi.aiff"
           notification.content_available = true
-          notification.custom_data = { 
-            promotion_id: @promotion.get_id, 
+          notification.custom_data = {
+            promotion_id: @promotion.get_id,
             user_id: @promotion.customer.get_id
           }
+          # push the notification
           APNS.get.push(notification)
         }
 
         ####################################
         # android notifications
         ####################################
-        #
-        # gather all the android devices
+
+        # gather all the android devices, and put them into a array
         devices = Device.where({ :os => 'android' }).map { |device|
           device.token
         }
 
         # send notifications to all dndroid devices
         response = GCM.get.send(devices, {
-          # the date will be pushed to remote 
-          data: { 
-            title: 'new promotion',
-            message: @promotion.customer.name + ": " + @promotion.title + "\n" + @promotion.description,
-            promotion_id: @promotion.get_id, 
-            user_id: @promotion.customer.get_id
-          },
-          collapse_key: 'vicinity_deals'
+                                  # the date will be pushed to remote
+                                  data: {
+                                    title: 'new promotion',
+                                    message: @promotion.customer.name + ": " + @promotion.title + "\n" + @promotion.description,
+                                    promotion_id: @promotion.get_id,
+                                    user_id: @promotion.customer.get_id
+                                  },
+                                  collapse_key: 'vicinity_deals'
         })
 
         puts response
@@ -174,26 +180,26 @@ class PromotionsController < ApplicationController
 
   private
 
-    # Use callbacks to share common setup or constraints between actions.
-    def set_promotion
-      @promotion = Promotion.find(params[:id] || params[:promotion_id])
-      raise NotfoundError.new('Promotion', { :id => params[:id] || params[:promotion_id] }.to_s ) unless @promotion
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_promotion
+    @promotion = Promotion.find(params[:id] || params[:promotion_id])
+    raise NotfoundError.new('Promotion', { :id => params[:id] || params[:promotion_id] }.to_s ) unless @promotion
+  end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def promotion_params
-      params.require(:promotion).permit(:title, :description, :catagory_id, :start_at, :expire_at)
-    end
+  # Never trust parameters from the scary internet, only allow the white list through.
+  def promotion_params
+    params.require(:promotion).permit(:title, :description, :catagory_id, :start_at, :expire_at)
+  end
 
-    # load owner
-    def set_owner
-      if params[:user_id]
-        @owner = User.find(params[:user_id])
-        raise NotfoundError.new('User', { :id => params[:user_id] }.to_s ) unless @owner
-      else
-        # if user_id is not provided, set it as nil by default
-        @owner = @current_user || User.new({ :guest => true })
-      end
+  # load owner
+  def set_owner
+    if params[:user_id]
+      @owner = User.find(params[:user_id])
+      raise NotfoundError.new('User', { :id => params[:user_id] }.to_s ) unless @owner
+    else
+      # if user_id is not provided, set it as nil by default
+      @owner = @current_user || User.new({ :guest => true })
     end
+  end
 
 end

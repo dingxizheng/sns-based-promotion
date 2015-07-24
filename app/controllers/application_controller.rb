@@ -14,7 +14,7 @@ class ApplicationController < ActionController::API
 	rescue_from GampError, :with => :render_error
 
 	# capture all syntax errors
-	rescue_from SyntaxError, :with => :handle_500
+	rescue_from SyntaxError, :with => :handle_general_error
 
 	# capture all general errors
 	rescue_from StandardError, :with => :handle_general_error
@@ -24,13 +24,13 @@ class ApplicationController < ActionController::API
 
 	# handle routing error and raise a routing exception
 	def handle_404
-		raise RoutingError.new(params[:path])
+		raise RoutingError.new(request.original_url)
 	end
 
 	# private methods
 	protected
 
-	# get geo information form request
+	# get geo information form the request
 	def get_geo_location
 		Rails.application.config.request_location = nil;
 		# get the location info from the request
@@ -48,10 +48,17 @@ class ApplicationController < ActionController::API
 				}
 			end
 		end
+
+		logger.tagged('LOCATION') { logger.info "#{ get_location }" } 
 	end
 
+	# get the location information
 	def get_location
 		Rails.application.config.request_location
+	end
+
+	def exception_logger
+		Rails.application.config.exception_logger
 	end
 
 	# params should be skipped in conditional query
@@ -85,6 +92,8 @@ class ApplicationController < ActionController::API
 
 		query_parameters.except!(*([:sortBy] + params_to_skip)).each do |key, value|
 			field = key.to_sym
+
+			logger.tagged('QUERY') { logger.info "key: #{key} , value: #{value}"}
 			
 			if value.start_with? '<='
 				tempResult = tempResult.lte(field => value[2..-1])
@@ -114,7 +123,8 @@ class ApplicationController < ActionController::API
 		if sortBy.present? 
 			# multiple sortBy parameters must be seperated by ',,'
 			# for instance: 'sortBy=time,,name' ==> means sortBy 'time' and 'name'
-			order_by_params = sortBy.split(',,').map do |item|
+			order_by_params = sortBy.split(',,').map do |item|		
+				logger.tagged('SORTBY') { logger.info item }	
 				if item.start_with? '-'
 					[item[1..-1].to_sym, -1]
 				else
@@ -126,6 +136,7 @@ class ApplicationController < ActionController::API
 
 		# if pagenation is required, then return required page
 		if page.present? and per_page.present?
+			logger.tagged('PAGE') { logger.info "page: #{page} , number per page: #{per_page}" }
 			return tempResult.page(page).per(per_page)
 		else
 			return tempResult.all
@@ -144,8 +155,10 @@ class ApplicationController < ActionController::API
 		@session = Session.find_by(access_token: loads_apikey)
 		@session.refresh if not @session.nil? and not @session.expire?
 		if not @session.nil? and not @session.expire?
+			logger.tagged('LOGGED IN USER') { logger.info "Name: #{@session.user.name} , Email: #{@session.user.email}" }
 			@current_user = @session.user
 		else
+			logger.tagged('LOGGED IN USER') { logger.info "None" }
 			@current_user = nil
 		end
 	end
@@ -157,6 +170,7 @@ class ApplicationController < ActionController::API
 
 	# render errors
 	def render_error(error)
+		logger.tagged('ERROR', error.status) { logger.info "#{ error.error }" }
 		render :json => error, :status => error.status
 	end
 
@@ -166,20 +180,33 @@ class ApplicationController < ActionController::API
 		@current_user ||= User.new({ :guest => true })
 	end
 
-	# handle syntax errors and response with 500 status message
-	def handle_500(error)
-		render_error(InternalError.new(error.message))
-	end
-
-	# if permission denied, send a noauthorized error with code 403
+	# if permission denied, send a unauthorized error with code 403
 	def permission_denied(error)
 		render_error(NotauthorizedError.new)
 	end
 
 	# handle general error
 	def handle_general_error(error)
-		puts error.to_yaml
-		error.backtrace.each { |line| puts line }
+		log_id = Time.now.to_s
+		logger.tagged('ERROR', 'INTERNAL') { 
+			logger.info "Type: #{ error.class.to_s }" 
+			logger.info "Message: #{ error.to_s }" 
+			logger.info "Details: Please see '[#{ error.class.to_s }] [#{ log_id }]' in *-rails-exceptions.log"
+		}
+		# log the backtrace into a seperate log file
+		exception_logger.tagged(error.class.to_s, log_id) { 
+			exception_logger.info '--------------------------------'
+			exception_logger.info '       #{ error.class.to_s  }   '
+			exception_logger.info '--------------------------------'
+			error.backtrace.each do |line|
+				exception_logger.info line
+			end
+			exception_logger.info ''
+		}
+		# email error message to the developers
+		Thread.start {
+			ExceptionNotifier.notify_exception(error, :env => request.env)
+		}
 		render_error(InternalError.new(error.message));
 	end
 

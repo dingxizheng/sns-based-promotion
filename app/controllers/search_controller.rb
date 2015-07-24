@@ -48,7 +48,25 @@ class SearchController < ApplicationController
 		end
 	end
 
-	# public search
+	# public search function
+	# it takes following parameters:
+	# 	query_scope:
+	# 	    1. this parameter tells solr app the scope which it should be searching in  
+	# 		2. this one is optional, could be left blank
+	# 		3. could be 'all', 'user' or 'promotion'
+	# 			or all combinations seperated by ',,': 'user,,promotion'
+	# 	excludes: 
+	# 		1. results should not be included the result list
+	# 		2. it should be model id's
+	# 			  for example:  excludes=1233344t,,5464564646
+	#   subscripted:
+	#   	1. if only searching in subscripted users and promotions
+	#   	2. could be nil, true or false
+	#   lat: latitude
+	#   long: longtitude
+	#   distance: results within the distance 
+	#   page:
+	#   per_page:
 	def query
 		query_scope = params[:query_scope]
 		# if query_scope is not specified, set it to 'all' by default

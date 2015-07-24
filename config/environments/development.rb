@@ -23,9 +23,9 @@ GampApi::Application.configure do
   config.action_mailer.smtp_settings = {
     address:              'smtp.gmail.com',
     port:                 587,
-    domain:               'dingxizheng@gmail.com',
-    user_name:            'dingxizheng@gmail.com',
-    password:             '1990322Kobe',
+    domain:               ENV["GMAIL_USERNAME"],
+    user_name:            ENV["GMAIL_USERNAME"],
+    password:             ENV["GMAIL_PASSWORD"],
     authentication:       'plain',
     enable_starttls_auto: true  
   }

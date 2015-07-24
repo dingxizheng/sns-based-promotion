@@ -72,8 +72,6 @@ module Mongoid
         @rater_classes = []
         return if clazzes.compact.empty?
         clazzes.each do |clazz|
-          puts 'class', clazz.to_s
-          # puts clazz.to_s
           # raise ArgumentError, "A rateable must be a class, was: #{clazz}" unless clazz.respond_to?(:new)
           @rater_classes << clazz
         end

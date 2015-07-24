@@ -42,3 +42,5 @@ gem 'houston'
 gem 'gcm'
 
 gem 'thin'
+
+gem 'exception_notification'

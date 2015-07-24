@@ -32,7 +32,22 @@ module GampApi
     # config.autoload_paths += Dir["#{config.root}/lib/modules/*"]
     
     config.active_job.queue_adapter = :delayed_job
+
+    # log mongodb queries, updates into seperate file
+    Moped.logger = Logger.new("#{ Rails.root }/log/#{ Rails.env }-mongodb.log")
+
+    # custom logger
+    config.logger = ActiveSupport::TaggedLogging.new(Logger.new("#{ Rails.root }/log/#{ Rails.env }-rails.log"))
+
+    config.exception_logger = ActiveSupport::TaggedLogging.new(Logger.new("#{ Rails.root }/log/#{ Rails.env }-rails-exceptions.log"))
     
+    config.middleware.use ExceptionNotification::Rack,
+        :email => {
+            :email_prefix         => "[VICINITY SERVER ERROR]",
+            :sender_address       => %{ "notifier"  notifier@example.com },
+            :exception_recipients => %w{ dingxizheng@gmail.com teepan.nanthakumar@gmail.com }
+        }
+
     # config.force_ssl = true
   end
 end

@@ -18,8 +18,8 @@ development:
 
 test:
   solr:
-    hostname: localhost
-    port: 8981
+    hostname: ec2-52-26-94-4.us-west-2.compute.amazonaws.com
+    port: 8080
     log_level: WARNING
     path: /solr/test
     
