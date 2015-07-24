@@ -44,7 +44,7 @@ module GampApi
     config.middleware.use ExceptionNotification::Rack,
         :email => {
             :email_prefix         => "[VICINITY SERVER ERROR]",
-            :sender_address       => %{ "notifier"  notifier@example.com },
+            :sender_address       => %{ "vicinity notifier" gampapp14@gmail.com },
             :exception_recipients => %w{ dingxizheng@gmail.com teepan.nanthakumar@gmail.com }
         }
 
