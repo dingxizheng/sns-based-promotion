@@ -30,6 +30,14 @@ class ApplicationController < ActionController::API
 	# private methods
 	protected
 
+	def default_url_options
+		if Rails.env.test? or Rails.env.production?
+			{ :host => 'rails-api-env-b4cm2bfxbr.elasticbeanstalk.com' }
+		else
+			{}
+		end
+	end
+
 	# get geo information form the request
 	def get_geo_location
 		
