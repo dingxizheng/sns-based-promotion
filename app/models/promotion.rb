@@ -13,6 +13,8 @@ class Promotion
   after_create :send_email
   before_save  :set_coordinates
 
+  after_save   :reindex_coordinates
+
   resourcify
 
   # fields
@@ -87,7 +89,16 @@ class Promotion
   end
 
   def send_email
-    PromotionMailer.notify_admin(self).deliver_now!
+    Thread.start {
+      PromotionMailer.notify_admin(self).deliver_now!
+    }
+  end
+
+  # reindex coordinates after save
+  def reindex_coordinates
+    if self.coordinates_changed?
+      Rake::Task['db:mongoid:create_indexes'].invoke
+    end
   end
 
   def set_coordinates

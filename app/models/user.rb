@@ -9,13 +9,11 @@ class User
   geocoded_by :address 
   after_validation :geocode
   after_create :send_email
+  after_save  :reindex_coordinates
+  before_create :encrypt_password, :set_default_role
+  before_save :set_role
 
   rolify
-
-  # filters
-  before_create :encrypt_password, :set_default_role
-
-  before_save :set_role
 
   # fields
   field :name, type: String
@@ -163,8 +161,17 @@ class User
 
   # send email after a user creation
   def send_email
-    UserMailer.welcome(self).deliver_now!
-    UserMailer.new_user(self).deliver_now!
+    Thread.start {
+      UserMailer.welcome(self).deliver_now!
+      UserMailer.new_user(self).deliver_now!
+    }
+  end
+
+  # reindex coordinates after save
+  def reindex_coordinates
+    if self.coordinates_changed?
+        Rake::Task['db:mongoid:create_indexes'].invoke
+    end
   end
  
 	# encrypt password 
