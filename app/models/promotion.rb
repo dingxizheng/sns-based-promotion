@@ -97,7 +97,12 @@ class Promotion
   # reindex coordinates after save
   def reindex_coordinates
     if self.coordinates_changed?
-      Rake::Task['db:mongoid:create_indexes'].invoke
+      Thread.start{
+        require 'rake'
+        Rake::Task.clear
+        Rails.application.load_tasks
+        Rake::Task['db:mongoid:create_indexes'].invoke
+      }
     end
   end
 
