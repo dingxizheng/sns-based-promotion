@@ -7,7 +7,10 @@ namespace :database do
 
   desc "add admin user"
   task add_admin_user: :environment  do
-  	load 'lib/tasks/files/add_admin_user.rb'
+  	mongoid_yml = File.join(Rails.root, "config/mongoid.yml")
+    Mongoid.load! mongoid_yml, :test
+  	puts User.all.count
+  	# load 'lib/tasks/files/add_admin_user.rb'
   end
 
 end

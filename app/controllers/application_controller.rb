@@ -32,6 +32,7 @@ class ApplicationController < ActionController::API
 
 	# get geo information form the request
 	def get_geo_location
+		
 		Rails.application.config.request_location = nil;
 		# get the location info from the request
 		if (true if Float(params[:lat]) rescue false) and (true if Float(params[:long]) rescue false)
@@ -96,7 +97,7 @@ class ApplicationController < ActionController::API
 			logger.tagged('QUERY') { logger.info "key: #{key} , value: #{value}"}
 			
 			if value.nil?
-				logger.tagged('QUERY') { logger.info "query value is empty."}
+				logger.tagged('QUERY') { logger.info "query value is empty!"}
 			elsif value.start_with? '<='
 				tempResult = tempResult.lte(field => value[2..-1])
 			elsif value.start_with? '<'

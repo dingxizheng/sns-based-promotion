@@ -1,18 +1,20 @@
 
-user1 = {
-  name: 'dingxizheng',
-  email: 'dingxizheng@gmail.com',
-  password: '1990322Kobe',
-  phone: '807-631-9942',
-  address: '16 Morbank drive',
-  description: 'The data can then be loaded with the rake db:seed',
-  keywords: ['admin', 'user']
-}
+puts ENV['MONGO_USERNAME']
 
-if not User.where({ :email => user1[:email] }).first.present?
+# user1 = {
+#   name: 'dingxizheng',
+#   email: 'dingxizheng@gmail.com',
+#   password: 'admin',
+#   phone: '807-631-9942',
+#   address: '472 Rupert Str. Thunder Bay, Ontario',
+#   description: 'The data can then be loaded with the rake db:seed',
+#   keywords: ['admin', 'user']
+# }
 
-  user = User.new(user1)
-  user.add_role :admin
-  user.save
+# if not User.where({ :email => user1[:email] }).first.present?
 
-end
+#   user = User.new(user1)
+#   user.add_role :admin
+#   user.save
+
+# end

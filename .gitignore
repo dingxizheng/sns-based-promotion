@@ -7,7 +7,14 @@
 # Ignore bundler config.
 /.bundle
 
+# Ignore the key files
+/certificates/*
+
+# Ignore system environment_files
+/config/initializers/environment_variables.rb
+
 # Ignore the default SQLite database.
+/db/*
 /db/*.sqlite3
 /db/*.sqlite3-journal
 
