@@ -1,4 +1,5 @@
 Dir["#{Rails.root}/lib/modules/mongoid_rateable/*.rb"].each {|file| require file }
+require 'rake'
 
 class Promotion
   include Mongoid::Document

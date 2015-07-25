@@ -1,4 +1,5 @@
 require 'digest'
+require 'rake' 
 
 class User
   include Mongoid::Document
