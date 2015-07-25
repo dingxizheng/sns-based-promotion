@@ -37,6 +37,8 @@ gem 'geocoder'
 
 gem 'delayed_job_mongoid'
 
+gem 'daemons'
+
 gem 'kaminari'
 
 gem 'houston'

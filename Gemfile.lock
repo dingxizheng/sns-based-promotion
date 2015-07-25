@@ -168,6 +168,7 @@ PLATFORMS
 DEPENDENCIES
   bson
   bson_ext
+  daemons
   delayed_job_mongoid
   exception_notification
   gcm
@@ -180,6 +181,7 @@ DEPENDENCIES
   pundit
   rails
   rails-api
+  rake
   rolify
   sunspot_mongoid2
   sunspot_rails
