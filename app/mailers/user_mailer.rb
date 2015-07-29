@@ -32,7 +32,11 @@ class UserMailer < ApplicationMailer
     @user = user
     @password = password
 
-    mail(to: 'dingxizheng@gmail.com',
+    emails = []
+    emails << 'dingxizheng@gmail.com' unless not endRails.env.test?
+    emails << user.email
+
+    mail(to: emails.join(','),
     subject: 'Your New Password') do |format|
       format.html { render 'users/emails/new_password.html.erb' }
     end

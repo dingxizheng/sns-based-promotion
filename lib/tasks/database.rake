@@ -1,4 +1,12 @@
 namespace :database do
+
+  desc "populate testers"
+  task :populate_testers => :environment do
+  	Mongoid.load!("config/mongoid.yml", :test)
+  	load 'lib/tasks/files/add_testers.rb'
+  	User.reindex
+  	Sunspot.commit
+  end
   
   desc "populate catagories"
   task :populate_catagory => :environment do
