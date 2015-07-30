@@ -83,11 +83,11 @@ class Subscription
   end
 
   def reindex
-    self.user.set_subscripted_status
+    # self.user.set_subscripted_status
     self.save
 
     self.user.promotions.each { |promotion|
-      promotion.set_subscripted_status
+      # promotion.set_subscripted_status
       promotion.save
     }
   end

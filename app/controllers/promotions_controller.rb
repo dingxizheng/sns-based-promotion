@@ -128,7 +128,6 @@ class PromotionsController < ApplicationController
 
     # firstly, it checks if the current token passed with the request is valid or not
     if Token.find(params[:admin_token]).present?
-
       # since sending notifications is a time consuming task,
       # it will be wraped and executed in a seperate thread
       Thread.start {
