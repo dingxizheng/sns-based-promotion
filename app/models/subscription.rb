@@ -83,8 +83,13 @@ class Subscription
   end
 
   def reindex
-    Sunspot.index! [self.user]
-    Sunspot.index! self.user.promotions
+    self.user.set_subscripted_status
+    self.save
+
+    self.user.promotions.each { |promotion|
+      promotion.set_subscripted_status
+      promotion.save
+    }
   end
 
   def get_id

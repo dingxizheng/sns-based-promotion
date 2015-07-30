@@ -11,7 +11,7 @@ class User
   after_create :send_email
   after_save  :reindex_coordinates
   before_create :encrypt_password, :set_default_role
-  before_save :set_role
+  before_save :set_role, :set_subscripted_status
 
   rolify
 
@@ -25,6 +25,7 @@ class User
   field :keywords, type: Array, default: []
   field :coordinates, type: Array
   field :guest, type: Boolean, default: false
+  field :subscripted, type: Boolean, default: false
   field :hours, type: Hash, default: {
     :Monday => { :from => '9:00', :to => '17:00' },
     :Tuesday => { :from => '9:00', :to => '17:00' },
@@ -57,9 +58,7 @@ class User
       get_id
     end
 
-    boolean :subscripted do
-      subscripted?
-    end
+    boolean :subscripted
 
     string :roles, :multiple => true do
     	roles.map{ |r| r.name }.uniq
@@ -77,6 +76,10 @@ class User
       :message => "must be a valid telephone number.",
       :with => /\(?([0-9]{3})\)?([ .-]?)([0-9]{3})\2([0-9]{4})/,
       :allow_blank => true
+
+  def set_subscripted_status
+    self.subscripted = self.subscripted?
+  end
 
   def subscripted?
     self.subscriptions.any? { |s| s.activate? }

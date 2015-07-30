@@ -23,9 +23,15 @@ namespace :database do
   desc "add admin user"
   task :add_admin_user => :environment  do
   	Mongoid.load!("config/mongoid.yml", :test)
+    # User.all.each { |user|
+    #   user.save
+    #   user.promotions.each { |pro|
+    #     pro.save
+    #   }
+    # }
   	# User.reindex
   	# Sunspot.commit
-	# puts User.all.count
+	   # puts User.all.count
   	load 'lib/tasks/files/add_admin_user.rb'
   	# Rake::Task['db:mongoid:create_indexes'].invoke
   end

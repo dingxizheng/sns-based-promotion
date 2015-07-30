@@ -11,7 +11,7 @@ class Promotion
   after_validation :geocode          # auto-fetch coordinates
 
   after_create :send_email
-  before_save  :set_coordinates
+  before_save  :set_coordinates, :set_subscripted_status
 
   after_save   :reindex_coordinates
 
@@ -23,6 +23,7 @@ class Promotion
   field :status, type: String, default: 'submitted'
   field :reject_reason, type: String, default: 'unknown'
   field :coordinates, type: Array
+  field :subscripted, type: Boolean, default: false
   field :start_at, type: DateTime, default: Time.now
   field :expire_at, type: DateTime, default: Time.now + 2.weeks
 
@@ -46,13 +47,15 @@ class Promotion
       get_id
     end
 
-    boolean :subscripted do
-      subscripted?
-    end
+    boolean :subscripted
 
     latlon(:location){
       Sunspot::Util::Coordinates.new(lat , lon)
     }
+  end
+
+  def set_subscripted_status
+    self.subscripted = self.subscripted?
   end
 
   def subscripted?

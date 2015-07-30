@@ -4,9 +4,7 @@ json.url user_url(user)
 
 json.keywords user.keywords
 
-json.extract! user, :name, :email, :address, :phone, :description, :created_at, :updated_at
-
-json.subscripted user.subscripted?
+json.extract! user, :name, :email, :address, :subscripted, :phone, :description, :created_at, :updated_at
 
 json.coordinates user.coordinates
 
