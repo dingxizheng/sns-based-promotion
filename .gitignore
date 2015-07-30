@@ -8,7 +8,7 @@
 /.bundle
 
 # Ignore the key files
-/certificates/*
+# /certificates/*
 
 # Ignore system environment_files
 /config/initializers/environment_variables.rb
