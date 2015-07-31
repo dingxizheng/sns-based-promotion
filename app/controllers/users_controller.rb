@@ -15,7 +15,10 @@ class UsersController < ApplicationController
   # GET /users/1
   # GET /users/1.json
   def show
-    render partial: "users/user", :locals => { :user => @user }
+    respond_to do |format|
+      format.html { render 'shares/user.html.erb' }
+      format.json { render partial: "users/user", :locals => { :user => @user } }
+    end
   end
 
   # POST /users

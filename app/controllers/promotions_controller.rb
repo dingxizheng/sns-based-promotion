@@ -21,7 +21,12 @@ class PromotionsController < ApplicationController
   # GET /promotions/1
   # GET /promotions/1.json
   def show
-    render :partial => 'promotions/promotion', :locals => { :promotion => @promotion }
+
+    respond_to do |format|
+      format.html { render 'shares/promotion.html.erb' }
+      format.json { render :partial => 'promotions/promotion', :locals => { :promotion => @promotion } }
+    end
+
   end
 
   # POST /promotions
@@ -164,8 +169,7 @@ class PromotionsController < ApplicationController
                                     message: @promotion.customer.name + ": " + @promotion.title + "\n" + @promotion.description,
                                     promotion_id: @promotion.get_id,
                                     user_id: @promotion.customer.get_id
-                                  },
-                                  collapse_key: 'vicinity_deals'
+                                  }
         })
 
         puts response

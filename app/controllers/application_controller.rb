@@ -1,4 +1,4 @@
-class ApplicationController < ActionController::API
+class ApplicationController < ActionController::Base
 
 	include ActionController::HttpAuthentication::Token::ControllerMethods
 	include Errors
@@ -72,7 +72,7 @@ class ApplicationController < ActionController::API
 
 	# params should be skipped in conditional query
 	def params_to_skip 
-		[:apitoken, :lat, :long, :page, :per_page, :within]
+		[:apitoken, :lat, :long, :page, :per_page, :within, :format]
 	end
 
 	# filter the result by distance
@@ -207,7 +207,7 @@ class ApplicationController < ActionController::API
 		# log the backtrace into a seperate log file
 		exception_logger.tagged(error.class.to_s, log_id) { 
 			exception_logger.info '--------------------------------'
-			exception_logger.info '       #{ error.class.to_s  }   '
+			exception_logger.info "       #{ error.class.to_s  }   "
 			exception_logger.info '--------------------------------'
 			error.backtrace.each do |line|
 				exception_logger.info line
@@ -227,7 +227,11 @@ class ApplicationController < ActionController::API
 	end
 
 	def set_default_response_format
-		request.format = :json
+		if params[:format].present? and params[:format] == 'html'
+			request.format = :html
+		else
+			request.format = :json
+		end
 	end
 
 end
