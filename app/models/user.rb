@@ -145,9 +145,14 @@ class User
 
   # if user has completed the profile, then mark it as a business user
   def set_role
-    if not self.has_role? :customer
+    if self.has_role? :customer
+      if self.address.nil? or self.phone.nil? or self.description.nil?
+        self.remove_role :customer
+      end
+    else
       unless self.address.nil? or self.phone.nil? or self.description.nil?
         self.add_role :customer
+        self.send_customer_confirmation_email
       end
     end
   end
@@ -167,6 +172,12 @@ class User
     Thread.start {
       UserMailer.welcome(self).deliver_now!
       UserMailer.new_user(self).deliver_now!
+    }
+  end
+
+  def send_customer_confirmation_email
+    Thread.start {
+      UserMailer.customer_confirmation(self).deliver_now!
     }
   end
 

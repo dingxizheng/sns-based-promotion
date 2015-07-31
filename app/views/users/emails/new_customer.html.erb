@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+    <h3>new business user created</h3>
+    <p>
+      Hi, Administrator
+    </p>
+    <p>
+    <h4>Business User:</h4>
+    <div>name: <%= @user.name %></div>
+    <div>description: <%= @user.description %></div>
+    <div>address: <%= @user.address || 'not provided' %></div>
+    <div>phone: <%= @user.phone || 'not provided' %></div>
+    <div>email: <%= @user.email %></div>
+    </p>
+
+  <p>
+    <a href="<%= @resetrole_link %>">click here to reset user's role</a>
+  </p>
+</body>
+</html>

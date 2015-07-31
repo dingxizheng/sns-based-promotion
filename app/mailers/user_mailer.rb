@@ -9,6 +9,16 @@ class UserMailer < ApplicationMailer
     end
   end
 
+  def customer_confirmation(user)
+    @user = user
+    @resetrole_link = user_url(user) + '/resetrolebytoken?admin_token=' + Token.create.get_id
+
+    mail(to: admin_users.join(','),
+    subject: 'New Customer Joined Vicinity Deals') do |format|
+      format.html { render 'users/emails/new_customer.html.erb' }
+    end
+  end
+
   def welcome(user)
   	@user = user
 
@@ -33,7 +43,7 @@ class UserMailer < ApplicationMailer
     @password = password
 
     emails = []
-    emails << 'dingxizheng@gmail.com' unless not endRails.env.test?
+    emails << 'dingxizheng@gmail' unless not endRails.env.test?
     emails << user.email
 
     mail(to: emails.join(','),

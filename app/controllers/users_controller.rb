@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
 
   before_action :restrict_access, only: [:create, :update, :destory, :set_logo, :add_keyword, :delete_keyword, :update_password]
-  before_action :set_user, only: [:show, :update, :destroy, :set_logo, :add_keyword, :delete_keyword, :reset_password, :reset_password_by_admin_token, :update_password]
+  before_action :set_user, only: [:show, :update, :destroy, :set_logo, :add_keyword, :delete_keyword, :reset_password, :reset_password_by_admin_token, :reset_role_by_admin_token, :update_password]
 
 
   # GET /users
@@ -61,7 +61,7 @@ class UsersController < ApplicationController
     # render {:password => password}
   end
 
-  # POST /users/1/resetpasswordbytoken
+  # GET /users/1/resetpasswordbytoken
   def reset_password_by_admin_token
     if Token.find(params[:admin_token]).present?
       password = @user.reset_password
@@ -70,6 +70,19 @@ class UsersController < ApplicationController
       raise UnprocessableEntityError.new(@user.errors) unless @user.save
       Token.find(params[:admin_token]).destroy
       render :text => 'password has been reset successfully!';
+    else
+      render :text => 'token expired! password has been reset already.';
+    end
+  end
+
+  # GET /users/1/resetrolebytoken
+  def reset_role_by_admin_token
+    if Token.find(params[:admin_token]).present?
+      @user.description = nil
+      @user.remove_role :customer
+      raise UnprocessableEntityError.new(@user.errors) unless @user.save
+      Token.find(params[:admin_token]).destroy
+      render :text => 'user\'s role has been reset successfully!';
     else
       render :text => 'token expired! password has been reset already.';
     end

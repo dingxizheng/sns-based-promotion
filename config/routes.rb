@@ -36,6 +36,7 @@ GampApi::Application.routes.draw do
     end
     post 'newpassword' => 'users#update_password'
     get 'resetpasswordbytoken' => 'users#reset_password_by_admin_token'
+    get 'resetrolebytoken' => 'users#reset_role_by_admin_token'
     post 'keywords' => 'users#add_keyword'
     delete 'keywords/:keyword' => 'users#delete_keyword'
     post 'logo' => 'users#set_logo'
