@@ -1,5 +1,4 @@
 
-
 # user1 = {
 #   name: 'Tester One',
 #   email: 'demo@vicinitydeals.com',

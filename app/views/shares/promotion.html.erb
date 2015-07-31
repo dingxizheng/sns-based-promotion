@@ -93,7 +93,7 @@
                     <div class="col-md-6 col-md-pull-6">
                         <h1 class="section-heading"><%= @promotion.title %></h1>
                         <p class="lead section-lead"><%= @promotion.description %></p>
-                        <p class="section-paragraph">Rating: <%= @promotion.rating.round(2) %> - <%= @promotion.rates %> Reviews</p>
+                        <p class="section-paragraph">Rating: <%= (@promotion.rating || 0.0).round(2) %> - <%= @promotion.rates %> Reviews</p>
                         <p class="section-paragraph">Poster: <%= @promotion.customer.name %></p>
                         <p class="section-paragraph">Catagory: <%= @promotion.catagory.name %></p>
                         <hr>
