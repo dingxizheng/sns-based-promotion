@@ -11,7 +11,7 @@ class User
   after_create :send_new_user_email
   after_save  :reindex_coordinates
   before_create :encrypt_password, :set_default_role
-  before_save :set_role, :set_subscripted_status
+  before_save :set_subscripted_status, :set_role
 
   rolify
 
@@ -79,6 +79,7 @@ class User
 
   def set_subscripted_status
     self.subscripted = self.subscripted?
+    return true
   end
 
   def subscripted?
@@ -155,6 +156,7 @@ class User
         self.send_customer_confirmation_email
       end
     end
+    return true
   end
 
   def reset_password
