@@ -8,7 +8,7 @@ class User
   
   geocoded_by :address 
   after_validation :geocode
-  after_create :send_email
+  after_create :send_new_user_email
   after_save  :reindex_coordinates
   before_create :encrypt_password, :set_default_role
   before_save :set_role, :set_subscripted_status
@@ -163,7 +163,7 @@ class User
   end
 
   # send email after a user creation
-  def send_email
+  def send_new_user_email
     Thread.start {
       UserMailer.welcome(self).deliver_now!
       UserMailer.new_user(self).deliver_now!
