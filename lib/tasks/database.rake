@@ -10,13 +10,13 @@ namespace :database do
   
   desc "populate catagories"
   task :populate_catagory => :environment do
-  	Mongoid.load!("config/mongoid.yml", :test)
+  	Mongoid.load!("config/mongoid.yml", :production)
   	load 'lib/tasks/files/populate_catagory.rb' 
   end
 
   desc "import products into the database"
   task :import_products => :environment do
-  	Mongoid.load!("config/mongoid.yml", :test)
+  	Mongoid.load!("config/mongoid.yml", :production)
   	load 'lib/tasks/files/import_products.rb' 
   end
 

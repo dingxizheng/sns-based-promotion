@@ -18,7 +18,11 @@ catagories.each do |c|
 
   catagory = Catagory.where(c.except!(:icon)).first
 
+  puts c[:name], ENV['MONGO_USERNAME']
+
   if not catagory.present?
+
+    puts 'adding...'
 
   	puts 'import catagory:' + c[:name]
 
