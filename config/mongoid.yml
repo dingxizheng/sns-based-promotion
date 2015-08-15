@@ -73,4 +73,16 @@ test:
 production:
   sessions:
     default:
-      uri: <%= ENV['MONGOHQ_URL'] %>
+      database: vicinity_production
+      hosts:
+        - ec2-52-26-67-69.us-west-2.compute.amazonaws.com:27017
+      username: <%= ENV['MONGO_USERNAME'] %>
+      password: <%= ENV['MONGO_PASSWORD'] %>
+      options:
+        read: primary
+        # In the test environment we lower the retries and retry interval to
+        # low amounts for fast failures.
+        max_retries: 1
+        retry_interval: 0
+  options:
+    raise_not_found_error: false
