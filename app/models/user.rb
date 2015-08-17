@@ -11,7 +11,7 @@ class User
   after_create :send_new_user_email
   after_save  :reindex_coordinates
   before_create :encrypt_password, :set_default_role
-  before_save :set_subscripted_status, :set_role
+  before_save :set_subscripted_status, :set_role, :check_address
 
   rolify
 
@@ -97,6 +97,15 @@ class User
   # return id object to id string
   def get_id
     self.id.to_s
+  end
+
+  def check_address
+    if self.address_changed?
+      if Geocoder.coordinates(self.address).nil?
+        self.errors.add :address, 'please check the address'
+        return false
+      end
+    end
   end
 
   # add keyword to user

@@ -7,6 +7,19 @@ namespace :database do
   	User.reindex
   	Sunspot.commit
   end
+
+  desc "mongodb reindex"
+  task :mongo_reindex => :environment do
+    Mongoid.load!("config/mongoid.yml", :production)
+    Rake::Task['RAILS_ENV=production db:mongoid:create_indexes'].invoke
+  end
+
+  desc "sunspot reindex"
+  task :solr_reindex => :environment do
+    User.reindex
+    Promotion.reindex
+    Sunspot.commit
+  end
   
   desc "populate catagories"
   task :populate_catagory => :environment do

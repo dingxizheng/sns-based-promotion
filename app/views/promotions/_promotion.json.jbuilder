@@ -16,7 +16,7 @@ if promotion.is_rejected?
 	json.reject_reason promotion.reject_reason
 end
 
-if Rails.application.config.request_location.present?
+if Rails.application.config.request_location.present? and not promotion.customer.coordinates.nil? and not promotion.customer.address.nil?
 	json.distance promotion.customer.distance_from([Rails.application.config.request_location[:lat], Rails.application.config.request_location[:long]]) * 1.60934
 end
 
