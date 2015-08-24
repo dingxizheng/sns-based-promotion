@@ -9,6 +9,13 @@ class UsersController < ApplicationController
   def index
     result_by_distance = filter_and_sort_by_distance(User, request.query_parameters)
     @users = query_by_conditions(result_by_distance, request.query_parameters)
+    if params[:roles]
+      @users = @users.select{ |item|
+        params[:roles].split(',,').any? { |role|
+          item.has_role? role
+        }
+      }
+    end
     render 'users/users', :locals => { :users => @users }
   end
 

@@ -72,7 +72,7 @@ class ApplicationController < ActionController::Base
 
 	# params should be skipped in conditional query
 	def params_to_skip 
-		[:apitoken, :lat, :long, :page, :per_page, :within, :format]
+		[:apitoken, :lat, :long, :page, :per_page, :within, :format, :roles]
 	end
 
 	# filter the result by distance
