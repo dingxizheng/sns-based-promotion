@@ -72,7 +72,7 @@ class ApplicationController < ActionController::Base
 
 	# params should be skipped in conditional query
 	def params_to_skip 
-		[:apitoken, :lat, :long, :page, :per_page, :within, :format, :roles]
+		[:apitoken, :lat, :long, :page, :per_page, :within, :format, :user_role]
 	end
 
 	# filter the result by distance
@@ -98,6 +98,10 @@ class ApplicationController < ActionController::Base
 		sortBy = query_parameters[:sortBy]
 		page = query_parameters[:page]
 		per_page = query_parameters[:per_page]
+
+		if params[:user_role]
+		  tempResult = User.with_role params[:user_role]
+	    end
 
 		query_parameters.except!(*([:sortBy] + params_to_skip)).each do |key, value|
 			field = key.to_sym
@@ -144,11 +148,6 @@ class ApplicationController < ActionController::Base
 			end
 			tempResult = tempResult.order_by(order_by_params)
 		end
-
-		if params[:roles]
-		  user_ids = User.with_all_roles(*params[:roles].split(',,')).map{|item| item.get_id }
-	      tempResult = tempResult.in(:_id => user_ids)
-	    end
 
 		# if pagenation is required, then return required page
 		if page.present? and per_page.present?
