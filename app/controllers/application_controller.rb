@@ -145,6 +145,11 @@ class ApplicationController < ActionController::Base
 			tempResult = tempResult.order_by(order_by_params)
 		end
 
+		if params[:roles]
+		  user_ids = User.with_all_roles(*params[:roles].split(',,')).map{|item| item.get_id }
+	      tempResult = tempResult.in(:_id => user_ids)
+	    end
+
 		# if pagenation is required, then return required page
 		if page.present? and per_page.present?
 			logger.tagged('PAGE') { logger.info "page: #{page} , number per page: #{per_page}" }
