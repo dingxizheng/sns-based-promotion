@@ -7,13 +7,12 @@ class Promotion
   include Mongoid::Rateable
   include Geocoder::Model::Mongoid
 
-  geocoded_by :coordinates           # can also be an IP address
-  after_validation :geocode          # auto-fetch coordinates
+  # geocoded_by :coordinates           # can also be an IP address
+  # after_validation :geocode          # auto-fetch coordinates
 
   after_create :send_email
-  before_save  :set_coordinates, :set_subscripted_status
-
-  after_save   :reindex_coordinates
+  before_save :set_coordinates, :set_subscripted_status
+  after_save :reindex_coordinates
 
   resourcify
 
@@ -33,7 +32,6 @@ class Promotion
   rate_config range: (0..5), raters: [User, Anonymity]
 
   has_many :reviews, inverse_of: :promotion, class_name: 'Review'
-
   belongs_to :catagory
   belongs_to :customer, class_name: 'User', inverse_of: :promotions
 
@@ -60,6 +58,7 @@ class Promotion
 
   def subscripted?
     self.customer && self.customer.subscriptions.any? { |s| s.activate? }
+    return true
   end
 
   def lon
@@ -111,6 +110,7 @@ class Promotion
 
   def set_coordinates
     self.coordinates = self.customer.coordinates
+    return true
   end
 
 end

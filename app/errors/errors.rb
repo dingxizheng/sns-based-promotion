@@ -60,6 +60,7 @@ module Errors
 			@code = 422
 			@error = 'the request contains unprocessable entities.'
 			@fields = fields
+			puts fields.to_yaml
 		end
 
 		def fields

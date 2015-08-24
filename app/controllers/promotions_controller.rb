@@ -33,6 +33,7 @@ class PromotionsController < ApplicationController
   # POST /promotions.json
   def create
     @promotion = @owner.promotions.build(promotion_params)
+    
     authorize @promotion
     moderatorize @owner, @promotion
     raise UnprocessableEntityError.new(@promotion.errors) unless @promotion.save
