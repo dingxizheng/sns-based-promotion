@@ -78,7 +78,7 @@ class ApplicationController < ActionController::Base
 	# filter the result by distance
 	def filter_and_sort_by_distance(scope, query_parameters)
 		if query_parameters[:within] and get_location
-			scope.near([get_location[:lat], get_location[:long]], Float(query_parameters[:within]), :units => :km)
+			scope.near([get_location[:lat], get_location[:long]], Float(query_parameters[:within]), :units => :km) rescue scope
 		else
 			scope
 		end
