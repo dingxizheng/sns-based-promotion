@@ -33,7 +33,7 @@ class PromotionsController < ApplicationController
   # POST /promotions.json
   def create
     @promotion = @owner.promotions.build(promotion_params)
-    
+
     authorize @promotion
     moderatorize @owner, @promotion
     raise UnprocessableEntityError.new(@promotion.errors) unless @promotion.save
@@ -141,6 +141,7 @@ class PromotionsController < ApplicationController
         # ios notifications
         #####################################
         Device.where({:os => 'ios'}).each { |device|
+          puts device.token
           notification = Houston::Notification.new(device: device.token)
           notification.alert = @promotion.customer.name + ": " + @promotion.title + "\n" + @promotion.description
           notification.sound = "sosumi.aiff"

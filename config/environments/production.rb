@@ -75,21 +75,23 @@ GampApi::Application.configure do
   config.action_mailer.default_url_options = { host: 'rails-api-env-b4cm2bfxbr.elasticbeanstalk.com' }
 
   config.action_mailer.smtp_settings = {
-    address:              'smtp.gmail.com',
-    port:                 587,
-    domain:               ENV["GMAIL_USERNAME"],
-    user_name:            ENV["GMAIL_USERNAME"],
-    password:             ENV["GMAIL_PASSWORD"],
-    authentication:       'plain',
+    address:              'smtp.office365.com',
+    port:                 '587',
+    domain:               'vinity.deals',
+    user_name:            ENV["EMAIL_USERNAME"],
+    password:             ENV["EMAIL_PASSWORD"],
+    authentication:       'login',
     enable_starttls_auto:  true  
   }
 
   # Send deprecation notices to registered listeners.
-  config.active_support.deprecation = :notify
+  config.active_support.deprecation = :stderr
+
+  # config.active_support.deprecation = :stderr
 
   # Disable automatic flushing of the log to improve performance.
   # config.autoflush_log = false
 
   # Use default logging formatter so that PID and timestamp are not suppressed.
-  config.log_formatter = ::Logger::Formatter.new
+  # config.log_formatter = ::Logger::Formatter.new
 end
