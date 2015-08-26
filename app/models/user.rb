@@ -42,6 +42,7 @@ class User
   has_many :promotions
   has_one  :session
   has_one  :logo, class_name: 'Image'
+  has_one  :background, class_name: 'Image'
   has_many :photos, class_name: 'Image'
   has_many :subscriptions
 
@@ -133,6 +134,18 @@ class User
       return false
     end
     self.logo = logo
+    return true
+  end
+
+  # set_background(upload)
+  def set_background(upload)
+    # create a new image record
+    background = Image.new({ :user_id => self.get_id })
+    if not background.store(upload) and not background.save
+      self.errors.add :background, upload.original_filename + ': could not set background.'
+      return false
+    end
+    self.background = background
     return true
   end
 

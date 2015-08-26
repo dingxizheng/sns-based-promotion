@@ -54,11 +54,11 @@ class Promotion
 
   def set_subscripted_status
     self.subscripted = self.subscripted?
+    return true;
   end
 
   def subscripted?
     self.customer && self.customer.subscriptions.any? { |s| s.activate? }
-    return true
   end
 
   def lon

@@ -103,6 +103,13 @@ class UsersController < ApplicationController
     render partial: "users/user", :locals => { :user => @user }
   end
 
+  # POST /users/1/background
+  def set_background
+    authorize @user
+    raise UnprocessableEntityError.new(@user.errors) unless @user.set_background(params[:background])
+    render partial: "users/user", :locals => { :user => @user }
+  end
+
   # keywords functions
   # POST /users/1/keywords
   def add_keyword

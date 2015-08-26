@@ -23,6 +23,13 @@ if not user.logo.nil?
 	end
 end
 
+if not user.background.nil?
+	json.background do
+		json.image_url user.background.image_url
+		json.thumb_url user.background.thumb_url
+	end
+end
+
 json.photos do
 	json.array! user.photos do |p|
 		json.image_url p.image_url
