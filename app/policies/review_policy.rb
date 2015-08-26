@@ -2,13 +2,7 @@ class ReviewPolicy < ApplicationPolicy
 
   class Scope < Scope
     def resolve
-      if user.guest
-        scope.all
-      elsif user.is_admin?
-        scope.all
-      else
-        user.reviews
-      end
+      scope.all
     end
   end
 

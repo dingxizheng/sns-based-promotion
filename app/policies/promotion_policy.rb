@@ -4,10 +4,8 @@ class PromotionPolicy < ApplicationPolicy
     def resolve
       if user.guest
         scope.nin(:status => ['submitted', 'rejected'])
-      elsif user.is_admin?
-        scope.all
       else
-        user.promotions
+        scope.all
       end
     end
   end
