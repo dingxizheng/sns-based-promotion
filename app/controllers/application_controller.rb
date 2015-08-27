@@ -50,6 +50,7 @@ class ApplicationController < ActionController::Base
 			}
 		# get the location info from request ip
 		elsif request.safe_location.present?
+
 			if request.safe_location.latitude != 0 or request.safe_location.longitude != 0
 				Rails.application.config.request_location = {
 					:lat => request.safe_location.latitude,
