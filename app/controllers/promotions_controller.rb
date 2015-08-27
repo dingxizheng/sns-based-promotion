@@ -171,7 +171,7 @@ class PromotionsController < ApplicationController
         response = GCM.get.send(devices, {
                                   # the date will be pushed to remote
                                   data: {
-                                    title: 'new promotion',
+                                    title: 'New Deal',
                                     message: @promotion.customer.name + ": " + @promotion.title + "\n" + @promotion.description,
                                     promotion_id: @promotion.get_id,
                                     user_id: @promotion.customer.get_id

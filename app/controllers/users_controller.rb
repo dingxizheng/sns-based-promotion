@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
 
   before_action :restrict_access, only: [:create, :update, :destory, :set_logo, :add_keyword, :delete_keyword, :update_password]
-  before_action :set_user, only: [:show, :update, :destroy, :set_logo, :add_keyword, :delete_keyword, :reset_password, :reset_password_by_admin_token, :reset_role_by_admin_token, :update_password]
+  before_action :set_user, only: [:rate, :show, :update, :destroy, :set_logo, :add_keyword, :delete_keyword, :reset_password, :reset_password_by_admin_token, :reset_role_by_admin_token, :update_password]
 
 
   # GET /users
@@ -86,6 +86,23 @@ class UsersController < ApplicationController
     else
       render :text => 'token expired! password has been reset already.';
     end
+  end
+
+  # POST /promotions/1/rate
+  def rate
+    if current_user.guest
+      rater = Anonymity.where(ip: request.remote_ip).first_or_create!
+    else
+      rater = current_user
+    end
+
+    # raise an error if it has been rated before by the same user
+    raise DuplicateError.new('you already rated this one.')  unless not @user.rated_by? rater
+
+    @user.rate Float(params[:rating]), rater
+
+    raise UnprocessableEntityError.new(@user.errors) unless @user.save
+    render :partial => 'users/user', :locals => { :user => @user }
   end
 
   # DELETE /users/1

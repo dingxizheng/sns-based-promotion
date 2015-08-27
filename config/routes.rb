@@ -41,6 +41,7 @@ GampApi::Application.routes.draw do
     delete 'keywords/:keyword' => 'users#delete_keyword'
     post 'logo' => 'users#set_logo'
     post 'reset' => 'users#reset_password'
+    post 'rate' => 'users#rate'
   end
 
   # authentication

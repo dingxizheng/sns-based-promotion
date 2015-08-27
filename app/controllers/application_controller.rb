@@ -48,15 +48,26 @@ class ApplicationController < ActionController::Base
 				:lat => params[:lat],
 				:long => params[:long]
 			}
+		elsif IPLocation.instance[request.remote_ip] === 'empty'
+			Rails.application.config.request_location = nil;
+		elsif IPLocation.instance[request.remote_ip]
+			Rails.application.config.request_location = IPLocation.instance[request.remote_ip]
 		# get the location info from request ip
 		elsif request.safe_location.present?
-
 			if request.safe_location.latitude != 0 or request.safe_location.longitude != 0
 				Rails.application.config.request_location = {
 					:lat => request.safe_location.latitude,
 					:long => request.safe_location.longitude
 				}
+				IPLocation.instance.store(request.remote_ip, { 
+					:lat => request.safe_location.latitude,
+					:long => request.safe_location.longitude
+				})
+			else
+				IPLocation.instance.store(request.remote_ip, 'empty')
 			end
+		else
+			IPLocation.instance.store(request.remote_ip, 'empty')
 		end
 
 		logger.tagged('LOCATION') { logger.info "#{ get_location }" } 

@@ -6,6 +6,15 @@ json.keywords user.keywords
 
 json.extract! user, :name, :email, :address, :subscripted, :phone, :description, :created_at, :updated_at
 
+json.rates user.rate_count
+
+json.rating user.rating || 0
+
+json.comments do
+	json.count user.reviews.count
+	json.url reviews_url(:customer_id => user.get_id)
+end
+
 json.coordinates user.coordinates
 
 json.roles user.roles.pluck :name

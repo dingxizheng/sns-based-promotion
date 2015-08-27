@@ -1,9 +1,11 @@
+Dir["#{Rails.root}/lib/modules/mongoid_rateable/*.rb"].each {|file| require file }
 require 'digest'
 
 class User
   include Mongoid::Document
   include Mongoid::Timestamps
   include Sunspot::Mongoid2
+  include Mongoid::Rateable
   include Geocoder::Model::Mongoid
   
   geocoded_by :address 
@@ -35,6 +37,9 @@ class User
   }
 
   index({ coordinates: "2d" })
+
+  # mark this model as reteable
+  rate_config range: (0..5), raters: [User, Anonymity]
   
   # relations
   has_many :reviews, inverse_of: :customer, class_name: 'Review'
