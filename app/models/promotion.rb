@@ -38,6 +38,10 @@ class Promotion
   # sunspot
   searchable do  
     text :title, :description
+    text :catagory do   
+      catagory.name
+    end
+
     time :expire_at, :start_at
     string :status
 
