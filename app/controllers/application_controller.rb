@@ -109,30 +109,41 @@ class ApplicationController < ActionController::Base
 
 			logger.tagged('QUERY') { logger.info "key: #{key} , value: #{value}"}
 			
+			query = {}
+
 			if value.nil?
 				logger.tagged('QUERY') { logger.info "query value is empty!"}
 			elsif value.start_with? '<='
-				tempResult = tempResult.lte(field => value[2..-1])
+				query.store(field.lte, value[2..-1])
+				# tempResult = tempResult.lte(field.lte => value[2..-1])
 			elsif value.start_with? '<'
-				tempResult = tempResult.lt(field => value[1..-1])
+				query.store(field.lt, value[1..-1])
+				# tempResult = tempResult.lt(field => value[1..-1])
 			elsif value.start_with? '>='
-				tempResult = tempResult.gte(field => value[2..-1])
+				query.store(field.gte, value[2..-1])
+				# tempResult = tempResult.gte(field => value[2..-1])
 			elsif value.start_with? '>'
-				tempResult = tempResult.gt(field => value[1..-1])
+				query.store(field.gt, value[1..-1])
+				# tempResult = tempResult.gt(field => value[1..-1])
 			elsif value.start_with? '!='
 				if value == "!=null"
-					tempResult = tempResult.where(field.exists => false)
+					query.store(field.exists, false)
+					# tempResult = tempResult.where(field.exists => false)
 				else
-					tempResult = tempResult.nin(field => value[2..-1].split(',,'))
+					query.store(field.nin, value[2..-1].split(',,'))
+					# tempResult = tempResult.nin(field => value[2..-1].split(',,'))
 				end
 			else
 				if value == "null"
-					tempResult = tempResult.where(field.exists => true)
+					query.store(field.exists, true)
+					# tempResult = tempResult.where(field.exists => true)
 				else
-					tempResult = tempResult.in(field => value.split(',,'))
+					query.store(field.in, value.split(',,'))
+					# tempResult = tempResult.in(field => value.split(',,'))
 				end
 			end
 
+			tempResult = tempResult.and(query);
 		end
 
 		# if 'sortBy' is contained in the query parameters
