@@ -1,0 +1,209 @@
+
+p.show-more {
+	white-space: '' !important;
+}
+
+.shadow-primary {
+	-webkit-box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.85);
+}
+
+.profile-header {
+	     width: 100%;
+	    height: 55vw;
+	background: white;
+	  position: relative;
+}
+
+.profile-avatar {
+	position: absolute;
+	border-radius: 50%;
+	overflow: hidden;
+	width: 20vw;
+	height: 20vw;
+	top: 44vw;
+	left: 77vw;
+	background: white;
+	border: 2px solid #ddd;
+}
+
+.profile-avatar img {
+	display: block;
+	min-height: 100%;
+	min-width: 100%;
+	width: 100%;
+	height: 100%;
+	z-index: 10000;
+}
+
+.profile-bg {
+	display: block;
+	position: absolute;
+	min-height: 100%;
+	min-width: 55vw;
+	height: 55vw;
+	width: 100%;
+}
+
+.profile-title {
+	/*background: white;*/
+	color: white;
+	position: absolute;
+	left: 5vw;
+	bottom: 5vw;
+	width: 70%;
+}
+
+.profile-bg-mask {
+	display: block;
+	background-image: -webkit-linear-gradient(top, #FFFFFF 0%, #001824 100%);
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	opacity: 0.5;
+}
+
+.profile-body {
+	margin-top: 12vw;
+	width: 100%;
+}
+
+.vertical-parent {
+	--webkit-transform-style: preserve-3d;
+}
+
+.vertical-parent .vertical-element {
+	position: relative;
+	top: 50%;
+	transform: translateY(50%);
+}
+
+.icon-card {
+	width: 100%;
+	min-height: 18vw; 
+}
+
+.edit-profile-btn {
+	width: 100%;
+}
+
+.icon-card-icon {
+	width: 100;
+}
+
+
+.zoom-08 {
+    zoom: 0.8;
+    -moz-transform: scale(0.8);
+    -moz-transform-origin: 0 0;
+    -o-transform: scale(0.8);
+    -o-transform-origin: 0 0;
+    -webkit-transform: scale(0.8);
+    -webkit-transform-origin: 0 0;
+    transform: scale(0.8); /* Standard Property */
+    transform-origin: 0 0;  /* Standard Property */
+}
+
+.zoom-06 {
+    zoom: 0.6;
+    -moz-transform: scale(0.6);
+    -moz-transform-origin: 0 0;
+    -o-transform: scale(0.6);
+    -o-transform-origin: 0 0;
+    -webkit-transform: scale(0.6);
+    -webkit-transform-origin: 0 0;
+    transform: scale(0.6); /* Standard Property */
+    transform-origin: 0 0;  /* Standard Property */
+}
+
+hr.thin {
+    border: none;
+    height: 1px;
+    /* Set the hr color */
+    color: #ccc; /* old IE */
+    background-color: #ccc; /* Modern Browsers */
+}
+
+.spinner svg {
+  width: 19% !important;
+  height: 85px !important;
+}
+
+.loading-container .loading {
+	background-color: rgba(0, 0, 0, 0.0);
+}
+
+
+/* solve performance issue on android */
+body * {
+	box-shadow: none !important;
+}
+.card {
+	border: 1px solid #dedede !important;
+}
+/* solve performance issue on android */
+
+
+/* theme styles */
+
+.bar-header, .bar-footer {
+	background-color: #101624 !important;
+}
+
+.bar-header .button, .title {
+	color: #ffbf49 !important;
+}
+
+.tab-nav {
+	background-color: #101624 !important;
+	border-bottom: 1px solid #101624 !important;
+}
+
+.tab-nav a.tab-item-active{
+	border: 0 solid #ffbf49 !important;
+	border-top-width: 3px !important;
+}
+
+.tab-nav a.tab-item .tab-title {
+	color: #ce9b3b !important;
+	/*filter: grayscale(70%);*/
+}
+
+.tab-nav a.tab-item-active .tab-title {
+	color: #ffbf49 !important;
+	/*filter: grayscale(100%);*/
+}
+
+.vicinity-left-menu {
+	background-color: #101624 !important;
+}
+
+.vicinity-left-menu .button {
+	color: #ffbf49 !important;
+	margin-left: 10px;
+}
+
+.vicinity-left-menu .card {
+	border: none !important;
+}
+
+.vicinity-left-menu .bar-header, .bar-footer {
+	border-color: #ffbf49 !important;
+	background-image: none !important;
+}
+
+.vicinity-left-menu .bar-header {
+	border-bottom: 1px solid #ffbf49 !important;
+}
+
+.vicinity-left-menu .bar-footer {
+	border-top: 0px solid #ffbf49 !important;
+}
+
+hr.munu-button-spiltter {
+    border: none;
+    height: 3px;
+    /* Set the hr color */
+    color: #000000; /* old IE */
+    background-color: #000000; /* Modern Browsers */
+}
+/* theme styles */

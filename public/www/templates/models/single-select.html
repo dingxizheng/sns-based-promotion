@@ -1,0 +1,12 @@
+<ion-modal-view>
+    <ion-header-bar>
+        <button class="button button-clear button-assertive" ng-click="singleSelectScope.cancel()">Cancel</button>
+        <h1 class="title">{{ singleSelectScope.title }}</h1>
+        <button class="button button-clear button-assertive" ng-show="singleSelectScope.saveable" ng-click="singleSelectScope.save(singleSelectScope.selected)">Save</button>
+    </ion-header-bar>
+    <ion-content class="">
+        <ion-list>
+            <ion-radio ng-repeat="item in singleSelectScope.list" ng-model="singleSelectScope.selected" ng-value="item.value" ng-change="singleSelectScope.onchange()">{{ item.name }}</ion-radio>
+        </ion-list>
+    </ion-content>
+</ion-modal-view>

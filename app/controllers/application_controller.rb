@@ -100,6 +100,7 @@ class ApplicationController < ActionController::Base
 	# 4. to query item within a distance to a certain point 
 	# 			===>  within=5 (within 5 kms)
 	def query_by_conditions(scope, query_parameters)
+
 		tempResult = scope
 		sortBy = query_parameters[:sortBy]
 		page = query_parameters[:page]
@@ -107,6 +108,9 @@ class ApplicationController < ActionController::Base
 
 		if params[:user_role]
 		  tempResult = User.with_role params[:user_role]
+		  if tempResult.count == 0
+		  	return []
+		  end
 	    end
 
 		query_parameters.except!(*([:sortBy] + params_to_skip)).each do |key, value|
