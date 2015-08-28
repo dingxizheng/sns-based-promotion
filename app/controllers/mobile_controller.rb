@@ -18,7 +18,7 @@ class MobileController < ApplicationController
 			redirect_to "/app/#{ current_version }/android/www/index.html"
 		
 		else
-			redirect_to "/app/#{ current_version }/android/www/index.html"
+			redirect_to "/404.html"
 		end
 
 	end
