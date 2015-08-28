@@ -107,9 +107,20 @@ class User
 
   def check_address
     if self.address_changed?
-      if Geocoder.coordinates(self.address).nil?
-        self.errors.add :address, 'please check the address'
+      results = Geocoder.search(self.address)
+      if results.count == 0
+        self.errors.add :address, 'it is not a valid address!'
         return false
+      else
+        new_results = results.select{ |addr|
+          addr.formatted_address.include? 'Canada'
+        }
+        if new_results.count == 0
+          self.errors.add :address, 'please input a valid canada address!'
+          return false
+        else
+          self.address = new_results[0].formatted_address
+        end 
       end
     end
   end
