@@ -1,5 +1,7 @@
 GampApi::Application.routes.draw do
 
+  get 'app' => 'mobile#app'
+
   resources :products
 
   resources :reviews, except: [:new, :edit] 

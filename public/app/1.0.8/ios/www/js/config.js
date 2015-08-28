@@ -4,6 +4,8 @@ angular.module('starter.config', [])
 // app config parameters
 .constant('gampConfig', {
 
+	clientVersion: '1.0.8',
+
 	// baseUrl: 'http://192.168.250.6:3000',
 	
 	baseUrl: 'http://rails-api-env-b4cm2bfxbr.elasticbeanstalk.com',

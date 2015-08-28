@@ -41,6 +41,8 @@ class ApplicationController < ActionController::Base
 	# get geo information form the request
 	def get_geo_location
 		
+		# puts "From...: #{ request.user_agent }"
+
 		Rails.application.config.request_location = nil;
 		# get the location info from the request
 		if (true if Float(params[:lat]) rescue false) and (true if Float(params[:long]) rescue false)
