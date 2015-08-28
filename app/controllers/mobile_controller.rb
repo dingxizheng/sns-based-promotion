@@ -7,6 +7,8 @@ class MobileController < ApplicationController
 	# GET /app
 	def app
 
+		puts request.user_agent
+
 		if request.user_agent.include? 'iPhone'
 			
 			redirect_to "/app/#{ current_version }/ios/www/index.html"
@@ -16,7 +18,7 @@ class MobileController < ApplicationController
 			redirect_to "/app/#{ current_version }/android/www/index.html"
 		
 		else
-			redirect_to "/404.html"
+			redirect_to "/app/#{ current_version }/android/www/index.html"
 		end
 
 	end
