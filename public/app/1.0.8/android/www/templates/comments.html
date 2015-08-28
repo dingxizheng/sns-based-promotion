@@ -8,9 +8,9 @@
         </div>
         <ion-list ng-if="comments.length">
             <a ng-repeat="comment in comments" class="item item-avatar" href="#">
-                <img ng-src="{{ comment.reviewer.id ? comment.reviewer.logo.thumb_url : 'false' }}" fallback-src="img/profileholder.png" loading-src="img/profileholder.png">
+                <img ng-src="{{ comment.reviewer.id ? comment.reviewer.logo.thumb_url : 'false' }}" fallback-src="{{ formatters.profile_pic_holder(comment.reviewer.id ? comment.reviewer.name : 'Anonymous user') }}" loading-src="{{ formatters.profile_pic_holder(comment.reviewer.id ? comment.reviewer.name : 'Anonymous user') }}">
                 <h2>{{ comment.reviewer.id ? comment.reviewer.name : 'Anonymous user' }}</h2>
-                <p>{{ comment.body }}</p>
+                <p style="white-space: normal">{{ comment.body }}</p>
                 <span class="item-note">
                   {{ comment.created_at | date: 'MM/dd/yyyy' }}
                 </span>

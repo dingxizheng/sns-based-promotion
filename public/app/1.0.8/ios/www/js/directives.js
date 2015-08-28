@@ -16,7 +16,8 @@ angular.module('starter.directives', [])
     };
 })
 
-.directive('gampcard', function(MapImg, Auth) {
+.directive('gampcard', function(MapImg, Auth, formatters) {
+
     return {
         restrict: 'E',
         scope: {
@@ -26,6 +27,9 @@ angular.module('starter.directives', [])
 			console.log(scope);
 			console.log('loads template:', 'templates/cards/' + attrs['templateurl']);
 			scope.finalTemplateUrl = 'templates/cards/' + attrs['templateurl'];
+            
+            scope.formatters = formatters;
+
             scope.getmap = function(address) {
                return new MapImg().center(address).zoom(14).size(150, 150).get();   
             };

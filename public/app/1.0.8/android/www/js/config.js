@@ -4,11 +4,11 @@ angular.module('starter.config', [])
 // app config parameters
 .constant('gampConfig', {
 
-	// baseUrl: 'http://192.168.250.6:3000',
+	//baseUrl: 'http://192.168.250.6:3000',
 	
 	baseUrl: 'http://rails-api-env-b4cm2bfxbr.elasticbeanstalk.com',
 	
-	// baseUrl: 'http://localhost:3000',
+	//baseUrl: 'http://localhost:3000',
 	
 	googleAnalyticsID: 'UA-66194905-1',
 

@@ -1,5 +1,16 @@
 angular.module('starter.language', [])
 
+.constant('formatters', {
+    
+    profile_pic_holder: function(name) {
+        var inits = name.replace(/\W*(\w)\w*/g, '$1').toUpperCase();
+        if(inits.length > 2) {
+          inits = inits.substring(0, 2);  
+        }
+        return "https://placeholdit.imgix.net/~text?txtsize=60&txt=" + inits + "&w=100&h=100";
+    } 
+})
+
 .constant('englishLang', {
 
     menu: {

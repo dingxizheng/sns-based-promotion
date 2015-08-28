@@ -1746,7 +1746,7 @@ function handlePluginsObject(path, moduleList, finishPluginLoading) {
     }
 
     for (var i = 0; i < moduleList.length; i++) {
-        injectIfNecessary(moduleList[i].id, moduleList[i].file, scriptLoadedCallback);
+        injectIfNecessary(moduleList[i].id, path + moduleList[i].file, scriptLoadedCallback);
     }
 }
 
@@ -1773,7 +1773,7 @@ exports.load = function(callback) {
         console.log('Could not find cordova.js script tag. Plugin loading may fail.');
         pathPrefix = '';
     }
-    injectIfNecessary('cordova/plugin_list', 'cordova_plugins.js', function() {
+    injectIfNecessary('cordova/plugin_list', pathPrefix + 'cordova_plugins.js', function() {
         var moduleList = require("cordova/plugin_list");
         handlePluginsObject(pathPrefix, moduleList, callback);
     }, callback);

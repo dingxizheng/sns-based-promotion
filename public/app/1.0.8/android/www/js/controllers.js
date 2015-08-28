@@ -955,7 +955,9 @@ angular.module('starter.controllers', [])
     };
 })
 
-.controller('CommentsCtrl', function($scope, Review, $state) {
+.controller('CommentsCtrl', function($scope, Review, $state, formatters) {
+
+    $scope.formatters = formatters;
 
     $scope.comments = [];
 
