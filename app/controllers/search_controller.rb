@@ -97,4 +97,28 @@ class SearchController < ApplicationController
 		render 'search/results', :locals => { :hits => @hits }
 	end
 
+	# GET /suggest
+	def suggest
+		
+		results = Term.search do
+			
+			if params[:type].present?
+				with(:type, params[:type].split(',,'))
+			end
+
+			without(:type, 'phone')
+
+			fulltext params[:query]
+			order_by(:searchs, :desc)
+		end
+		# puts results.hits.to_yaml
+		# results.hits.each { |hit| puts hit.class_name; puts hit.result }
+		
+		terms = results.hits.map { |hit|
+			hit.result
+		}
+
+		render json: terms
+	end
+
 end

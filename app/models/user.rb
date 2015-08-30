@@ -11,7 +11,7 @@ class User
   geocoded_by :address 
   after_validation :geocode
   after_create :send_new_user_email
-  after_save  :reindex_coordinates
+  after_save  :reindex_coordinates, :index_terms
   before_create :encrypt_password, :set_default_role
   before_save :set_subscripted_status, :set_role, :check_address
 
@@ -231,6 +231,13 @@ class User
         Rake::Task['db:mongoid:create_indexes'].invoke
       }
     end
+  end
+
+  # index_terms
+  def index_terms
+    Thread.start{
+      Term.index_user_on_demand(self)
+    }
   end
  
 	# encrypt password 

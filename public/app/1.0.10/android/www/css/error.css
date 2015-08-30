@@ -1,0 +1,53 @@
+/** Styling for the username field **/
+label.item.has-error {  
+  border-bottom: 1px solid red;
+}
+
+/** Styling for the username field **/
+label.item.valid {  
+  /*border-bottom: 1px solid #387ef5;*/
+}
+
+/** Styling for the password field when an error exists**/
+label.item.has-error-lr {  
+  border-left: 2px solid red;
+  border-right: 2px solid red;
+}
+
+/** Styling for the password field when an error has been resolved**/
+label.item.valid-lr {  
+  border-left: 2px solid green;
+  border-right: 2px solid green;
+}
+
+/** Styling for the error text and container **/
+.form-errors {
+  margin: 5px 0
+}
+.form-error {
+  padding: 2px 0 2px 16px;
+  color: red;
+}
+
+.flash-message {
+	height: auto;
+	width: 100vw;
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	z-index: 10000001;
+	background-color: #fff;
+	margin: 0;
+}
+
+.flash-mask {
+	height: 100vh;
+	width: 100vw;
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	z-index: 10000000;
+	background-color: #000;
+	opacity: 0.7;
+	margin: 0;
+}

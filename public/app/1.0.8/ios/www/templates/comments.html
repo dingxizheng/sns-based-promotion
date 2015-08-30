@@ -9,11 +9,11 @@
         <ion-list ng-if="comments.length">
             <a ng-repeat="comment in comments" class="item item-avatar" href="#">
                 <img ng-src="{{ comment.reviewer.id ? comment.reviewer.logo.thumb_url : 'false' }}" fallback-src="{{ formatters.profile_pic_holder(comment.reviewer.id ? comment.reviewer.name : 'Anonymous user') }}" loading-src="{{ formatters.profile_pic_holder(comment.reviewer.id ? comment.reviewer.name : 'Anonymous user') }}">
-                <h2>{{ comment.reviewer.id ? comment.reviewer.name : 'Anonymous user' }}</h2>
-                <p style="white-space: normal">{{ comment.body }}</p>
                 <span class="item-note">
                   {{ comment.created_at | date: 'MM/dd/yyyy' }}
                 </span>
+                <h4>{{ comment.reviewer.id ? comment.reviewer.name : 'Anonymous user' }}</h4>
+                <p style="white-space: normal">{{ comment.body }}</p>   
             </a>
         </ion-list>
         <ion-infinite-scroll ng-if="!hideInfiniteScroll" on-infinite="loadNext()" distance="1%" icon="ion-loading-c">

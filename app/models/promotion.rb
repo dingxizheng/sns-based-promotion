@@ -12,7 +12,7 @@ class Promotion
 
   after_create :send_email
   before_save :set_coordinates, :set_subscripted_status
-  after_save :reindex_coordinates
+  after_save :reindex_coordinates, :index_terms
 
   resourcify
 
@@ -110,6 +110,12 @@ class Promotion
         Rake::Task['db:mongoid:create_indexes'].invoke
       }
     end
+  end
+
+  def index_terms
+    Thread.start{
+      Term.index_promotion_on_demand(self)
+    }
   end
 
   def set_coordinates

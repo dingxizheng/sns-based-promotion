@@ -1,0 +1,56 @@
+<ion-modal-view>
+    <ion-header-bar>
+        <button class="button button-clear button-assertive" ng-click="promotionFilterScope.cancel()">Cancel</button>
+        <h1 class="title">Filters</h1>
+        <button class="button button-clear button-assertive" ng-click="promotionFilterScope.save()">Update</button>
+    </ion-header-bar>
+    <ion-content>
+        <div class="list">
+            <label class="item item-input item-select">
+                <div class="input-label">
+                    Sort by
+                </div>
+                <select ng-model="promotionFilterScope.settings.sortBy">
+                    <option value="updated_at"> + modified time</option>
+                    <option value="-updated_at"> - modified time</option>
+                    <option value="created_at"> + created time</option>
+                    <option value="-created_at"> - created time</option>
+                    <option value="rating"> + rating</option>
+                    <option value="-rating"> - rating</option>
+                    <option value="title"> + title</option>
+                    <option value="-title"> - title</option>
+                </select>
+            </label>
+            <li class="item item-divider">
+                Includes
+            </li>
+            <li class="item item-toggle">
+                Reviewed
+                <label class="toggle toggle-assertive">
+                    <input type="checkbox" ng-model="promotionFilterScope.settings.reviewed">
+                    <div class="track">
+                        <div class="handle"></div>
+                    </div>
+                </label>
+            </li>
+            <li class="item item-toggle">
+                Submitted
+                <label class="toggle toggle-assertive">
+                    <input type="checkbox" ng-model="promotionFilterScope.settings.submitted">
+                    <div class="track">
+                        <div class="handle"></div>
+                    </div>
+                </label>
+            </li>
+            <li class="item item-toggle">
+                Rejected
+                <label class="toggle toggle-assertive">
+                    <input type="checkbox" ng-model="promotionFilterScope.settings.rejected">
+                    <div class="track">
+                        <div class="handle"></div>
+                    </div>
+                </label>
+            </li>
+        </div>
+    </ion-content>
+</ion-modal-view>

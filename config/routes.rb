@@ -54,7 +54,7 @@ GampApi::Application.routes.draw do
 
   get 'search' => 'search#query'
 
-  get 'autocomplete/:query' => 'search#autocomplete'
+  get 'suggest' => 'search#suggest'
 
   # errors
   match "*path", :to => "application#handle_404", :via => :all
