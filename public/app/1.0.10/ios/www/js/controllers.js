@@ -95,18 +95,15 @@ angular.module('starter.controllers', [])
         $ionicSideMenuDelegate.toggleLeft();
     };
 
-    $scope.query_term;
-
     $scope.autoSuggest = function() {
 
         AutoSuggest.init($scope, {
 
-            query: $scope.query_term
+            query: $scope.query
 
         }, function(query) {
-            $scope.query = query;
-            $scope.query_term = query;
-            $scope.search();
+            // $scope.query = query;
+            $scope.search(query);
         })
         .then(function() {
             AutoSuggest.show();
@@ -274,11 +271,10 @@ angular.module('starter.controllers', [])
 
 
     ControllerService.onEnter('search', function(qstr) {
-        $scope.query_term = qstr;
         $scope.search(qstr);
     });
 
-    initQuery && ($scope.query_term = initQuery);
+    initQuery && ($scope.query = initQuery);
     initQuery && $scope.search(initQuery);
 
     setTimeout(function() {

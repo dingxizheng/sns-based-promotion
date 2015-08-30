@@ -648,6 +648,8 @@ angular.module('starter.models', [])
 
             var self = this;
 
+            var cache = {};
+
             scope.autoSuggestScope = {
 
                 query: params.query || '',
@@ -656,17 +658,24 @@ angular.module('starter.models', [])
 
                 onChange: function() {
                     console.log('search', gampConfig.baseUrl + '/suggest?query=' + scope.autoSuggestScope.query);
-                    $http.get(gampConfig.baseUrl + '/suggest', {
+                    cache[scope.autoSuggestScope.query] || $http.get(gampConfig.baseUrl + '/suggest', {
                         params: {
                             query: scope.autoSuggestScope.query
-                        }
+                        },
+                        cache: true
                     })
                     .then(function(res) {
-                        console.log(res.data);
-                       scope.autoSuggestScope.terms = res.data; 
-                       // document.getElementById("auto-suggest-query").focus();
+                       cache[res.config.params.query] = res.data;
+
+                       if(res.config.params.query === scope.autoSuggestScope.query) {
+                            scope.autoSuggestScope.terms = res.data;
+                        }
+
                     });
 
+                    if (cache[scope.autoSuggestScope.query]) {
+                       scope.autoSuggestScope.terms = cache[scope.autoSuggestScope.query];
+                    }
                 },
 
                 select: function(term) {

@@ -3,10 +3,10 @@
         <button class="button button-icon icon ion-navicon" ng-click="toggleLeft()"></button>
         <label class="item-input-wrapper">
             <i class="icon ion-ios7-search placeholder-icon"></i>
-            <input readonly ng-click="autoSuggest();false" type="search" placeholder="{{ query_term || 'e.g. Vicinity Deals' }}">
+            <input readonly ng-click="autoSuggest();false" type="search" placeholder="e.g. Vicinity Deals" ng-model="query">
         </label>
-        <button class="button button-clear button-assertive" ng-click="search(query_term)" ng-class="{
-                'disabled': !query_term || !query_term.trim().length > 1
+        <button class="button button-clear button-assertive" ng-click="search(query)" ng-class="{
+                'disabled': !query || !query.trim().length > 1
             }">
                 {{ lang.search.search_btn_name }}
         </button>
