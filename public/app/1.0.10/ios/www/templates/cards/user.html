@@ -11,7 +11,7 @@
 
         <p><span style="color: white; background-color: #C57477">&nbsp;{{ item.rating.toFixed(1) }} <i class="icon ion-ios-star"></i>&nbsp;</span> - {{ item.rates }} Reviews</p>
 
-        <p style="white-space: normal">keywords: 
+        <p style="white-space: normal">
             <span ng-if="item.keywords.length === 0" style="color: #C57477;">no keywords</span>
             <span ng-repeat="keyword in item.keywords" style="color: #C57477;">#{{ keyword }}<span style="display: inline-block; width: 0vw;"/></span>
         </p>

@@ -84,7 +84,7 @@ class UsersController < ApplicationController
       Token.find(params[:admin_token]).destroy
       render :text => 'user\'s role has been reset successfully!';
     else
-      render :text => 'token expired! password has been reset already.';
+      render :text => 'token expired! role has been reset already.';
     end
   end
 

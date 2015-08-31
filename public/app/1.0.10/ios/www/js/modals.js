@@ -662,6 +662,11 @@ angular.module('starter.models', [])
                         params: {
                             query: scope.autoSuggestScope.query
                         },
+                        track: [{
+                            dimension: 'suggest',
+                            level: function(obj, params) { return params.query; },
+                            view: 'type'
+                        }], 
                         cache: true
                     })
                     .then(function(res) {

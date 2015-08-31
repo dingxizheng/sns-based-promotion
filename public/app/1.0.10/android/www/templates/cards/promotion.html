@@ -13,7 +13,7 @@
  <div class="card" style="margin: 2vw 2vw">
     <a class="item item-avatar" ng-href="#/app/promotions/{{ item.id }}">
         <img ng-src="{{ item.catagory.icon.image_url }}" fallback-src="img/placeholder.png" loading-src="img/placeholder.png" style="border-radius: 0">
-        <h2>{{ item.title }}</h2>
+        <h2 style="white-space: normal">{{ item.title }}</h2>
         <p style="white-space: normal">{{ item.description }}</p>
         <hr class="thin">
         <span ng-if="item.distance" class="item-note" style="color: #C57477">{{ item.distance.toFixed(1) + ' km'}}</span>

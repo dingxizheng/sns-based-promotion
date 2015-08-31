@@ -50,26 +50,36 @@ angular.module('starter.interceptors', [])
 
 	return {
 
-		request: function(config) {
+		request: function(config) {	
+		
+			// TrackService.isReady() && TrackService.track.trackEvent('request', config.url, JSON.stringify(config.params));
 			
-			TrackService.isReady() && TrackService.track.trackEvent('request', config.url, JSON.stringify(config.params));
-
 			config.url += '?';
-			var params = [];
-			
+			var params = [];			
 			if (!!Session.session && !!Session.session.apitoken) {
 				params.push('apitoken=' + Session.session.apitoken);
 			}
-
 			if (GeoService.location()) {
 				params.push('lat=' + GeoService.location().latitude);
 				params.push('long=' + GeoService.location().longitude);
 			}
-
 			config.url += params.join('&');
-
 			return config;
-		}
+		},
+
+		response: function(response) {
+			if(response.config.track) {
+				// console.log('response..', response.config.params);
+				response.config.track.forEach(function(track) {
+					// alert(track);
+					TrackService.isReady() && TrackService.track.trackEvent(track.dimension, angular.isString(track.view) ? track.view : track.view(response.data, response.config.params), track.level(response.data, response.config.params));
+					// TrackService.isReady() && TrackService.track.addCustomDimension(track.dimension, track.level(response.data, response.config.params));
+					// TrackService.isReady() && TrackService.track.trackView(angular.isString(track.view) ? track.view : track.view(response.data, response.config.params));
+				});
+			}
+
+			return response;
+		}	
 	};
 
 })
@@ -126,7 +136,7 @@ angular.module('starter.interceptors', [])
 					msg += rejection.data.error + '\n';
 				}
 
-				TrackService.isReady() && TrackService.track.trackEvent('http error', rejection.status, '[ '+ rejection.config.url + ' ]  ' + msg);
+				TrackService.isReady() && TrackService.track.trackEvent('Http Error', rejection.status, '[ '+ rejection.config.url + ' ]  ' + msg);
 				Flash.setMessage(msg);
 
 				return $q.reject(rejection);
@@ -140,9 +150,9 @@ angular.module('starter.interceptors', [])
 			}
 
 			// $cordovaToast.showLongBottom(rejection.data && rejection.data.error || 'unknown error, please try later.');
-			TrackService.isReady() && TrackService.track.trackEvent('http error', rejection.status, '[ '+ rejection.config.url + ' ]  ' +(rejection.data.error || 'unknown error, please try later.'));
+			TrackService.isReady() && TrackService.track.trackEvent('Http Error', rejection.status, '[ '+ rejection.config.url + ' ]  ' +(rejection.data.error || 'unknown error, please try later.'));
 
-			Flash.setMessage(rejection.data && rejection.data.error || 'unknown error, please try later.');
+			Flash.setMessage(rejection.data && rejection.data.error || 'Unknown Error! Please try later.');
 			return $q.reject(rejection);
 		}
 

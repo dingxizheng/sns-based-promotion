@@ -26,7 +26,21 @@ angular.module('starter.resources', ['ngResource'])
 
     return {
         query: function(params) {
-            return $http.get(url, { params: params });
+            return $http.get(url, { 
+                params: params,
+                track: [
+                    {
+                        dimension: 'search',
+                        level: function(obj, params) { return params.query; },
+                        view: 'query'
+                    },
+                    {
+                        dimension: 'search',
+                        level: function(obj, params) { return params.query_scope; },
+                        view: 'scope'
+                    }        
+                ]
+            });
         }
     };
 
@@ -43,7 +57,19 @@ angular.module('starter.resources', ['ngResource'])
     }, {
         'get': {
             method: 'GET',
-            cache: true
+            cache: true,
+            track: [
+                {
+                    dimension: 'deals',
+                    level: function(obj, params) { return obj.title; },
+                    view: 'get'
+                },
+                {
+                    dimension: 'catagorys',
+                    level: function(obj, params) { return obj.catagory.name; },
+                    view: 'get'
+                }          
+            ]
         },
         'save': {
             method: 'POST',
@@ -83,7 +109,19 @@ angular.module('starter.resources', ['ngResource'])
             params: { 
                 promotionId: '@id'            
             },
-            url: url + '/rate'
+            url: url + '/rate',
+            track: [
+                {
+                    dimension: 'deals',
+                    level: function(obj, params) { return obj.title; },
+                    view: function(obj, params) { return 'rate ' + params.rating; }
+                },
+                {
+                    dimension: 'deals',
+                    level: function(obj, params) { return obj.title; },
+                    view: 'rate all'
+                },            
+            ]
         },
         'notify': {
             method: 'POST',
@@ -162,21 +200,47 @@ angular.module('starter.resources', ['ngResource'])
     }, {
         'get': {
             method: 'GET',
-            cache: true
+            cache: true,
+            track:[
+                {
+                    dimension: 'users',
+                    level: function(obj, params) { return obj.name; },
+                    view: 'get'
+                }
+            ]
         },
         'update': {
             method: 'PUT',
             params: {
             	modelWraper: 'user',
                 uncache: true
-            }
+            },
+            track:[
+                {
+                    dimension: 'users',
+                    level: function(obj, params) { return obj.name; },
+                    view: 'update'
+                }
+            ]
         },
 
         'addTag': {
         	method: 'POST',
         	data: {},
         	params: { userId: '@id' },
-        	url: url + '/keywords'
+        	url: url + '/keywords',
+            track:[
+                {
+                    dimension: 'users',
+                    level: function(obj, params) { return obj.name; },
+                    view: 'addTag'
+                },
+                {
+                    dimension: 'tags',
+                    level: function(obj, params) { return params.keyword; },
+                    view: 'add'
+                }
+            ]
         },
 
         'deleteTag': {
@@ -188,13 +252,13 @@ angular.module('starter.resources', ['ngResource'])
         'reset': {
             method: 'POST',
             params: { userId: '@id' },
-            url: url + '/reset'
+            url: url + '/reset',
         },
 
         'newpassword': {
             method: 'POST',
             params: { userId: '@id' },
-            url: url + '/newpassword'
+            url: url + '/newpassword',
         },
 
         'rate': {
@@ -202,7 +266,19 @@ angular.module('starter.resources', ['ngResource'])
             params: { 
                 userId: '@id'            
             },
-            url: url + '/rate'
+            url: url + '/rate',
+            track: [
+                {
+                    dimension: 'users',
+                    level: function(obj, params) { return obj.name; },
+                    view: function(obj, params) { return 'rate ' + params.rating; }
+                },
+                {
+                    dimension: 'users',
+                    level: function(obj, params) { return obj.name; },
+                    view: 'rate all'
+                },            
+            ]
         }
     });
 })

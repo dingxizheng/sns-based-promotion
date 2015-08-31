@@ -193,9 +193,6 @@ angular.module('starter.controllers', [])
             query_params.distance = settings.distance;
         }
 
-        // track search history
-        TrackService.track.trackEvent('search', $scope.search_type, JSON.stringify(query_params));
-
         !$scope.search_done[index] && Search.query(query_params).then(function(res) {
             $scope.page[index] ++;
             $scope.results[index].normal = $scope.results[index].normal.concat(res.data);
