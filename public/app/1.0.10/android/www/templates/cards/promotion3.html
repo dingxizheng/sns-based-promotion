@@ -4,7 +4,9 @@
     <p style="white-space: normal">{{ item.description }}</p>
     <hr class="thin">
     <p><span style="color: white; background-color: #C57477">&nbsp;{{ item.rating.toFixed(1) }} <i class="icon ion-ios-star"></i>&nbsp;</span> - {{ item.rates }} Reviews</p>
-    <p>catagory: <span style="color: #C57477">{{ item.catagory.name }}</span></p>
+
+    <p><span style="color: #C57477"><i class="fa fa-tag"></i> {{ item.catagory.name }}</span></p>
+
     <hr ng-if="editable(item.customer.id)" class="thin">
     <p ng-if="editable(item.customer.id)">expire at: <span style="color: #C57477">{{ item.expire_at | date: 'MM/dd/yyyy' }}</span></p>
     <p ng-if="editable(item.customer.id)">status: <span style="color: #C57477">{{ item.status }}</span></p>

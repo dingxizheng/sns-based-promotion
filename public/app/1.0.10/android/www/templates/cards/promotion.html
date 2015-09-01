@@ -1,25 +1,16 @@
-<!-- <div class="card" style="margin: 1vw 1vw;">
-    <a class="item item-thumbnail-right" ng-href="#/app/promotions/{{ item.id }}">
-        <img ng-src="{{ getmap(item.customer.address) }}" fallback-src="img/placeholder.png" loading-src="img/placeholder.png">
-        <h2>{{ item.title }} <span class="item-note zoom-08">{{ item.catagory.name }}</h2>
-        <p style="white-space: normal">{{ item.description || 'not provided' }}
-        </p>
-        <p><span ng-if="item.distance" style="color: #387ef5">{{ item.distance.toFixed(1) + ' kms away' }}</span></p>
-        <span ng-if="item.subscripted" style="color: white; background-color: #C57477; bottom:0; left:0; position: absolute">&nbsp;&nbsp;Ads&nbsp;&nbsp;</span>
-    </a>
-</div>
- -->
-
  <div class="card" style="margin: 2vw 2vw">
     <a class="item item-avatar" ng-href="#/app/promotions/{{ item.id }}">
         <img ng-src="{{ item.catagory.icon.image_url }}" fallback-src="img/placeholder.png" loading-src="img/placeholder.png" style="border-radius: 0">
         <h2 style="white-space: normal">{{ item.title }}</h2>
         <p style="white-space: normal">{{ item.description }}</p>
+        
         <hr class="thin">
+        
         <span ng-if="item.distance" class="item-note" style="color: #C57477">{{ item.distance.toFixed(1) + ' km'}}</span>
         <p><span style="color: white; background-color: #C57477">&nbsp;{{ item.rating.toFixed(1) }} <i class="icon ion-ios-star"></i>&nbsp;</span> - {{ item.rates }} Reviews</p>
-        <p>posted by: <span style="color: #C57477">{{ item.customer.name }}</span></p>
-        <p>catagory: <span style="color: #C57477">{{ item.catagory.name }}</span></p>
-        <span ng-if="item.subscripted" style="color: white; background-color: #C57477; top:0; right:0; position: absolute">&nbsp;&nbsp;Ads&nbsp;&nbsp;</span>
+        <p><span style="color: #C57477"><i class="fa fa-user"></i> {{ item.customer.name }}</span></p>
+        <p><span style="color: #C57477"><i class="fa fa-tag"></i> {{ item.catagory.name }}</span></p>
+
+        <span ng-if="item.subscripted" style="font-size: 60%; background: none; color: #C57477; top:0; right:0; position: absolute">&nbsp;&nbsp;Ads&nbsp;&nbsp;</span>
     </a>
 </div>

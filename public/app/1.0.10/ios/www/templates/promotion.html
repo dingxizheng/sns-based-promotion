@@ -19,11 +19,14 @@
                 <hr class="thin">
                 <span ng-if="promotion.distance" class="item-note" style="color: #C57477">{{ promotion.distance.toFixed(1) + ' km'}}</span>
                 <p><span style="color: white; background-color: #C57477">&nbsp;{{ promotion.rating.toFixed(1) }} <i class="icon ion-ios-star"></i>&nbsp;</span> - {{ promotion.rates }} Reviews</p>
-                <p>posted by: <span style="color: #C57477">{{ customer.name }}</span></p>
-                <p>catagory: <span style="color: #C57477">{{ promotion.catagory.name }}</span></p>
+                
+                <!-- <p><span style="color: #C57477"><i class="fa fa-user"></i> {{ customer.name }}</span></p> -->
+                <p><span style="color: #C57477"><i class="fa fa-tag"></i> {{ promotion.catagory.name }}</span></p>
+                
                 <hr ng-if="editiable" class="thin">
                 <p ng-if="editiable">expire at: <span style="color: #C57477">{{ promotion.expire_at | date: 'MM/dd/yyyy' }}</span></p>
                 <p ng-if="editiable">status: <span style="color: #C57477">{{ promotion.status }}</span></p>
+                
                 <span class="item-note">
                     {{ promotion.created_at  | date: 'MM/dd/yyyy' }}
                 </span>
@@ -36,10 +39,18 @@
                 <i class="icon ion-ios-location-outline"></i>
                 <p style="white-space: normal">{{ promotion.customer.address }}</p>
             </a>
+            <a ng-href="#/app/users/{{ customer.id }}" class="item item-icon-left">
+                <i class="icon ion-ios-person-outline"></i>
+                <p style="white-space: normal">{{ customer.name }}</p>
+            </a>
             <a ng-href="tel:{{ promotion.customer.phone }}" class="item item-icon-left">
                 <i class="icon ion-ios-telephone-outline"></i>
                 <p>Call {{ promotion.customer.phone }}</p>
             </a>
+            <!-- <a ng-href="#" class="item item-icon-left" ng-click="">
+                <i class="icon ion-ios-pricetag-outline"></i>
+                <p style="white-space: normal">{{ promotion.catagory.name }}</p>
+            </a> -->
             <div class="item tabs tabs-secondary tabs-icon-left">
                 <a class="tab-item" ng-click="review()">
                     <i class="icon ion-ios-chatbubble"></i> Review

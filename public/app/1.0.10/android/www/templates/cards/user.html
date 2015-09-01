@@ -11,10 +11,10 @@
 
         <p><span style="color: white; background-color: #C57477">&nbsp;{{ item.rating.toFixed(1) }} <i class="icon ion-ios-star"></i>&nbsp;</span> - {{ item.rates }} Reviews</p>
 
-        <p style="white-space: normal">
+        <p style="white-space: normal" ng-if="item.keywords.length !== 0">
             <span ng-if="item.keywords.length === 0" style="color: #C57477;">no keywords</span>
             <span ng-repeat="keyword in item.keywords" style="color: #C57477;">#{{ keyword }}<span style="display: inline-block; width: 0vw;"/></span>
         </p>
-        <span ng-if="item.subscripted" style="color: white; background-color: #C57477; top:0; right:0; position: absolute">&nbsp;&nbsp;Ads&nbsp;&nbsp;</span>
+        <span ng-if="item.subscripted" style="font-size: 60%; background: none; color: #C57477; top:0; right:0; position: absolute">&nbsp;&nbsp;Ads&nbsp;&nbsp;</span>
     </a>
 </div>

@@ -777,6 +777,10 @@ angular.module('starter.controllers', [])
         $ionicSideMenuDelegate.toggleLeft();
     };
 
+    $scope.goToCustomer = function() {
+        alert('good');
+    };
+
     Auth.onLoggedIn(function() {
         // set profile as editiable, if user owns this or user's role is admin
         $scope.editiable = Auth.owns(loadedPromotion.customer.id) || Auth.isAuthorized('admin');

@@ -660,7 +660,8 @@ angular.module('starter.models', [])
                     console.log('search', gampConfig.baseUrl + '/suggest?query=' + scope.autoSuggestScope.query);
                     cache[scope.autoSuggestScope.query] || $http.get(gampConfig.baseUrl + '/suggest', {
                         params: {
-                            query: scope.autoSuggestScope.query
+                            query: scope.autoSuggestScope.query,
+                            type: 'name,,keyword,,title,,catagory'
                         },
                         track: [{
                             dimension: 'suggest',
