@@ -28,6 +28,7 @@ class User
   field :coordinates, type: Array
   field :guest, type: Boolean, default: false
   field :subscripted, type: Boolean, default: false
+  
   field :hours, type: Hash, default: {
     :Monday => { :from => '9:00', :to => '17:00' },
     :Tuesday => { :from => '9:00', :to => '17:00' },
@@ -36,7 +37,7 @@ class User
     :Friday => { :from => '9:00', :to => '17:00' }
   }
 
-  index({ coordinates: "2d" })
+  # index({ coordinates: "2d" })
 
   # mark this model as reteable
   rate_config range: (0..5), raters: [User, Anonymity]

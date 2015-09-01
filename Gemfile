@@ -45,6 +45,8 @@ gem 'kaminari'
 
 gem 'houston'
 
+gem 'simple-spreadsheet'
+
 gem 'gcm'
 
 gem 'thin'

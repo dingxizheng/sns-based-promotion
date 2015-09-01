@@ -86,6 +86,8 @@ class ApplicationController < ActionController::Base
 	# filter the result by distance
 	def filter_and_sort_by_distance(scope, query_parameters)
 		if query_parameters[:within] and get_location
+			puts 'location.....'
+			# scope.geo_near([get_location[:lat], get_location[:long]]).max_distance(Float(query_parameters[:within])) rescue scope
 			scope.near([get_location[:lat], get_location[:long]], Float(query_parameters[:within]), :units => :km) rescue scope
 		else
 			scope
@@ -109,7 +111,7 @@ class ApplicationController < ActionController::Base
 		per_page = query_parameters[:per_page]
 
 		if params[:user_role]
-		  tempResult = User.with_role params[:user_role]
+		  tempResult = tempResult.with_role params[:user_role]
 		  if tempResult.count == 0
 		  	return []
 		  end
@@ -117,40 +119,30 @@ class ApplicationController < ActionController::Base
 
 		query_parameters.except!(*([:sortBy] + params_to_skip)).each do |key, value|
 			field = key.to_sym
-
 			logger.tagged('QUERY') { logger.info "key: #{key} , value: #{value}"}
-			
 			query = {}
 
 			if value.nil?
 				logger.tagged('QUERY') { logger.info "query value is empty!"}
 			elsif value.start_with? '<='
 				query.store(field.lte, value[2..-1])
-				# tempResult = tempResult.lte(field.lte => value[2..-1])
 			elsif value.start_with? '<'
 				query.store(field.lt, value[1..-1])
-				# tempResult = tempResult.lt(field => value[1..-1])
 			elsif value.start_with? '>='
 				query.store(field.gte, value[2..-1])
-				# tempResult = tempResult.gte(field => value[2..-1])
 			elsif value.start_with? '>'
 				query.store(field.gt, value[1..-1])
-				# tempResult = tempResult.gt(field => value[1..-1])
 			elsif value.start_with? '!='
 				if value == "!=null"
 					query.store(field.exists, false)
-					# tempResult = tempResult.where(field.exists => false)
 				else
-					query.store(field.nin, value[2..-1].split(',,'))
-					# tempResult = tempResult.nin(field => value[2..-1].split(',,'))
+					query.store(field.nin, value[2..-1].split(',,'))	
 				end
 			else
 				if value == "null"
 					query.store(field.exists, true)
-					# tempResult = tempResult.where(field.exists => true)
 				else
 					query.store(field.in, value.split(',,'))
-					# tempResult = tempResult.in(field => value.split(',,'))
 				end
 			end
 

@@ -33,6 +33,12 @@ namespace :database do
   	load 'lib/tasks/files/import_products.rb' 
   end
 
+  desc "import users"
+  task :import_users => :environment do
+    Mongoid.load!("config/mongoid.yml", :production)
+    load 'lib/tasks/files/import_users.rb' 
+  end
+
   desc "add admin user"
   task :add_admin_user => :environment  do
   	Mongoid.load!("config/mongoid.yml", :test)

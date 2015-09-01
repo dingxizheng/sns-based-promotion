@@ -22,7 +22,7 @@ json.roles user.roles.pluck :name
 json.hours user.hours
 
 if Rails.application.config.request_location.present? and user.has_role? :customer and not user.coordinates.nil? and not user.address.nil?
-	json.distance user.distance_from([Rails.application.config.request_location[:lat], Rails.application.config.request_location[:long]]) * 1.60934
+	json.distance user.distance_to([Rails.application.config.request_location[:lat], Rails.application.config.request_location[:long]]) * 1.60934
 end
 
 if not user.logo.nil?
