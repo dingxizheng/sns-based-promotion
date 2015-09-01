@@ -231,9 +231,11 @@ angular.module('starter.controllers', [])
                 within: 100000,
                 page: 1,
                 per_page: 4,
-                user_role: 'customer',
-                sortBy: '-subscripted'
+                user_role: 'customer'
             }).$promise.then(function(data) {
+               data = data.sort(function(a, b) {
+                 return  !a.subscripted && b.subscripted;
+               });
                $scope.suggested_dealers = data;
                suggestedItems.dealers = {
                     time: new Date().getTime(),
@@ -253,9 +255,12 @@ angular.module('starter.controllers', [])
             Promotion.query({
                 within: 100000,
                 page: 1,
-                per_page: 4,
-                sortBy: '-subscripted'
+                per_page: 4
             }).$promise.then(function(data) {
+               // make sure subscripted ones are on top 
+               data = data.sort(function(a, b) {
+                 return  !a.subscripted && b.subscripted;
+               });
                $scope.suggested_promotions = data; 
                suggestedItems.promotions = {
                     time: new Date().getTime(),
