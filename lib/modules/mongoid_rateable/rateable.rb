@@ -1,3 +1,5 @@
+require 'active_support/concern'
+
 module Mongoid
   module Rateable
     extend ActiveSupport::Concern

@@ -7,8 +7,15 @@ class UsersController < ApplicationController
   # GET /users
   # GET /users.json
   def index
-    result_by_distance = filter_and_sort_by_distance(User, request.query_parameters)
-    @users = query_by_conditions(result_by_distance, request.query_parameters)
+    result_by_distance = User.with_in_radius(get_location, params[:within])  
+    if params[:user_role]
+      result_by_role = result_by_distance.with_role(params[:user_role])
+      if result_by_role.count < 1
+        raise EmptyList.new
+      end
+    end
+    queried_result = (result_by_role || result_by_distance).query_by_params(request.query_parameters.except!(*(params_to_skip)))
+    @users = queried_result.sortby(params[:sortBy]).paginate(params[:page], params[:per_page])
     render 'users/users', :locals => { :users => @users }
   end
 
@@ -95,12 +102,9 @@ class UsersController < ApplicationController
     else
       rater = current_user
     end
-
     # raise an error if it has been rated before by the same user
     raise DuplicateError.new('you already rated this one.')  unless not @user.rated_by? rater
-
     @user.rate Float(params[:rating]), rater
-
     raise UnprocessableEntityError.new(@user.errors) unless @user.save
     render :partial => 'users/user', :locals => { :user => @user }
   end

@@ -5,7 +5,7 @@ class Catagory
 
   field :name, type: String
 
-  has_many :promotion
+  has_many :promotions
   has_one :icon, class_name: 'Image'
 
   def initialize(args = nil)
@@ -28,9 +28,5 @@ class Catagory
 
   validates_uniqueness_of :name
   validates_length_of :name, minimum: 4, maximum: 30
-
-  def get_id
-    self.id.to_s
-  end
 
 end

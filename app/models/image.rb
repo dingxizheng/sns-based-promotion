@@ -62,9 +62,4 @@ class Image
 
   end
 
-  # get string id
-  def get_id
-  	self.id.to_s
-  end
-
 end

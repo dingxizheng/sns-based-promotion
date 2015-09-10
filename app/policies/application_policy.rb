@@ -1,11 +1,12 @@
 class ApplicationPolicy
 
 	class Scope
-		attr_reader :user, :scope
+		attr_reader :user, :scope, :params
 
-		def initialize(user, scope)
+		def initialize(user, scope, params = {})
 			@user = user
 			@scope = scope
+			@params = params
 		end
 
 		def resolve

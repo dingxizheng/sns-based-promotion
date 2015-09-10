@@ -1,6 +1,9 @@
+require 'query_helper'
+
 class Review
   include Mongoid::Document
   include Mongoid::Timestamps
+  include Mongoid::QueryHelper
 
   resourcify
 
@@ -31,10 +34,5 @@ class Review
   def anonymous?
     self.anonymity_id ? true : false
   end
-
-  def get_id
-  	self.id.to_s
-  end
-
 
 end

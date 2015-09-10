@@ -1,6 +1,9 @@
+require 'query_helper'
+
 class Subscription
   include Mongoid::Document
   include Mongoid::Timestamps
+  include Mongoid::QueryHelper
 
   before_save :set_expire_and_status
   after_create :send_email
@@ -82,19 +85,18 @@ class Subscription
     self.reindex
   end
 
+  # when the status changes, needs to 
+  # update the user's status and the status of 
+  # all the promotions owned by this user
   def reindex
-    # self.user.set_subscripted_status
-    self.save
-
+    # save user will trigger reindex on user
+    self.user.save
+    # for each promotion owned by this user, call save to 
+    # reindex each of them
     self.user.promotions.each { |promotion|
-      # promotion.set_subscripted_status
       promotion.save
     }
   end
-
-  def get_id
-  	self.id.to_s
-  end 
 
   def set_expire_and_status
     if self.product.present?
@@ -119,5 +121,6 @@ class Subscription
   def send_email
     SubscriptionMailer.notify_admin(self).deliver_now!
   end
+  handle_asynchronously :send_email, :run_at => Proc.new { 1.minutes.from_now }
 
 end

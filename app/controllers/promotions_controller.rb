@@ -8,20 +8,64 @@ class PromotionsController < ApplicationController
   # GET /promotions
   # GET /promotions.json
   def index
-    # fitler the results by distance provided
-    result_by_distance = filter_and_sort_by_distance(Promotion, request.query_parameters)
-    # filter the results by users' role
-    promotions_before_query = PromotionPolicy::Scope.new(@owner, result_by_distance).resolve
-    # filter the reuslts by query parameters
-    @promotions = query_by_conditions(promotions_before_query, request.query_parameters)
-    # render the results
+    if params[:suggested]
+      suggested_index
+    else
+      normal_index
+    end
+  end
+
+  def normal_index
+    romotions_before_query = PromotionPolicy::Scope.new(@owner, Promotion, params).resolve
+    if params[:catagory_id]
+      promotions_by_category = romotions_before_query.by_category(params[:catagory_id])
+      if promotions_by_category.count < 1
+        raise EmptyList.new
+      end
+    end
+    result_by_distance = (promotions_by_category || Promotion).with_in_radius(get_location, params[:within])
+    queried_result = result_by_distance.query_by_params(request.query_parameters.except!(*(params_to_skip)))
+    @promotions = queried_result.sortby(params[:sortBy]).paginate(params[:page], params[:per_page])
+    render 'promotions/promotions', :locals => { :promotions => @promotions }
+  end
+
+  # this method helps return computed results:
+  #   1. put two randomized paid promotions at the top of the list
+  def suggested_index
+    romotions_before_query = PromotionPolicy::Scope.new(@owner, Promotion, params).resolve
+    if params[:catagory_id]
+      promotions_by_category = romotions_before_query.by_category(params[:catagory_id])
+      if promotions_by_category.count < 1
+        raise EmptyList.new
+      end
+    end
+    result_by_distance = (promotions_by_category || Promotion).with_in_radius(get_location, params[:within])
+    
+    paid_results = result_by_distance.query_by_params({ :subscripted => 'true' })
+    randomized_results = []  
+    if (paid_results.count > 2)
+      first_one = rand(paid_results.count)
+      second_one = rand(paid_results.count)
+      while first_one == second_one do
+        second_one = rand(paid_results.count)
+      end
+      randomized_results << paid_results[first_one] << paid_results[second_one]
+    else
+      randomized_results = paid_results.map{|r| r }
+    end
+    
+    queried_result = result_by_distance
+                        .query_by_params({ :_id => "!=#{ randomized_results.map(&:get_id).join(',,') }" })
+                        .query_by_params(request.query_parameters.except!(*(params_to_skip)))
+    @promotions = queried_result.sortby(params[:sortBy]).paginate(params[:page], params[:per_page])
+    @promotions = @promotions.map{|p| p}
+    randomized_results.each{|r| @promotions.insert(0, r) } unless params[:page].to_i > 1
     render 'promotions/promotions', :locals => { :promotions => @promotions }
   end
 
   # GET /promotions/1
   # GET /promotions/1.json
   def show
-
     respond_to do |format|
       format.html { render 'shares/promotion.html.erb' }
       format.json { render :partial => 'promotions/promotion', :locals => { :promotion => @promotion } }
@@ -32,11 +76,9 @@ class PromotionsController < ApplicationController
   # POST /promotions
   # POST /promotions.json
   def create
-    
     if @owner.promotions.in(:status => ['reviewed', 'submitted']).count >= 3
       raise BadRequestError.new('you only can have 3 active promotions')
     end
-
     @promotion = @owner.promotions.build(promotion_params)
     authorize @promotion
     moderatorize @owner, @promotion

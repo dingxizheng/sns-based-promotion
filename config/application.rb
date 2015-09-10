@@ -29,7 +29,11 @@ module GampApi
     # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
     # config.i18n.default_locale = :de
 
-    # config.autoload_paths += Dir["#{config.root}/lib/modules/*"]
+    # ActiveSupport::Dependencies.autoload_paths << "#{Rails.root}/lib/modules/mongoid_rateable"
+
+    config.autoload_paths += Dir["#{Rails.root}/lib/modules/*"]
+
+    puts 'Application..', config.autoload_paths
     
     config.active_job.queue_adapter = :delayed_job
 

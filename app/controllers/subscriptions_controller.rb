@@ -6,7 +6,9 @@ class SubscriptionsController < ApplicationController
   # GET /subscriptions
   # GET /subscriptions.json
   def index
-    @subscriptions = query_by_conditions(Subscription, request.query_parameters)
+    @subscriptions = Subscription.query_by_params(request.query_parameters.except!(*(params_to_skip)))
+                                 .sortby(params[:sortBy])
+                                 .paginate(params[:page], params[:per_page])
     render 'subscriptions/subscriptions', :locals => { :subscriptions => @subscriptions }
   end
 

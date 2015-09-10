@@ -1,14 +1,15 @@
 
-catagories = [{ :name => "Beauty & Wellness", :icon => "public/icons/wellness-beauty.png"} ,
-              { :name => "Food & Drinks", :icon => "public/icons/food-drinks.png"} ,
-              { :name => "Grocery", :icon => "public/icons/groceries.png"} ,
-              { :name => "Home & Reno", :icon => "public/icons/home-reno.png"} ,
-              { :name => "Auto", :icon => "public/icons/auto.png"} ,
-              { :name => "Sports & Fitness", :icon => "public/icons/sports-fitness.png"} ,
-              { :name => "Travel", :icon => "public/icons/travel.png"} ,
+catagories = [{ :name => "Beauty & Wellness", :icon => "public/icons/Beauty&wellness.png"} ,
+              { :name => "Food & Drinks", :icon => "public/icons/food&drinks.png"} ,
+              { :name => "Home & Reno", :icon => "public/icons/home&reno.png"} ,
+              { :name => "Auto", :icon => "public/icons/Auto.png"} ,
+              { :name => "Sport & Fitness", :icon => "public/icons/Sport&fitness.png"} ,
+              { :name => "Travel", :icon => "public/icons/Travel.png"} ,
               { :name => "Events", :icon => "public/icons/events.png"} ,
-              { :name => "Recreational", :icon => "public/icons/recreation.png"} ,
-              { :name => "Others", :icon => "public/icons/other-misc.png"}]
+              { :name => "Apparel", :icon => "public/icons/Apparel.png"} ,
+              { :name => "Electronics", :icon => "public/icons/Electronics.png"} ,
+              { :name => "Finance", :icon => "public/icons/Finance.png"} ,
+              { :name => "Other", :icon => "public/icons/Other.png"}]
 
 
 catagories.each do |c|
@@ -35,7 +36,9 @@ catagories.each do |c|
 
     cgr.icon = icon
 
-  elsif catagory.present? and not catagory.icon.present?
+  elsif catagory.present?
+    puts 'new icon...'
+
   	icon = Image.new
     icon.store(nil, File.read(filename))
     icon.save

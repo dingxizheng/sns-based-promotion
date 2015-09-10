@@ -7,8 +7,10 @@ class ReviewsController < ApplicationController
   # GET /reviews
   # GET /reviews.json
   def index
-    reviews_before_query = ReviewPolicy::Scope.new(@reviewer, Review).resolve
-    @reviews = query_by_conditions(reviews_before_query, request.query_parameters)
+    @reviews = ReviewPolicy::Scope.new(@reviewer, Review).resolve
+                  .query_by_params(request.query_parameters.except!(*(params_to_skip)))
+                  .sortby(params[:sortBy])
+                  .paginate(params[:page], params[:per_page])
     render 'reviews/reviews', :locals => { :reviews => @reviews }
   end
 

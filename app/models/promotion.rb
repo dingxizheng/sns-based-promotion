@@ -1,4 +1,8 @@
-Dir["#{Rails.root}/lib/modules/mongoid_rateable/*.rb"].each {|file| require file }
+
+require 'rateable'
+require 'rating'
+require 'query_helper'
+require 'geo_helper'
 
 class Promotion
   include Mongoid::Document
@@ -6,13 +10,15 @@ class Promotion
   include Sunspot::Mongoid2
   include Mongoid::Rateable
   include Geocoder::Model::Mongoid
+  include Mongoid::QueryHelper
+  include Mongoid::GeoHelper
 
-  # geocoded_by :coordinates           # can also be an IP address
+  geocoded_by :coordinates           # can also be an IP address
   # after_validation :geocode          # auto-fetch coordinates
 
   after_create :send_email
   before_save :set_coordinates, :set_subscripted_status
-  after_save :reindex_coordinates, :index_terms
+  after_save :index_terms
 
   resourcify
 
@@ -26,7 +32,7 @@ class Promotion
   field :start_at, type: DateTime, default: Time.now
   field :expire_at, type: DateTime, default: Time.now + 2.weeks
 
-  index({ coordinates: "2d" })
+  # index({ coordinates: "2d" })
 
   # mark this model as reteable
   rate_config range: (0..5), raters: [User, Anonymity]
@@ -36,16 +42,16 @@ class Promotion
   belongs_to :customer, class_name: 'User', inverse_of: :promotions
 
   # sunspot
-  searchable do  
+  searchable do
     text :title, :description
-    text :catagory do   
+    text :catagory do
       catagory.name
     end
 
     time :expire_at, :start_at
     string :status
 
-    string :id do 
+    string :id do
       get_id
     end
 
@@ -68,9 +74,9 @@ class Promotion
   def lon
     if not self.coordinates.nil? then self.coordinates[0] else 0 end
   end
- 
+
   def lat
-    if not self.coordinates.nil? then self.coordinates[1] else 0 end 
+    if not self.coordinates.nil? then self.coordinates[1] else 0 end
   end
 
   def approve
@@ -90,37 +96,30 @@ class Promotion
     'rejected' == self.status
   end
 
-  def get_id
-  	self.id.to_s
-  end
-
   def send_email
-    Thread.start {
-      PromotionMailer.notify_admin(self).deliver_now!
-    }
+    PromotionMailer.notify_admin(self).deliver_now!
   end
-
-  # reindex coordinates after save
-  def reindex_coordinates
-    if self.coordinates_changed?
-      Thread.start{
-        require 'rake'
-        Rake::Task.clear
-        Rails.application.load_tasks
-        Rake::Task['db:mongoid:create_indexes'].invoke
-      }
-    end
-  end
+  handle_asynchronously :send_email, :run_at => Proc.new { 1.minutes.from_now }
 
   def index_terms
-    Thread.start{
-      Term.index_promotion_on_demand(self)
-    }
+    Term.index_promotion_on_demand(self)
   end
+  handle_asynchronously :index_terms, :run_at => Proc.new { 3.minutes.from_now }
 
   def set_coordinates
     self.coordinates = self.customer.coordinates
     return true
+  end
+
+  class << self
+    def by_category(catagory_id)
+      category = Catagory.find(catagory_id)
+      if category.present? and category.promotions.count > 0
+        category.promotions
+      else
+        []
+      end
+    end
   end
 
 end

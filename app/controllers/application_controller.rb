@@ -10,6 +10,9 @@ class ApplicationController < ActionController::Base
 	# set default response format to json
 	before_filter :set_default_response_format
 
+	# return empty list
+	rescue_from EmptyList, :with => :render_empty_list
+
 	# capture all errors and pass them to functin render_error
 	rescue_from GampError, :with => :render_error
 
@@ -32,7 +35,7 @@ class ApplicationController < ActionController::Base
 
 	def default_url_options
 		if Rails.env.test? or Rails.env.production?
-			{ :host => 'rails-api-env-b4cm2bfxbr.elasticbeanstalk.com' }
+			{ :host => ENV["APP_HOST"] }
 		else
 			{}
 		end
@@ -71,7 +74,11 @@ class ApplicationController < ActionController::Base
 
 	# get the location information
 	def get_location
-		Rails.application.config.request_location
+		if (false if Rails.application.config.request_location[:lat] rescue true)
+			nil
+		else
+			Rails.application.config.request_location
+		end
 	end
 
 	def exception_logger
@@ -80,96 +87,7 @@ class ApplicationController < ActionController::Base
 
 	# params should be skipped in conditional query
 	def params_to_skip 
-		[:apitoken, :lat, :long, :page, :per_page, :within, :format, :user_role]
-	end
-
-	# filter the result by distance
-	def filter_and_sort_by_distance(scope, query_parameters)
-		if query_parameters[:within] and get_location
-			# scope.geo_near([get_location[:lat], get_location[:long]]).max_distance(Float(query_parameters[:within])) rescue scope
-			scope.near([get_location[:lat], get_location[:long]], Float(query_parameters[:within]), :units => :km) rescue scope
-		else
-			scope
-		end
-	end
-
-	# build mongoid query
-	# 1. id=123,,345,,678  
-	# 			===> id in [123, 345, 678]
-	# 2. created=<=1023456 
-	# 			===> created <= 1023456  
-	# 3. filtering by fields' existence 
-	# 			===> filed=!=null or filed=null
-	# 4. to query item within a distance to a certain point 
-	# 			===>  within=5 (within 5 kms)
-	def query_by_conditions(scope, query_parameters)
-
-		tempResult = scope
-		sortBy = query_parameters[:sortBy]
-		page = query_parameters[:page]
-		per_page = query_parameters[:per_page]
-
-		if params[:user_role]
-		  tempResult = tempResult.with_role params[:user_role]
-		  if tempResult.count == 0
-		  	return []
-		  end
-	    end
-
-		query_parameters.except!(*([:sortBy] + params_to_skip)).each do |key, value|
-			field = key.to_sym
-			logger.tagged('QUERY') { logger.info "key: #{key} , value: #{value}"}
-			query = {}
-
-			if value.nil?
-				logger.tagged('QUERY') { logger.info "query value is empty!"}
-			elsif value.start_with? '<='
-				query.store(field.lte, value[2..-1])
-			elsif value.start_with? '<'
-				query.store(field.lt, value[1..-1])
-			elsif value.start_with? '>='
-				query.store(field.gte, value[2..-1])
-			elsif value.start_with? '>'
-				query.store(field.gt, value[1..-1])
-			elsif value.start_with? '!='
-				if value == "!=null"
-					query.store(field.exists, false)
-				else
-					query.store(field.nin, value[2..-1].split(',,'))	
-				end
-			else
-				if value == "null"
-					query.store(field.exists, true)
-				else
-					query.store(field.in, value.split(',,'))
-				end
-			end
-
-			tempResult = tempResult.and(query);
-		end
-
-		# if 'sortBy' is contained in the query parameters
-		if sortBy.present? 
-			# multiple sortBy parameters must be seperated by ',,'
-			# for instance: 'sortBy=time,,name' ==> means sortBy 'time' and 'name'
-			order_by_params = sortBy.split(',,').map do |item|		
-				logger.tagged('SORTBY') { logger.info item }	
-				if item.start_with? '-'
-					[item[1..-1].to_sym, -1]
-				else
-					[item.to_sym, 1]
-				end
-			end
-			tempResult = tempResult.order_by(order_by_params)
-		end
-
-		# if pagenation is required, then return required page
-		if page.present? and per_page.present?
-			logger.tagged('PAGE') { logger.info "page: #{page} , number per page: #{per_page}" }
-			return tempResult.page(page).per(per_page)
-		else
-			return tempResult.all
-		end
+		[:apitoken, :lat, :long, :page, :per_page, :within, :format, :user_role, :sortBy, :suggested]
 	end
 
 	# raise an unauthorized error if no session created or session expired
@@ -195,6 +113,11 @@ class ApplicationController < ActionController::Base
 	# get the apitoken from the request
 	def loads_apikey
 		@apitoken = params[:apitoken]
+	end
+
+	# return empty list
+	def render_empty_list
+		render :json => []
 	end
 
 	# render errors

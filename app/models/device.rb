@@ -11,8 +11,4 @@ class Device
 
   # validates :identity, uniqueness: true
 
-  def get_id
-  	self.id.to_s
-  end
-
 end

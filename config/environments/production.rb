@@ -35,7 +35,7 @@ GampApi::Application.configure do
   # Version of your assets, change this if you want to expire all your assets.
   config.assets.version = '1.0'
 
-  config.action_controller.default_url_options = { host: 'rails-api-env-b4cm2bfxbr.elasticbeanstalk.com' }
+  config.action_controller.default_url_options = { host: ENV["APP_HOST"] }
 
   # Specifies the header that your server uses for sending files.
   # config.action_dispatch.x_sendfile_header = "X-Sendfile" # for apache
@@ -72,7 +72,7 @@ GampApi::Application.configure do
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.raise_delivery_errors = true
   config.action_mailer.perform_deliveries = true
-  config.action_mailer.default_url_options = { host: 'rails-api-env-b4cm2bfxbr.elasticbeanstalk.com' }
+  config.action_mailer.default_url_options = { host: ENV["APP_HOST"] }
 
   config.action_mailer.smtp_settings = {
     address:              'smtp.office365.com',

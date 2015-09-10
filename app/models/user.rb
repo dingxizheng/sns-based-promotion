@@ -1,5 +1,9 @@
-Dir["#{Rails.root}/lib/modules/mongoid_rateable/*.rb"].each {|file| require file }
+
 require 'digest'
+require 'query_helper'
+require 'geo_helper'
+require 'rating'
+require 'rateable'
 
 class User
   include Mongoid::Document
@@ -7,11 +11,13 @@ class User
   include Sunspot::Mongoid2
   include Mongoid::Rateable
   include Geocoder::Model::Mongoid
+  include Mongoid::QueryHelper
+  include Mongoid::GeoHelper
   
   geocoded_by :address 
   after_validation :geocode
   after_create :send_new_user_email
-  after_save  :reindex_coordinates, :index_terms
+  after_save  :index_terms
   before_create :encrypt_password, :set_default_role
   before_save :set_subscripted_status, :set_role, :check_address
 
@@ -29,6 +35,7 @@ class User
   field :guest, type: Boolean, default: false
   field :subscripted, type: Boolean, default: false
   
+  # business operation hours
   field :hours, type: Hash, default: {
     :Monday => { :from => '9:00', :to => '17:00' },
     :Tuesday => { :from => '9:00', :to => '17:00' },
@@ -89,6 +96,7 @@ class User
     return true
   end
 
+  # check if user still has any active subscriptions
   def subscripted?
     self.subscriptions.any? { |s| s.activate? }
   end
@@ -101,17 +109,16 @@ class User
     if not self.coordinates.nil? then self.coordinates[1] else 0 end 
   end
 
-  # return id object to id string
-  def get_id
-    self.id.to_s
-  end
-
+  # validate address
   def check_address
     if self.address_changed?
+      # search address by using google api
       results = Geocoder.search(self.address)
+      # if no result returned, then is not a valid address
       if results.count == 0
         self.errors.add :address, 'it is not a valid address!'
         return false
+      # otherwise, check if the address is a valid canada address
       else
         new_results = results.select{ |addr|
           addr.formatted_address.include? 'Canada'
@@ -198,6 +205,7 @@ class User
     return true
   end
 
+  # reset user's password
   def reset_password
     self.password = ('0'..'9').to_a.shuffle.first(5).join
     # self.encrypt_password
@@ -210,36 +218,22 @@ class User
 
   # send email after a user creation
   def send_new_user_email
-    Thread.start {
-      UserMailer.welcome(self).deliver_now!
-      UserMailer.new_user(self).deliver_now!
-    }
+    UserMailer.welcome(self).deliver_now!
+    UserMailer.new_user(self).deliver_now!
   end
+  handle_asynchronously :send_new_user_email, :run_at => Proc.new { 1.minutes.from_now }
+
 
   def send_customer_confirmation_email
-    Thread.start {
-      UserMailer.customer_confirmation(self).deliver_now!
-    }
+    UserMailer.customer_confirmation(self).deliver_now!
   end
+  handle_asynchronously :send_customer_confirmation_email, :run_at => Proc.new { 1.minutes.from_now }
 
-  # reindex coordinates after save
-  def reindex_coordinates
-    if self.coordinates_changed?
-      Thread.start{
-        require 'rake'
-        Rake::Task.clear
-        Rails.application.load_tasks
-        Rake::Task['db:mongoid:create_indexes'].invoke
-      }
-    end
-  end
-
-  # index_terms
+  # break user's info into small chunks and index them
   def index_terms
-    Thread.start{
-      Term.index_user_on_demand(self)
-    }
+    Term.index_user_on_demand(self)
   end
+  handle_asynchronously :index_terms, :run_at => Proc.new { 3.minutes.from_now }
  
 	# encrypt password 
 	def encrypt_password

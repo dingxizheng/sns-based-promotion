@@ -32,6 +32,14 @@ module Errors
 
 	end
 
+	# in some cases, when error happens, we want to return an empty list instead of an error message
+	class EmptyList < Exception
+		def initialize
+			@code = 200
+			@msg = 'nothing found'
+		end
+	end
+
 	class BadRequestError < GampError
 		def initialize(message)
 			@code = 400

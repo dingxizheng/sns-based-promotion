@@ -57,7 +57,7 @@ class SearchController < ApplicationController
 	# 			or all combinations seperated by ',,': 'user,,promotion'
 	# 	excludes: 
 	# 		1. results should not be included the result list
-	# 		2. it should be model id's
+	# 		2. it should be model ids'
 	# 			  for example:  excludes=1233344t,,5464564646
 	#   subscripted:
 	#   	1. if only searching in subscripted users and promotions
@@ -111,12 +111,8 @@ class SearchController < ApplicationController
 			fulltext params[:query]
 			order_by(:searchs, :desc)
 		end
-		# puts results.hits.to_yaml
-		# results.hits.each { |hit| puts hit.class_name; puts hit.result }
-		
-		terms = results.hits.map { |hit|
-			hit.result
-		}
+
+		terms = results.hits.map(&:result)
 
 		render json: terms
 	end

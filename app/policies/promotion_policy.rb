@@ -2,10 +2,10 @@ class PromotionPolicy < ApplicationPolicy
 
   class Scope < Scope
     def resolve
-      if user.guest
-        scope.nin(:status => ['submitted', 'rejected'])
-      else
+      if user.get_id == params[:customer_id]
         scope.all
+      else
+        scope.nin(:status => ['submitted', 'rejected'])
       end
     end
   end

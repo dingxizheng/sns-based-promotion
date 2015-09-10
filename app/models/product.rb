@@ -1,6 +1,9 @@
+require 'query_helper'
+
 class Product
   include Mongoid::Document
   include Mongoid::Timestamps
+  include Mongoid::QueryHelper
 
   field :price, type: Float
   field :name,  type: String
@@ -14,10 +17,6 @@ class Product
       :description => self.description,
       :time => self.time
     }
-  end
-
-  def get_id
-  	self.id.to_s
   end
 
 end
