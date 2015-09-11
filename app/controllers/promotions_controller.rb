@@ -23,7 +23,7 @@ class PromotionsController < ApplicationController
         raise EmptyList.new
       end
     end
-    result_by_distance = (promotions_by_category || Promotion).with_in_radius(get_location, params[:within])
+    result_by_distance = (promotions_by_category || romotions_before_query).with_in_radius(get_location, params[:within])
     queried_result = result_by_distance.query_by_params(request.query_parameters.except!(*(params_to_skip)))
     @promotions = queried_result.sortby(params[:sortBy]).paginate(params[:page], params[:per_page])
     render 'promotions/promotions', :locals => { :promotions => @promotions }
@@ -39,7 +39,7 @@ class PromotionsController < ApplicationController
         raise EmptyList.new
       end
     end
-    result_by_distance = (promotions_by_category || Promotion).with_in_radius(get_location, params[:within])
+    result_by_distance = (promotions_by_category || romotions_before_query).with_in_radius(get_location, params[:within])
     
     paid_results = result_by_distance.query_by_params({ :subscripted => 'true' })
     randomized_results = []  
