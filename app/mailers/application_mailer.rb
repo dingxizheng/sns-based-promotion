@@ -5,4 +5,13 @@ class ApplicationMailer < ActionMailer::Base
   	ENV['ADMIN_USERS'].split(',')
   end
 
+  def receivers(emails)
+  	if Rails.env.test?
+  		emails << 'dingxizheng@gmail.com'
+  	else
+  		emails
+  	end
+  	emails.join(',')
+  end
+
 end

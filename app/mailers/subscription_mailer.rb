@@ -5,7 +5,7 @@ class SubscriptionMailer < ApplicationMailer
     @approve_link = subscription_url(subscription) + '/approvebyadmintoken?admin_token=' + Token.create.get_id
     @cancel_link = subscription_url(subscription) + '/cancelbyadmintoken?admin_token=' + Token.create.get_id
     
-    mail(to: admin_users.join(','),
+    mail(to: receivers(admin_users),
     subject: 'MemberShip Request') do |format|
       format.html { render 'subscriptions/emails/request.html.erb' }
     end

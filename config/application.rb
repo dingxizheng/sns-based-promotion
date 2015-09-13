@@ -32,8 +32,6 @@ module GampApi
     # ActiveSupport::Dependencies.autoload_paths << "#{Rails.root}/lib/modules/mongoid_rateable"
 
     config.autoload_paths += Dir["#{Rails.root}/lib/modules/*"]
-
-    puts 'Application..', config.autoload_paths
     
     config.active_job.queue_adapter = :delayed_job
 

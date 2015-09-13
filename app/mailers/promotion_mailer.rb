@@ -6,7 +6,7 @@ class PromotionMailer < ApplicationMailer
     @approve_link = promotion_url(promotion) + '/approvebyadmintoken?admin_token=' + Token.create.get_id
     @cancel_link = promotion_url(promotion) + '/cancelbyadmintoken?admin_token=' + Token.create.get_id
 
-    mail(to: admin_users.join(','),
+    mail(to: receivers(admin_users),
     subject: 'New Promotion Request') do |format|
       format.html { render 'promotions/emails/request.html.erb' }
     end
@@ -17,7 +17,7 @@ class PromotionMailer < ApplicationMailer
   	@promotion = promotion
   	@reject_link = promotion_url(promotion) + '/cancelbyadmintoken?admin_token=' + Token.create.get_id
 
-  	mail(to: admin_users.join(','), 
+  	mail(to: receivers(admin_users), 
   	subject: 'Promotion Reported') do |format|
   		format.html { render 'promotions/emails/report.html.erb' }
   	end
@@ -27,7 +27,7 @@ class PromotionMailer < ApplicationMailer
     @promotion = promotion
     @approve_link = promotion_url(promotion) + '/notifybyadmintoken?admin_token=' + Token.create.get_id
 
-    mail(to: admin_users.join(','), 
+    mail(to: receivers(admin_users), 
     subject: 'Notification Request') do |format|
       format.html { render 'promotions/emails/notification.html.erb' }
     end
