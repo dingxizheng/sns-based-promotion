@@ -20,6 +20,13 @@ if Rails.application.config.request_location.present? and not promotion.customer
 	json.distance promotion.customer.distance_from([Rails.application.config.request_location[:lat], Rails.application.config.request_location[:long]]) * 1.60934
 end
 
+if not promotion.cover.nil?
+	json.cover do
+		json.image_url promotion.cover.image_url
+		json.thumb_url promotion.cover.thumb_url
+	end
+end
+
 json.catagory do
 	json.id promotion.catagory.get_id
 	json.name promotion.catagory.name
