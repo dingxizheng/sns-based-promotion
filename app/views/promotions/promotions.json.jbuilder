@@ -1,3 +1,3 @@
 json.array!(promotions) do |promotion|
-  json.partial! :partial => 'promotions/promotion', :locals => { :promotion => promotion }
+  json.partial! :partial => 'promotions/listitem', :locals => { :promotion => promotion }
 end

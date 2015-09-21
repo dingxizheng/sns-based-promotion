@@ -32,26 +32,8 @@ json.catagory do
 	end
 end
 
-if not promotion.cover.nil?
-	json.cover do
-		json.image_url promotion.cover.image_url
-		json.thumb_url promotion.cover.thumb_url
-	end
-end
-
 json.customer do
 	json.id promotion.customer.get_id
 	json.url user_url(promotion.customer)
 	json.name promotion.customer.name
-	json.email promotion.customer.email
-	json.phone promotion.customer.phone
-	json.address promotion.customer.address
-
-	if not promotion.customer.logo.nil?
-		json.logo do
-			json.image_url promotion.customer.logo.image_url
-			json.thumb_url promotion.customer.logo.thumb_url
-		end
-	end
-
 end

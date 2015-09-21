@@ -41,6 +41,7 @@ class UserMailer < ApplicationMailer
   def new_password(user, password)
     @user = user
     @password = password
+    
     mail(to: receivers([user.email]),
     subject: 'Your New Password') do |format|
       format.html { render 'users/emails/new_password.html.erb' }

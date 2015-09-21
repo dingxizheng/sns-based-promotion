@@ -1,13 +1,23 @@
 class UsersController < ApplicationController
 
-  before_action :restrict_access, only: [:create, :update, :destory, :set_logo, :add_keyword, :delete_keyword, :update_password]
-  before_action :set_user, only: [:rate, :show, :update, :destroy, :set_logo, :add_keyword, :delete_keyword, :reset_password, :reset_password_by_admin_token, :reset_role_by_admin_token, :update_password]
+  before_action :restrict_access, only: [:create, :update, :destory, :add_keyword, :delete_keyword, :update_password]
+  before_action :set_user, only: [:rate, :show, :update, :destroy, :add_keyword, :delete_keyword, :reset_password, :reset_password_by_admin_token, :reset_role_by_admin_token, :update_password]
 
 
   # GET /users
   # GET /users.json
   def index
-    result_by_distance = User.with_in_radius(get_location, params[:within])  
+    if params[:suggested]
+      suggested_index
+    elsif params[:suggested_paid]
+      suggested_paid
+    else
+      normal_index
+    end
+  end
+
+  def normal_index
+    result_by_distance = User.with_in_radius(get_location, params[:within])
     if params[:user_role]
       result_by_role = result_by_distance.with_role(params[:user_role])
       if result_by_role.count < 1
@@ -16,6 +26,31 @@ class UsersController < ApplicationController
     end
     queried_result = (result_by_role || result_by_distance).query_by_params(request.query_parameters.except!(*(params_to_skip)))
     @users = queried_result.sortby(params[:sortBy]).paginate(params[:page], params[:per_page])
+    render 'users/users', :locals => { :users => @users }
+  end
+
+  def suggested_paid
+    result_by_distance = User.with_in_radius(get_location, params[:within])
+    if params[:user_role]
+      result_by_role = result_by_distance.with_role(params[:user_role])
+      if result_by_role.count < 1
+        raise EmptyList.new
+      end
+    end
+    paid_result = (result_by_role || result_by_distance).query_by_params({ :subscripted => 'true' })
+    queried_result = paid_result.query_by_params(request.query_parameters.except!(*(params_to_skip)))
+    
+    if queried_result.count >= 10
+      randomized_results = []
+      while randomized_results.count < 10 do
+        i = rand(queried_result.count)
+        randomized_results << i unless randomized_results.include?(i)
+      end 
+      @users = randomized_results.map{|i| queried_result[i]}
+    else
+      @users = queried_result
+    end
+      
     render 'users/users', :locals => { :users => @users }
   end
 
@@ -32,6 +67,7 @@ class UsersController < ApplicationController
   # POST /users.json
   def create
     @user = User.new(user_params)
+    set_images(@user)
     authorize @user
     raise UnprocessableEntityError.new(@user.errors) unless @user.save
     render partial: "users/user", :locals => { :user => @user }, status: :created
@@ -41,8 +77,9 @@ class UsersController < ApplicationController
   # PATCH/PUT /users/1.json
   def update
     authorize @user
+    set_images(@user)
     @user.hours = params[:user][:hours] unless params[:user][:hours].nil?
-    raise UnprocessableEntityError.new(@user.errors) unless @user.update(user_params)     
+    raise UnprocessableEntityError.new(@user.errors) unless @user.update(user_params)
     render partial: "users/user", :locals => { :user => @user }
   end
 
@@ -52,7 +89,7 @@ class UsersController < ApplicationController
       @user.password = params[:new_password]
       @user.encrypt_password
       raise UnprocessableEntityError.new(@user.errors) unless @user.save
-    else 
+    else
       raise GampError.new(500, 'the current password is not correct!')
     end
     render partial: "users/user", :locals => { :user => @user }
@@ -117,20 +154,6 @@ class UsersController < ApplicationController
     head :no_content
   end
 
-  # POST /users/1/logo
-  def set_logo
-    authorize @user
-    raise UnprocessableEntityError.new(@user.errors) unless @user.set_logo(params[:logo])
-    render partial: "users/user", :locals => { :user => @user }
-  end
-
-  # POST /users/1/background
-  def set_background
-    authorize @user
-    raise UnprocessableEntityError.new(@user.errors) unless @user.set_background(params[:background])
-    render partial: "users/user", :locals => { :user => @user }
-  end
-
   # keywords functions
   # POST /users/1/keywords
   def add_keyword
@@ -149,6 +172,24 @@ class UsersController < ApplicationController
   end
 
   private
+
+  def set_images(user)
+    logo = Image.find(params[:user][:logo_id] || 'false')
+    background = Image.find(params[:user][:background_id] || 'false')
+
+    flag = false
+    if logo.present?
+      user.logo = logo
+      flag = true
+    end
+
+    if background.present?
+      user.background = background
+      flag = true
+    end
+    return flag
+  end
+
   # Use callbacks to share common setup or constraints between actions.
   def set_user
     user_id = params[:id] || params[:user_id]
@@ -161,10 +202,6 @@ class UsersController < ApplicationController
   def user_params
     # puts params.require(:user)
     params.require(:user).permit(:name, :phone, :email, :address, :description, :password, :hours)
-  end
-
-  def user_logo
-    params.require(:user).permit(:logo)
   end
 
 end

@@ -12,6 +12,7 @@ class Promotion
   include Geocoder::Model::Mongoid
   include Mongoid::QueryHelper
   include Mongoid::GeoHelper
+  include Mongoid::Keywordsable
 
   geocoded_by :coordinates           # can also be an IP address
   # after_validation :geocode          # auto-fetch coordinates
@@ -37,13 +38,14 @@ class Promotion
   # mark this model as reteable
   rate_config range: (0..5), raters: [User, Anonymity]
 
+  has_one  :cover, class_name: 'Image'
   has_many :reviews, inverse_of: :promotion, class_name: 'Review'
   belongs_to :catagory
   belongs_to :customer, class_name: 'User', inverse_of: :promotions
 
   # sunspot
   searchable do
-    text :title, :description
+    text :title, :description, :keywords
     text :catagory do
       catagory.name
     end

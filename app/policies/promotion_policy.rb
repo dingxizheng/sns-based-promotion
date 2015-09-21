@@ -31,4 +31,12 @@ class PromotionPolicy < ApplicationPolicy
     user.is_admin?
   end
 
+  def add_keyword?
+    user.has_role? :moderator, record
+  end
+
+  def delete_keyword?
+    user.has_role? :moderator, record
+  end
+
 end

@@ -13,6 +13,7 @@ class User
   include Geocoder::Model::Mongoid
   include Mongoid::QueryHelper
   include Mongoid::GeoHelper
+  include Mongoid::Keywordsable
   
   geocoded_by :address 
   after_validation :geocode
@@ -30,7 +31,6 @@ class User
   field :phone, type: String
   field :address, type: String
   field :description, type: String
-  field :keywords, type: Array, default: []
   field :coordinates, type: Array
   field :guest, type: Boolean, default: false
   field :subscripted, type: Boolean, default: false
@@ -54,9 +54,9 @@ class User
   has_many :opinions, inverse_of: :reviewer, class_name: 'Review'
   has_many :promotions
   has_one  :session
-  has_one  :logo, class_name: 'Image'
-  has_one  :background, class_name: 'Image'
-  has_many :photos, class_name: 'Image'
+  has_one  :logo, inverse_of: :logo_owner, class_name: 'Image'
+  has_one  :background, inverse_of: :background_owner, class_name: 'Image'
+  has_many :photos, inverse_of: :photos_owner, class_name: 'Image'
   has_many :subscriptions
 
   # appointments
@@ -133,44 +133,9 @@ class User
     end
   end
 
-  # add keyword to user
-  def add_keyword(keyword)
-    if self.keywords.include?(keyword)
-      self.errors.add :keywords, 'could not have duplicate values'
-      # return false if an error added
-      return false
-    else
-      self.push(keywords: keyword)
-    end
-  end
-
   # see if password matches or not
   def password_match?(password)
   	self.password == Digest::SHA2.hexdigest(password)
-  end
-
-  # set logo
-  def set_logo(upload)
-    # create a new image record
-    logo = Image.new({ :user_id => self.get_id })
-    if not logo.store(upload) and not logo.save
-      self.errors.add :logo, upload.original_filename + ': could not set logo.'
-      return false
-    end
-    self.logo = logo
-    return true
-  end
-
-  # set_background(upload)
-  def set_background(upload)
-    # create a new image record
-    background = Image.new({ :user_id => self.get_id })
-    if not background.store(upload) and not background.save
-      self.errors.add :background, upload.original_filename + ': could not set background.'
-      return false
-    end
-    self.background = background
-    return true
   end
 
   # add a new photo

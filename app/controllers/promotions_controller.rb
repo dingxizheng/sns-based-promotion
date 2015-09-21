@@ -1,7 +1,7 @@
 class PromotionsController < ApplicationController
 
   # always put this at top
-  before_action :restrict_access, only: [:create, :update, :destory, :approve, :reject]
+  before_action :restrict_access, only: [:create, :update, :destory, :approve, :reject, :add_keyword, :delete_keyword]
   before_action :set_promotion, except: [:index, :create]
   before_action :set_owner, except:[]
 
@@ -10,11 +10,14 @@ class PromotionsController < ApplicationController
   def index
     if params[:suggested]
       suggested_index
+    elsif params[:suggested_paid]
+      suggested_paid
     else
       normal_index
     end
   end
 
+  # this method handles normal requests
   def normal_index
     romotions_before_query = PromotionPolicy::Scope.new(@owner, Promotion, params).resolve
     if params[:catagory_id]
@@ -34,7 +37,7 @@ class PromotionsController < ApplicationController
   def suggested_index
     romotions_before_query = PromotionPolicy::Scope.new(@owner, Promotion, params).resolve
     if params[:catagory_id]
-      promotions_by_category = romotions_before_query.by_category(params[:catagory_id])
+      promotions_by_category = romotions_before_query.where({ :catagory_id => params[:catagory_id]})
       if promotions_by_category.count < 1
         raise EmptyList.new
       end
@@ -53,13 +56,41 @@ class PromotionsController < ApplicationController
     else
       randomized_results = paid_results.map{|r| r }
     end
-    
+
     queried_result = result_by_distance
                         .query_by_params({ :_id => "!=#{ randomized_results.map(&:get_id).join(',,') }" })
                         .query_by_params(request.query_parameters.except!(*(params_to_skip)))
     @promotions = queried_result.sortby(params[:sortBy]).paginate(params[:page], params[:per_page])
     @promotions = @promotions.map{|p| p}
     randomized_results.each{|r| @promotions.insert(0, r) } unless params[:page].to_i > 1
+    render 'promotions/promotions', :locals => { :promotions => @promotions }
+  end
+
+  def suggested_paid
+    romotions_before_query = PromotionPolicy::Scope.new(@owner, Promotion, params).resolve
+    if params[:catagory_id]
+      promotions_by_category = romotions_before_query.where({ :catagory_id => params[:catagory_id]})
+      if promotions_by_category.count < 1
+        raise EmptyList.new
+      end
+    end
+    result_by_distance = (promotions_by_category || romotions_before_query).with_in_radius(get_location, params[:within])
+    
+    paid_results = result_by_distance.query_by_params({ :subscripted => 'true' })
+
+    queried_result = paid_results.query_by_params(request.query_parameters.except!(*(params_to_skip)))
+
+    if queried_result.count >= 2
+      randomized_results = []
+      while randomized_results.count < 2 do
+        i = rand(queried_result.count)
+        randomized_results << i unless randomized_results.include?(i)
+      end 
+      @promotions = randomized_results.map{|i| queried_result[i]}
+    else
+      @promotions = queried_result
+    end
+
     render 'promotions/promotions', :locals => { :promotions => @promotions }
   end
 
@@ -82,7 +113,9 @@ class PromotionsController < ApplicationController
     @promotion = @owner.promotions.build(promotion_params)
     authorize @promotion
     moderatorize @owner, @promotion
+
     raise UnprocessableEntityError.new(@promotion.errors) unless @promotion.save
+    set_images(@promotion)
     render :partial => 'promotions/promotion', :locals => { :promotion => @promotion }, status: :created
   end
 
@@ -90,13 +123,13 @@ class PromotionsController < ApplicationController
   # PATCH/PUT /promotions/1.json
   def update
     authorize @promotion
+    set_images(@promotion)
     raise UnprocessableEntityError.new(@promotion.errors) unless @promotion.update(promotion_params)
     render :partial => 'promotions/promotion', :locals => { :promotion => @promotion }
   end
 
   # POST /promotions/1/rate
   def rate
-
     if current_user.guest
       rater = Anonymity.where(ip: request.remote_ip).first_or_create!
     else
@@ -229,7 +262,36 @@ class PromotionsController < ApplicationController
     end
   end
 
+  # keywords functions
+  # POST /promotions/1/keywords
+  def add_keyword
+    authorize @promotion
+    raise UnprocessableEntityError.new(@promotion.errors) unless @promotion.add_keyword(params[:keyword])
+    Sunspot.index! [@promotion]
+    head :no_content
+  end
+
+  # DELETE /promotion/1/keywords/:keyword
+  def delete_keyword
+    authorize @promotion
+    @promotion.pull(keywords: params[:keyword])
+    Sunspot.index! [@promotion]
+    head :no_content
+  end
+
   private
+
+  # Set images
+  def set_images(promotion)
+    cover = Image.find(params[:promotion][:cover_id] || 'false')
+    flag = false
+    if cover.present?
+      cover.promotion = promotion
+      cover.save
+      flag = true
+    end
+    return flag
+  end
 
   # Use callbacks to share common setup or constraints between actions.
   def set_promotion
@@ -239,7 +301,7 @@ class PromotionsController < ApplicationController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def promotion_params
-    params.require(:promotion).permit(:title, :description, :catagory_id, :start_at, :expire_at)
+    params.require(:promotion).permit(:title, :description, {keywords: []}, :catagory_id, :start_at, :expire_at)
   end
 
   # load owner

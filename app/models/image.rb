@@ -15,8 +15,11 @@ class Image
   field :original_data, type: String
 
   # relations
-  belongs_to :user
+  belongs_to :logo_owner, inverse_of: :logo, class_name: 'User'
+  belongs_to :background_owner, inverse_of: :background, class_name: 'User'
+  belongs_to :photos_owner, inverse_of: :photos, class_name: 'User'
   belongs_to :catagory
+  belongs_to :promotion
 
   # save data from request 
   # in our case we don't store any images on local
@@ -50,13 +53,13 @@ class Image
     
     require 'json'
     data = JSON.parse(res.body)    
-    self.extension = data["image"]["extension"]
-    self.size = data["image"]["size"]
-    self.width = data["image"]["width"]
-    self.height = data["image"]["height"]
-    self.image_url = data["image"]["image"]["url"]
-    self.thumb_url = data["image"]["thumb"]["url"]
-    self.medium_url = data["image"]["medium"]["url"] if data["image"]["medium"].present?
+    self.extension     = data["image"]["extension"]
+    self.size          = data["image"]["size"]
+    self.width         = data["image"]["width"]
+    self.height        = data["image"]["height"]
+    self.image_url     = data["image"]["image"]["url"]
+    self.thumb_url     = data["image"]["thumb"]["url"]
+    self.medium_url    = data["image"]["medium"]["url"] if data["image"]["medium"].present?
     self.original_data = res.body
     return true
 

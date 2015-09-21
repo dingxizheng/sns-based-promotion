@@ -6,12 +6,16 @@ GampApi::Application.routes.draw do
 
   resources :reviews, except: [:new, :edit] 
 
+  resources :images, except: [:new, :edit, :update, :destroy]
+
   resources :promotions, except: [:new, :edit] do 
     post 'report' => 'promotions#report'
     post 'approve' => 'promotions#approve'
     post 'reject' => 'promotions#reject'
     post 'rate' => 'promotions#rate'
     post 'notify' => 'promotions#notify'
+    post 'keywords' => 'promotions#add_keyword'
+    delete 'keywords/:keyword' => 'promotions#delete_keyword'
     get  'approvebyadmintoken' => 'promotions#approve_by_admin_token'
     get  'cancelbyadmintoken' => 'promotions#cancel_by_admin_token'
     get  'notifybyadmintoken' => 'promotions#notify_by_admin_token' 
@@ -35,13 +39,15 @@ GampApi::Application.routes.draw do
       post 'reject' => 'promotions#reject'
       post 'rate' => 'promotions#rate'
       post 'notify' => 'promotions#notify'
+      post 'keywords' => 'promotions#add_keyword'
+      delete 'keywords/:keyword' => 'promotions#delete_keyword'
     end
+
     post 'newpassword' => 'users#update_password'
     get 'resetpasswordbytoken' => 'users#reset_password_by_admin_token'
     get 'resetrolebytoken' => 'users#reset_role_by_admin_token'
     post 'keywords' => 'users#add_keyword'
     delete 'keywords/:keyword' => 'users#delete_keyword'
-    post 'logo' => 'users#set_logo'
     post 'reset' => 'users#reset_password'
     post 'rate' => 'users#rate'
   end
