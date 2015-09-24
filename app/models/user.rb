@@ -53,7 +53,7 @@ class User
   has_many :reviews, inverse_of: :customer, class_name: 'Review'
   has_many :opinions, inverse_of: :reviewer, class_name: 'Review'
   has_many :promotions
-  has_one  :session
+  has_many :sessions
   has_one  :logo, inverse_of: :logo_owner, class_name: 'Image'
   has_one  :background, inverse_of: :background_owner, class_name: 'Image'
   has_many :photos, inverse_of: :photos_owner, class_name: 'Image'
@@ -63,6 +63,10 @@ class User
   has_many :booked_appointments, inverse_of: :booker, class_name: 'Appointment'
   has_many :accepted_appointments, inverse_of: :accepter, class_name: 'Appointment'
   has_many :timeslots
+
+  # messages
+  has_many :out_going_msgs, inverse_of: :sender, class_name: 'Message'
+  has_many :in_coming_msgs, inverse_of: :receiver, class_name: 'Message'
 
   # sunspot
   searchable do   

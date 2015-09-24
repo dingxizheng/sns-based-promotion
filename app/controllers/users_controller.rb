@@ -173,6 +173,7 @@ class UsersController < ApplicationController
 
   private
 
+  # get image ids from the request params and bind them to the user object
   def set_images(user)
     logo = Image.find(params[:user][:logo_id] || 'false')
     background = Image.find(params[:user][:background_id] || 'false')

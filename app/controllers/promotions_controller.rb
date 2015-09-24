@@ -66,6 +66,7 @@ class PromotionsController < ApplicationController
     render 'promotions/promotions', :locals => { :promotions => @promotions }
   end
 
+  # this method is being used to return suggested results when onthing is searched 
   def suggested_paid
     romotions_before_query = PromotionPolicy::Scope.new(@owner, Promotion, params).resolve
     if params[:catagory_id]
@@ -158,6 +159,7 @@ class PromotionsController < ApplicationController
     authorize @promotion
     @promotion.approve
     raise UnprocessableEntityError.new(@promotion.errors) unless @promotion.save
+    @promotion.create_approval_msg(current_user)
     render :partial => 'promotions/promotion', :locals => { :promotion => @promotion }
   end
 
@@ -186,6 +188,7 @@ class PromotionsController < ApplicationController
     if Token.find(params[:admin_token]).present?
       @promotion.approve
       raise UnprocessableEntityError.new(@promotion.errors) unless @promotion.save
+      @promotion.create_approval_msg
       Token.find(params[:admin_token]).destroy
       render :text => 'request has been approved successfully!';
     else
@@ -242,7 +245,7 @@ class PromotionsController < ApplicationController
           device.token
         }
 
-        # send notifications to all dndroid devices
+        # send notifications to all android devices
         response = GCM.get.send(devices, {
                                   # the date will be pushed to remote
                                   data: {

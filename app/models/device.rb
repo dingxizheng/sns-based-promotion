@@ -7,7 +7,8 @@ class Device
   field :identity, type: String
   field :token, type: String 
   field :os, type: String
-  field :user_id, type: String
+
+  has_one :session
 
   # validates :identity, uniqueness: true
 

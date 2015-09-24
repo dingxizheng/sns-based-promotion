@@ -10,13 +10,18 @@ class AccountsController < ApplicationController
 		raise BadRequestError.new('user does not exist') unless not @user.nil?
 		# if password does not match, raise a 400 error
 		raise BadRequestError.new('wrong password') unless @user.password_match?(params[:password])
-		@user.session.destroy unless not @user.session.presence
-
+		
+		# @user.session.destroy unless not @user.session.presence
+		
+		# delete expired sessions
+		@user.sessions.each{|s| s.destroy unless not s.expire?}
+		
 		# otherwise create a new seession
 		session = Session.new
 		session.save
 		session.refresh
-		@user.session = session
+		@user.sessions << session
+
 		render :partial => 'users/session', :locals => { :session => session }
 
 	end

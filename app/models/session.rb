@@ -9,10 +9,13 @@ class Session
  
   # fields
   field :access_token, type: String
-  field :expire_at, type: DateTime, default: DateTime.now + 24.hours
+  # session can only last for 10 days
+  field :expire_at, type: DateTime, default: DateTime.now + 240.hours
 
   # relations
   belongs_to :user
+
+  belongs_to :device
 
   # validaters
   validates :access_token, uniqueness: true
@@ -24,7 +27,8 @@ class Session
 
   # when a valid token is received, refresh the session
   def refresh
-    self.expire_at = DateTime.now + 24.hours
+    # self.expire_at = DateTime.now + 24.hours 
+    # will be implemented later
   end
  
   private

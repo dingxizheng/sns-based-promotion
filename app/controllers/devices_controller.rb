@@ -16,10 +16,18 @@ class DevicesController < ApplicationController
 	def create
 		if Device.where({ :identity => device_params[:identity] }).first.nil?
 			@device = Device.new(device_params)
+			@device.session = @session
 			raise UnprocessableEntityError.new(@device.errors) unless @device.save
 		else
 			@device = Device.where({ :identity => device_params[:identity] }).first
+			@device.session = @session
 			raise UnprocessableEntityError.new(@device.errors) unless @device.update(device_params)
+		end
+		# send message to the device
+		if not @session.nil?
+			Message.where({ msg_send: false, receiver_id: @session.user.get_id }).each{|msg|
+				msg.send_msg
+			}
 		end
 		head :no_content
 	end
