@@ -6,9 +6,9 @@ angular.module('starter.config', [])
 
 	// baseUrl: 'http://192.168.250.6:3000',
 	
-	// baseUrl: 'http://rails-api-env-b4cm2bfxbr.elasticbeanstalk.com',
+	baseUrl: 'http://rails-api-env-b4cm2bfxbr.elasticbeanstalk.com',
 	
-	baseUrl: 'http://vicinity-deals-test-3hqca6tun5.elasticbeanstalk.com',
+	// baseUrl: 'http://vicinity-deals-test-3hqca6tun5.elasticbeanstalk.com',
 	
 	// baseUrl: 'http://localhost:3000',
 	
