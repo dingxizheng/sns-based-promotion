@@ -1,0 +1,13 @@
+<a class="item item-avatar" ng-href="#/app/promotions/{{ item.id }}">
+    <img ng-src="{{ item.catagory.icon.image_url }}" fallback-src="img/placeholder.png" loading-src="img/placeholder.png" style="border-radius: 0">
+    <h3>{{ item.title }}</h3>
+    <p style="white-space: normal">{{ item.description }}</p>
+    <hr class="thin">
+    <p><span style="color: white; background-color: #C57477">&nbsp;{{ item.rating.toFixed(1) }} <i class="icon ion-ios-star"></i>&nbsp;</span> - {{ item.rates }} Reviews</p>
+    <p ng-if="editable(item.customer.id)">expire at: <span style="color: #C57477">{{ item.expire_at | date: 'MM/dd/yyyy' }}</span></p>
+    <p ng-if="editable(item.customer.id)">status: <span style="color: #C57477">{{ item.status }}</span></p>
+    <span class="item-note">
+        {{ item.created_at  | date: 'MM/dd/yyyy' }}
+    </span>
+   <!--  <span style="color: white; background-color: #C57477; top:0; right:0; position: absolute">&nbsp;&nbsp;{{ item.created_at | date: 'MM/dd/yyyy' }}&nbsp;&nbsp;</span> -->
+</a>

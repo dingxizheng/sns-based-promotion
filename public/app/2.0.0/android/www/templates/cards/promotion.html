@@ -1,0 +1,18 @@
+ <div class="card" style="margin: 2vw 2vw">
+    <a class="item item-avatar" ng-href="#/app/promotions/{{ item.id }}">
+        <img ng-src="{{ item.catagory.icon.image_url }}" fallback-src="img/placeholder.png" loading-src="img/placeholder.png" style="border-radius: 0">
+        <h2 style="white-space: normal">{{ item.title }}</h2>
+        <p><i class="fa fa-user"></i> {{ item.customer.name }}</p>
+        <p style="white-space: normal; font-size: 80%" ng-if="item.keywords.length !== 0">
+            <span ng-if="item.keywords.length === 0" style="color: #C57477;">no keywords</span>
+            <span ng-repeat="keyword in item.keywords" style="color: #C57477;">#{{ keyword }}<span style="display: inline-block; width: 0vw;"/></span>
+        </p>
+
+        <hr class="thin">
+        
+        <span ng-if="item.distance" class="item-note" style="color: #C57477; font-size: 80%">{{ item.distance.toFixed(1) + ' km'}}</span>
+        <p style="font-size: 80%"><span style="color: white; background-color: #C57477">&nbsp;{{ item.rating.toFixed(1) }} <i class="icon ion-ios-star"></i>&nbsp;</span> - {{ item.rates }} Reviews</p>
+
+        <span ng-if="item.subscripted" style="font-size: 60%; background: none; color: #C57477; top:0; right:0; position: absolute">&nbsp;&nbsp;Ads&nbsp;&nbsp;</span>
+    </a>
+</div>

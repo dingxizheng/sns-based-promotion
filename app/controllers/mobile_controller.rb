@@ -13,6 +13,13 @@ class MobileController < ApplicationController
 		params[:app_version] || base_version
 	end
 
+	# GET /appversion
+	def app_version
+		render :json => {
+			version: '2.0.0'
+		}
+	end
+
 	# GET /app
 	def app
 		if request.user_agent.include? 'iPhone'			

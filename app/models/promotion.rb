@@ -118,6 +118,26 @@ class Promotion
   end
   handle_asynchronously :create_approval_msg, :run_at => Proc.new { 3.minutes.from_now }
 
+  # create a message asynchronously 
+  def create_rejection_msg(admin = nil)
+    params = { 
+        :msg_type => 'promotion_rejection_notify',
+        :msg_body => {
+          :title => 'Promotion Rejected',
+          :message => "[ #{ self.title } ] has been rejected. please see email for details",
+          :promotion_id => self.get_id,
+          :promotion_type => self.title,
+          :promotion_description => self.description,
+          :msg_type => 'promotion_rejection_notify'
+        },
+        :receiver_id => self.customer.get_id,
+        :sender_id => if admin.nil? then nil else admin.get_id end
+    }
+    message = Message.new(params)
+    message.save
+  end
+  handle_asynchronously :create_rejection_msg, :run_at => Proc.new { 3.minutes.from_now }
+
   # send email to admin users, when a new promotion is created
   def send_email
     PromotionMailer.notify_admin(self).deliver_now!

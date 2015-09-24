@@ -2,6 +2,8 @@ GampApi::Application.routes.draw do
 
   get 'app' => 'mobile#app'
 
+  get 'appversion' => 'mobile#app_version'
+
   resources :products
 
   resources :reviews, except: [:new, :edit] 

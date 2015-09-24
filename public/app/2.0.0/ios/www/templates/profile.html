@@ -1,0 +1,98 @@
+<ion-view title="Profile">
+    <ion-nav-buttons side="right">
+        <a class="button button-clear ion-ios-chatboxes-outline button-assertive" ng-href="#/app/comments?customer_id={{ customer.id }}"> {{ customer.comments.count < 100 ? customer.comments.count : '100+' }} </a>
+        <button class="button button-icon ion-more" ng-click="showMoreMenu()">
+        </button>
+    </ion-nav-buttons>
+    <ion-nav-buttons side="left">
+        <button class="button button-icon icon ion-navicon" ng-if="!isBackButtonShown" ng-click="toggleLeft()"></button>
+    </ion-nav-buttons>
+    <ion-nav-title>
+        {{ customer.name }}
+    </ion-nav-title>
+    <ion-content has-header="true">
+        <ion-refresher pulling-text="pull to reload" pulling-icon="ion-ios-reload" on-refresh="doRefresh()" refreshing-icon="ion-ios-reload">
+        </ion-refresher>
+        
+        <div class="profile-header">
+            <img class="profile-bg" ng-src="{{ customer.background.image_url || mapurl }}" fallback-src="http://placehold.it/800x540?text=Loading Map" loading-src="http://placehold.it/800x540?text=Loading Map" style="object-fit: cover;" />
+            <div class="profile-bg-mask"></div>
+            <h3 class="profile-title">{{ customer.name }}</h3>
+            <p class="profile-review"><span style="color: white; background-color: #C57477">&nbsp;{{ customer.rating.toFixed(1) }} <i class="ion-ios-star"></i>&nbsp;</span> - {{ customer.rates }} Reviews</p>
+            <div class="profile-avatar shadow-primary">
+                <img class="" ng-src="{{ customer.logo.thumb_url }}" fallback-src="img/profileholder.png" loading-src="img/profileholder.png"></img>
+            </div>
+        </div>
+
+        <div class="profile-body">
+            
+            <div class="list card" ng-if="customer.roles.indexOf('customer') === -1 && editiable">
+                <a ng-href="#/app/users/{{ customer.id }}/profile-edit" class="item item-icon-left item-icon-right">
+                    <i class="icon ion-ios-person-outline"></i>
+                    <h3>Normal User</h3>
+                    <p>upgrade to business user</p>
+                    <i class="icon ion-ios-arrow-right"></i>
+                </a>
+            </div>
+            <div class="list card">
+
+                <a href="#" class="item item-icon-left" ng-click="showTagsMenu(customer.keywords);" ng-if="customer.keywords.length > 0 && customer.roles.indexOf('customer') !== -1">
+                    <i class="icon ion-ios-grid-view-outline"></i>
+                    <h3>Keywords</h3>
+                    <p style="white-space: normal" ng-bind-html="keywords"></p> 
+                </a>
+
+                <a href="#" class="item item-icon-left" ng-click=" showMore = !showMore " ng-if="customer.roles.indexOf('customer') !== -1">
+                    <i class="icon ion-ios-information-outline"></i>
+                    <h3>Description</h3>
+                    <p style="{{ showMore ? 'white-space: normal' : ''  }}">{{ customer.description }}</p>
+                    <span ng-if="!showMore" class="item-note" style="font-size: 80%" >show more</span>
+                </a>
+
+                <a href="#" class="item item-icon-left" ng-click="navigate()">
+                    <i class="icon ion-ios-location-outline"></i>
+                    <h3>Address</h3>
+                    <p style="white-space: normal">{{ customer.address || 'not provided' }}</p>
+                    <p ng-if="customer.distance"><span style="color: #C57477; font-size: 90%">{{ customer.distance.toFixed(1) + ' kms away'}}</span></p>
+                </a>
+                <a ng-href="tel:{{ customer.phone }}" class="item item-icon-left">
+                    <i class="icon ion-ios-telephone-outline"></i>
+                    <h3>Phone</h3>
+                    <p>{{ customer.phone || 'not provided' }}</p>
+                </a>
+                <a href="#" class="item item-icon-left" ng-click="emailUser()">
+                    <i class="icon ion-ios-email-outline"></i>
+                    <h3>Email</h3>
+                    <p>{{ customer.email }}</p>
+                </a>
+
+                <a href="#" class="item item-icon-left" ng-if="customer.roles.indexOf('customer') !== -1">
+                    <i class="icon ion-ios-clock-outline"></i>
+                    <h2>Operation hours</h2>
+                    <p ng-repeat="key in hours" ng-if="customer.hours[key]">
+                        {{ key }}: {{ customer.hours[key].from }} - {{ customer.hours[key].to }}
+                    </p>
+                </a>
+            </div>
+
+            <div class="card" style="margin: 2vw 2vw" ng-if="customer.roles.indexOf('customer') !== -1">
+                <div ng-if="!latestPromotion" class="item item-image">
+                    <img src="http://placehold.it/500x180?text=No Deals Found"/>
+                </div>
+                <gampcard ng-if="latestPromotion" mycard ng-model="latestPromotion" templateUrl="{{ 'promotion2.html' }}"></gampcard>
+                <div class="item tabs tabs-secondary tabs-icon-left">
+                    <a ng-if="editiable" class="tab-item" ng-click="newPromotion()">
+                        New Ad
+                    </a>
+                    <a class="tab-item" ng-click="viewAllPromotions()">
+                        View All
+                    </a>
+                </div>
+            </div>
+
+            <div class="card" style="opacity: 0">
+            </div>
+
+        </div>
+    </ion-content>
+</ion-view>

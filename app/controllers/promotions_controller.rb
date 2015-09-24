@@ -168,6 +168,7 @@ class PromotionsController < ApplicationController
     authorize @promotion
     @promotion.reject params[:reason]
     raise UnprocessableEntityError.new(@promotion.errors) unless @promotion.save
+    @promotion.create_rejection_msg(current_user)
     render :partial => 'promotions/promotion', :locals => { :promotion => @promotion }
   end
 
@@ -202,6 +203,7 @@ class PromotionsController < ApplicationController
       @promotion.reject 'no reason'
       Token.find(params[:admin_token]).destroy
       raise UnprocessableEntityError.new(@promotion.errors) unless @promotion.save
+      @promotion.create_rejection_msg
       render :text => 'request has been cancelled successfully!';
     else
       render :text => 'token expired! the request has been cancelled already!';

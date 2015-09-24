@@ -1,0 +1,8 @@
+<div class="card" style="margin: 2vw 2vw">
+    <a class="item" >
+        <h2>{{ item.product.name }}</h2>
+        <p>status: <span style="color: #C57477">{{ item.status }}</span></p>
+        <p>start at: <span style="color: #C57477">{{ item.start_at | date: 'MM/dd/yyyy' }}</span></p>
+        <p>expire at: <span style="color: #C57477">{{ item.expire_at | date: 'MM/dd/yyyy' }}</span></p>
+    </a>
+</div>
