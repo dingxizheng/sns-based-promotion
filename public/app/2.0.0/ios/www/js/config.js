@@ -8,9 +8,9 @@ angular.module('starter.config', [])
 	
 	// baseUrl: 'http://rails-api-env-b4cm2bfxbr.elasticbeanstalk.com',
 	
-	// baseUrl: 'http://vicinity-deals-test-3hqca6tun5.elasticbeanstalk.com',
+	baseUrl: 'http://vicinity-deals-test-3hqca6tun5.elasticbeanstalk.com',
 	
-	baseUrl: 'http://localhost:3000',
+	// baseUrl: 'http://localhost:3000',
 	
 	googleAnalyticsID: 'UA-66194905-1',
 
