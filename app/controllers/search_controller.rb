@@ -171,9 +171,9 @@ class SearchController < ApplicationController
 				with(:type, params[:type].split(',,'))
 			end
 
-			if params[:model].present?
-				with(:model, params[:model])
-			end
+			# if params[:model].present?
+			# 	with(:model, params[:model])
+			# end
 
 			without(:type, 'phone')
 
