@@ -89,16 +89,23 @@ angular.module('starter.authenticaion',[])
 })
 
 // a singleton object, to keep user's session information
-.service('Session', function($localstorage) {
+.service('Session', function($localstorage, $q) {
+
+	this.deffered = $q.defer();;
 
 	this.reload = function() {
 		this.session = $localstorage.getObject('savedSession');
 		this.valid() || this.destory();	
-		console.log('[SESSION][RELOADED]', this.session.apitoken, this.user().name);	
+		console.log('[SESSION][RELOADED]', this.session ? this.session.apitoken : null, this.user().name);	
+		this.deffered.resolve(this.session);
+	};
+
+	this.isReload = function(){
+		return this.deffered.promise;
 	};
 
 	this.valid = function() {
-		return this.session.expire_at && new Date(this.session.expire_at) > new Date();
+		return this.session && this.session.expire_at && new Date(this.session.expire_at) > new Date();
 	};
 
 	// create a session

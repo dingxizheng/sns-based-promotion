@@ -39,6 +39,9 @@
   </body>
   <script type="text/javascript">
 
+    document.getElementById('disconnected-message').style.display = 'none';
+    document.getElementById('check-btn').style.display = 'none';
+
     function checkInternet() {
 
       document.getElementById('disconnected-message').style.display = 'none';
@@ -47,15 +50,17 @@
       setTimeout(function() {
           document.getElementById('disconnected-message').style.display = 'block';
           document.getElementById('check-btn').style.display = 'block';
-      }, 300);
-      
+      }, 1000);
+
       var type = navigator.connection.type;
       if (type === Connection.NONE) {
-
+        navigator.splashscreen.hide();
       } else {
+        navigator.splashscreen.show();
         var version = localStorage.getItem("app_version");
+        // alert(window.location);
         // window.location.href = "index.html";
-        window.location.href = "http://vicinity-deals-test-3hqca6tun5.elasticbeanstalk.com/app?app_version=" + (version || '2.0.0');
+        window.location = "http://rails-api-env-b4cm2bfxbr.elasticbeanstalk.com/app?app_version=" + (version || '2.0.0');
       }
     };
 

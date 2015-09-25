@@ -27,10 +27,19 @@ angular.module('starter', ['ionic',
   'starter.directives', 
   'starter.models'])
 
-.run(function($ionicPlatform, $cordovaDevice, $rootScope, Auth, Session, $state, $ionicLoading, Notification, $localstorage, $location, TrackService, $cordovaDialogs) {
+.run(function($ionicPlatform, $cordovaSplashscreen, $cordovaDevice, $rootScope, Auth, Session, $state, $ionicLoading, Notification, $localstorage, $location, TrackService, $cordovaDialogs) {
   
   $ionicPlatform.ready(function() {
 
+    $rootScope.$on('$cordovaNetwork:offline', function() {
+      $cordovaDialogs.alert('Please check your device\'s connection!', 'Bad Network', 'OK');
+    });
+
+    // hide splash screen
+    setTimeout(function(){
+      $cordovaSplashscreen.hide();
+    }, 1000)
+    
     // initialize tracking service
     TrackService.isReady() && TrackService.init();
 
@@ -79,8 +88,11 @@ angular.module('starter', ['ionic',
       }
     }
 
-    // initialize notification service if session is not valid
-    !Session.valid() && Notification.init();
+    // initialize notification service
+    // wraped with timeout function, insure that it gets called after the session is set
+    setTimeout(function(){
+      Notification.init();
+    }, 1000);
 
     // regeister notification callbacks
     $rootScope.$on('$cordovaPush:notificationReceived', $cordovaDevice.getPlatform() === 'Android' ? Notification.androidCallback : Notification.iosCallback);
@@ -186,14 +198,11 @@ angular.module('starter', ['ionic',
 // Ionic uses
 .config(function($provide, $stateProvider, $ionicConfigProvider, $compileProvider, $urlRouterProvider, gampConfig, $httpProvider) {
 
-  $provide.decorator("$exceptionHandler", function($delegate, gampConfig, Session) {
+  $provide.decorator("$exceptionHandler", function($delegate, gampConfig) {
       return function (exception, cause) {
 
         if (typeof analytics !== 'undefined') {
           analytics.startTrackerWithId(gampConfig.googleAnalyticsID);
-          if (Session.user().id) {
-            analytics.setUserId(Session.user().id);
-          } 
           analytics.trackEvent('error handler', cause + '', exception.message);
         }
         $delegate(exception, cause);
@@ -247,7 +256,13 @@ angular.module('starter', ['ionic',
     url: '/app',
     abstract: true,
     templateUrl: 'menu.html',
-    controller: 'MenuCtrl'
+    controller: 'MenuCtrl',
+    resolve: {
+      reloadedSession: function(Session) {
+        // return true;
+        return Session.isReload();
+      }
+    }
   })
 
   .state('app.browse', {
@@ -302,6 +317,7 @@ angular.module('starter', ['ionic',
         controller: 'ProfileCtrl',
         resolve: {
           loadedUser: function(User, $stateParams) {
+            console.log('loadedUser', $stateParams);
             var userid = $stateParams.userid;
             return User.get({ userId: userid }).$promise;      
           }

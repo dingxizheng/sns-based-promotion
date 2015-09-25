@@ -17,6 +17,26 @@ angular.module('starter.services', [])
     return this;
 })
 
+.service('RuntimeStorage', function() {
+
+    this.data = {};
+    
+    this.set = function(key, data) {
+        this.data[key] = data;
+    };
+
+    this.get = function(key) {
+        if (this.data[key])
+            return this.data[key];
+        else {
+            this.set(key, {});
+            return this.data[key];
+        }
+    };
+
+    return this;
+})
+
 .factory('ControllerService', function() {
 
     var onEnterCallbacks = {};
@@ -168,6 +188,13 @@ angular.module('starter.services', [])
     return this;
 })
 
+.service('Loading', function() {
+
+    this.show = false;
+
+    return this;
+})
+
 .factory('$localstorage', ['$window', function($window) {
 
     return {
@@ -181,7 +208,7 @@ angular.module('starter.services', [])
         },
 
         setObject: function(key, value) {
-            $window.localStorage[key] = JSON.stringify(value);
+            $window.localStorage[key] = angular.toJson(value);
         },
         
         getObject: function(key) {

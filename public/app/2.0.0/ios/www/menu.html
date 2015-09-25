@@ -26,20 +26,22 @@
                  <!-- </div> -->
             </div>
 
-            <!-- <ion-list> -->
-            <a nav-clear menu-close class="button icon-left ion-ios-navigate-outline button-clear button-assertive" href="#/app/browse">   {{ lang.menu.browse_btn_name }}</a>
-            <hr class="munu-button-spiltter"/>
-            <a nav-clear menu-close class="button icon-left ion-ios-search button-clear button-assertive" href="#/app/search">   {{ lang.menu.search_btn_name }}</a>
-            <hr class="munu-button-spiltter"/>
-            <a nav-clear menu-close class="button icon-left ion-ios-home-outline button-clear button-assertive" ng-href="{{ goToProfile }}">   {{ lang.menu.profile_btn_name }}</a>
-            <hr class="munu-button-spiltter"/>
-            <a nav-clear ng-href="{{ goToStore }}" menu-close class="button icon-left ion-ios-cart-outline button-clear button-assertive">   {{ lang.menu.store_btn_name }}</a>
-            <hr class="munu-button-spiltter" ng-show="isLoggedin"/>
-            <a ng-show="isLoggedin" menu-close class="button icon-left ion-ios-close-outline button-clear button-assertive" ng-click="logout()">   {{ lang.menu.signout_btn_name }}</a>
-            <hr class="munu-button-spiltter" ng-show="!isLoggedin"/>
-            <a nav-clear ng-show="!isLoggedin" menu-close class="button icon-left ion-ios-checkmark-outline button-clear button-assertive" href="#/login">   {{ lang.menu.signin_btn_name }}</a>
+            <ion-list>
+            <!-- class="item item-icon-left" -->
+                <a nav-clear menu-close class="menu-item item icon-left ion-ios-navigate-outline" href="#/app/browse">   {{ lang.menu.browse_btn_name }}</a>
+                <hr class="munu-button-spiltter"/>
+                <a nav-clear menu-close class="menu-item item icon-left ion-ios-search" href="#/app/search">   {{ lang.menu.search_btn_name }}</a>
+                <hr class="munu-button-spiltter"/>
+                <a nav-clear menu-close class="menu-item item icon-left ion-ios-home-outline" ng-href="{{ goToProfile }}">   {{ lang.menu.profile_btn_name }}</a>
+                <hr class="munu-button-spiltter"/>
+                <a nav-clear ng-href="{{ goToStore }}" menu-close class="menu-item item icon-left ion-ios-cart-outline">   {{ lang.menu.store_btn_name }}</a>
+                <hr class="munu-button-spiltter" ng-show="isLoggedin"/>
+                <a ng-show="isLoggedin" menu-close class="menu-item item icon-left ion-ios-close-outline" ng-click="logout()">   {{ lang.menu.signout_btn_name }}</a>
+                <hr class="munu-button-spiltter" ng-show="!isLoggedin"/>
+                <a nav-clear ng-show="!isLoggedin" menu-close class="menu-item item icon-left ion-ios-checkmark-outline" href="#/login">   {{ lang.menu.signin_btn_name }}</a>
 
-            <hr class="munu-button-spiltter"/>
+                <hr class="munu-button-spiltter"/>
+            </ion-list>
 
         </ion-content>
 

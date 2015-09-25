@@ -6,7 +6,7 @@ angular.module('starter.controllers', [])
 })
 
 // Menu Controller
-.controller('MenuCtrl', function($scope, $injector, $state, Auth, Session, $cordovaInAppBrowser, $ionicActionSheet) {
+.controller('MenuCtrl', function($scope, $injector, $state, Auth, Session, $cordovaInAppBrowser, $ionicActionSheet, reloadedSession) {
     $scope.lang = $injector.get('englishLang');
 
     $scope.goToProfile = '#/app/loginas';
@@ -150,7 +150,19 @@ angular.module('starter.controllers', [])
 
 })
 
-.controller('CategoryCtrl', function($scope, $injector, categoryId, title, $ionicSlideBoxDelegate, $ionicSideMenuDelegate, $localstorage, $location, Promotion, SearchParams, AutoSuggest) {
+.controller('CategoryCtrl', function($scope, $injector, RuntimeStorage, categoryId, title, $ionicSlideBoxDelegate, $ionicSideMenuDelegate, $localstorage, $location, Promotion, SearchParams, AutoSuggest) {
+
+    var settings = $localstorage.getObject('searchSettings');
+
+    var storedData = RuntimeStorage.get('catagory_' + categoryId);
+
+    if (!storedData.rawResult) {
+        storedData.page = 1;
+        storedData.per_page = 8;
+        storedData.settings = settings;
+        storedData.rawResult =  [];
+        storedData.haveMore = true;
+    }
 
     $scope.toggleLeft = function(){ $ionicSideMenuDelegate.toggleLeft(); };
     
@@ -162,15 +174,7 @@ angular.module('starter.controllers', [])
 
     $scope.rows = [];
 
-    $scope.haveMore = true;
-
-    var page = 1;
-
-    var per_page = 8;
-
-    var settings = $localstorage.getObject('searchSettings');
-
-    var rawResult = [];
+    $scope.haveMore = storedData.haveMore;
 
     var loadMoreBtn = {
         id: 'loadmore',
@@ -185,6 +189,49 @@ angular.module('starter.controllers', [])
         }
     };
 
+    $scope.processRawdata = function(data) {
+        if (storedData.rawResult[storedData.rawResult.length - 1] && storedData.rawResult[storedData.rawResult.length - 1].id === 'loadmore') {
+            storedData.rawResult.pop();
+        }
+        storedData.rawResult = storedData.rawResult.concat(data || []); 
+
+        storedData.haveMore && storedData.rawResult.push(loadMoreBtn);
+
+        $scope.ads = [];
+        $scope.rows = [];
+        var row = [];           
+        row = [];
+        storedData.rawResult.forEach(function(v, i) {
+            console.log(v.title.length, v.id); 
+            
+            if (i < 2) {
+                $scope.ads.push(v);
+                return;
+            }
+
+            if (i >= 0 && row.length === 0) {
+                row.push(v);
+            } else if (i >= 0 && row.length === 1 && v.title.length <= 30) {
+                row.push(v);
+                $scope.rows.push(row);
+                row = [];
+            } else if (i >= 0 && row.length === 1 && v.title.length > 30) {
+                $scope.rows.push(row);
+            }
+
+            if (i >= 0 && v.title.length > 30) {
+                $scope.rows.push([v]);
+                row = [];
+            }
+
+            if (i === storedData.rawResult.length - 1 && row.length === 1) {
+                $scope.rows.push(row);
+            }
+        });
+
+        $ionicSlideBoxDelegate.update();
+    };
+
     $scope.loadNext = function () {
         if (!$scope.haveMore) {
             return;
@@ -192,12 +239,12 @@ angular.module('starter.controllers', [])
 
         var params = {
             suggested: true,
-            page: page,
-            per_page: per_page
+            page: storedData.page,
+            per_page: storedData.per_page
         };
 
-        if (settings.enable){
-            params.within = settings.distance;
+        if (storedData.settings.enable){
+            params.within = storedData.settings.distance;
         }
 
         if (categoryId !== 'all') {
@@ -206,55 +253,21 @@ angular.module('starter.controllers', [])
 
         Promotion.query(params).$promise.then(function(data) {
             
-            if(data.length < per_page) {
-                $scope.haveMore = false;
-            } else {
-                data.push(loadMoreBtn);
-            }
-
-            if (rawResult[rawResult.length - 1] && rawResult[rawResult.length - 1].id === 'loadmore') {
-                rawResult.pop();
+            if(data.length < storedData.per_page) {
+                storedData.haveMore = false;
             }
             
-            page ++;
-            $scope.ads = [];
-            $scope.rows = [];
-            var row = [];
-            rawResult = rawResult.concat(data);           
-            row = [];
-            rawResult.forEach(function(v, i) {
-                console.log(v.title.length, v.id); 
-                
-                if (i < 2) {
-                    $scope.ads.push(v);
-                    return;
-                }
-
-                if (i >= 0 && row.length === 0) {
-                    row.push(v);
-                } else if (i >= 0 && row.length === 1 && v.title.length <= 30) {
-                    row.push(v);
-                    $scope.rows.push(row);
-                    row = [];
-                } else if (i >= 0 && row.length === 1 && v.title.length > 30) {
-                    $scope.rows.push(row);
-                }
-
-                if (i >= 0 && v.title.length > 30) {
-                    $scope.rows.push([v]);
-                    row = [];
-                }
-
-                if (i === rawResult.length - 1 && row.length === 1) {
-                    $scope.rows.push(row);
-                }
-
-            });
-            $ionicSlideBoxDelegate.update();
+            storedData.page ++;
+            
+            $scope.processRawdata(data);
         });
     };
 
-    $scope.loadNext();
+    if (storedData.page === 1) {
+        $scope.loadNext();
+    } else {
+        $scope.processRawdata();
+    }
 
     $scope.autoSuggest = function() {
 
@@ -540,7 +553,7 @@ angular.module('starter.controllers', [])
         return pre += '<span style="color: #C57477">#' + next + '<span>  '
     }, '');
 
-    $scope.hours = Object.keys(loadedUser.hours);
+    $scope.hours = Object.keys(loadedUser.hours || {});
 
     $scope.showMore = false;
 
@@ -755,7 +768,7 @@ angular.module('starter.controllers', [])
         $cordovaSocialSharing
             .share('[Vicinity Deals][' + loadedUser.name + '][' + loadedUser.address + ']', loadedUser.description, null, loadedUser.url + '?format=html')
             .then(function(result) {
-              TrackService.isReady() && TrackService.track.trackEvent('share', 'business [' + loadedUser.id  + ']', JSON.stringify(loadedUser));
+              TrackService.isReady() && TrackService.track.trackEvent('share', 'business [' + loadedUser.id  + ']', loadedUser.name);
             }, function(err) {
               // An error occured. Show a message to the user
             });
@@ -774,7 +787,7 @@ angular.module('starter.controllers', [])
         return '#' + $scope.customer.keywords.join(' #');
     };
 
-    $scope.hours = Object.keys(loadedUser.hours);
+    $scope.hours = Object.keys(loadedUser.hours || {});
 
     $scope.options = {
 
@@ -848,7 +861,7 @@ angular.module('starter.controllers', [])
     $scope.editHours = function() {
         BusinessHours.init($scope, {
 
-            hours: loadedUser.hours
+            hours: loadedUser.hours || {}
 
         }, function(hours) {
 
@@ -1055,7 +1068,7 @@ angular.module('starter.controllers', [])
             // .share(loadedPromotion.title + ': ' + loadedPromotion.description, 'Promotion From [Vicinity Deals]', loadedPromotion.customer.logo.thumb_url, loadedPromotion.url)
             .then(function(result) {
                // $cordovaToast.showShortBottom('shared successfully');
-               TrackService.isReady() && TrackService.track.trackEvent('share', 'deal [' + loadedPromotion.id  + ']', JSON.stringify(loadedPromotion));
+               TrackService.isReady() && TrackService.track.trackEvent('share', 'deal [' + loadedPromotion.id  + ']', loadedPromotion.title);
             }, function(err) {
                $cordovaToast.showShortBottom('Failed! please try later.');
             });
@@ -1399,13 +1412,13 @@ angular.module('starter.controllers', [])
             }
             $localstorage.setObject('savedUsers', savedUsers);
 
-            // if (data.user.roles.indexOf('customer') !== -1) {
             if($state.params.jump_to) {
+                console.log('[LOGGED IN] jump to ' + $state.params.jump_to);
                 $location.path($state.params.jump_to);
             } else {
+                console.log('[LOGGED IN] go to profile page');
                 $state.go('app.profile', { userid: data.user.id });
             }
-            // }
 
         });
     };

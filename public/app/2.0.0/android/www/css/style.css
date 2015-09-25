@@ -152,6 +152,8 @@ hr.thin {
 .category-row {
     padding-left: 0 !important;
     padding-right: 0 !important;
+    margin-top: 0 !important;
+    padding: 0 !important;
 }
 
 .category-box {
@@ -364,12 +366,19 @@ body * {
     background-color: #101624 !important;
 }
 
+.vicinity-left-menu .menu-item {
+    padding: 10px;
+    background-color: #101624 !important;
+    color: #ffbf49 !important;
+    margin-left: 10px;
+}
+
 .vicinity-left-menu .button {
     color: #ffbf49 !important;
     margin-left: 10px;
 }
 
-.vicinity-left-menu .card {
+.vicinity-left-menu .card, .menu-item {
     border: none !important;
 }
 

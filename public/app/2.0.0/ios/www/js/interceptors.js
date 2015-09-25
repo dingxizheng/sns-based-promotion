@@ -118,7 +118,9 @@ angular.module('starter.interceptors', [])
 
 		responseError: function(rejection) {
 
-			console.log(JSON.stringify(rejection));
+			console.log('[HTTP ERROR] start');
+			console.log(JSON.stringify(rejection), null, 2);
+			console.log('[HTTP ERROR] end');
 
 			// hide the standing by mask when ever a error happens
 			rejection.config.show && $rootScope.$broadcast('loading:hide');
