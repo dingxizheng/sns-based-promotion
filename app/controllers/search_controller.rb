@@ -44,7 +44,7 @@ class SearchController < ApplicationController
 
 		if results.hits.count >= count
 	      randomized_results = []
-	      while results.hits.count < count do
+	      while randomized_results.count < count do
 	        i = rand(results.hits.count)
 	        randomized_results << i unless randomized_results.include?(i)
 	      end 

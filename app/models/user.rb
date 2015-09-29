@@ -17,8 +17,7 @@ class User
   
   geocoded_by :address 
   after_validation :geocode
-  after_create :send_new_user_email
-  after_save  :index_terms
+  after_save :send_new_user_email, :index_terms
   before_create :encrypt_password, :set_default_role
   before_save :set_subscripted_status, :set_role, :check_address
 
@@ -168,7 +167,7 @@ class User
     else
       unless self.address.nil? or self.phone.nil? or self.description.nil?
         self.add_role :customer
-        self.send_customer_confirmation_email
+        # self.send_customer_confirmation_email
       end
     end
     return true

@@ -35,7 +35,7 @@ namespace :database do
 
   desc "import users"
   task :import_users => :environment do
-    Mongoid.load!("config/mongoid.yml", :production)
+    Mongoid.load!("config/mongoid.yml", :test)
     load 'lib/tasks/files/import_users.rb' 
   end
 

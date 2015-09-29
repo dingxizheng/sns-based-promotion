@@ -78,12 +78,11 @@ class PromotionsController < ApplicationController
     result_by_distance = (promotions_by_category || romotions_before_query).with_in_radius(get_location, params[:within])
     
     paid_results = result_by_distance.query_by_params({ :subscripted => 'true' })
-
     queried_result = paid_results.query_by_params(request.query_parameters.except!(*(params_to_skip)))
 
-    if queried_result.count >= 2
+    if queried_result.count >= 10
       randomized_results = []
-      while randomized_results.count < 2 do
+      while randomized_results.count < 10 do
         i = rand(queried_result.count)
         randomized_results << i unless randomized_results.include?(i)
       end 
