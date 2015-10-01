@@ -49,13 +49,25 @@ class Promotion
     text :catagory do
       catagory.name
     end
+    text :customer_name do
+      customer.name
+    end
+    text :customer_address do
+      customer.address
+    end
+    text :customer_email do
+      customer.email  
+    end
 
     time :expire_at, :start_at
+    
     string :status
-
     string :id do
       get_id
     end
+
+    double :rating
+    double :rate_count
 
     boolean :subscripted
 

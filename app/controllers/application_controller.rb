@@ -175,4 +175,10 @@ class ApplicationController < ActionController::Base
 		end
 	end
 
+	# helper functions
+	# 
+	def to_boolean(s)
+	  s and !!s.match(/^(true|t|yes|y|1)$/i)
+	end
+
 end

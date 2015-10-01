@@ -81,6 +81,9 @@ class User
     	roles.map{ |r| r.name }.uniq
     end
 
+    double :rating
+    double :rate_count
+
     latlon(:location) {
       Sunspot::Util::Coordinates.new(lat , lon)
     }
