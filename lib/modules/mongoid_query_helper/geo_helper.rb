@@ -4,7 +4,7 @@ module Mongoid
 
     included do
 
-      after_save :reindex_coordinates
+      # after_save :reindex_coordinates
 
       scope :with_in_radius, ->(location, radius) {
         if location and radius

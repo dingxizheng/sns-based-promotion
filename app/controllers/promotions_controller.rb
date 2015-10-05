@@ -8,9 +8,7 @@ class PromotionsController < ApplicationController
   # GET /promotions
   # GET /promotions.json
   def index
-    if params[:suggested]
-      suggested_index
-    elsif params[:suggested_paid]
+    if params[:suggested_paid]
       suggested_paid
     else
       normal_index
@@ -32,65 +30,25 @@ class PromotionsController < ApplicationController
     render 'promotions/promotions', :locals => { :promotions => @promotions }
   end
 
-  # this method helps return computed results:
-  #   1. put two randomized paid promotions at the top of the list
-  def suggested_index
-    romotions_before_query = PromotionPolicy::Scope.new(@owner, Promotion, params).resolve
-    if params[:catagory_id]
-      promotions_by_category = romotions_before_query.where({ :catagory_id => params[:catagory_id]})
-      if promotions_by_category.count < 1
-        raise EmptyList.new
-      end
-    end
-    result_by_distance = (promotions_by_category || romotions_before_query).with_in_radius(get_location, params[:within])
-    
-    paid_results = result_by_distance.query_by_params({ :subscripted => 'true' })
-    randomized_results = []  
-    if (paid_results.count > 2)
-      first_one = rand(paid_results.count)
-      second_one = rand(paid_results.count)
-      while first_one == second_one do
-        second_one = rand(paid_results.count)
-      end
-      randomized_results << paid_results[first_one] << paid_results[second_one]
-    else
-      randomized_results = paid_results.map{|r| r }
-    end
-
-    queried_result = result_by_distance
-                        .query_by_params({ :_id => "!=#{ randomized_results.map(&:get_id).join(',,') }" })
-                        .query_by_params(request.query_parameters.except!(*(params_to_skip)))
-    @promotions = queried_result.sortby(params[:sortBy]).paginate(params[:page], params[:per_page])
-    @promotions = @promotions.map{|p| p}
-    randomized_results.each{|r| @promotions.insert(0, r) } unless params[:page].to_i > 1
-    render 'promotions/promotions', :locals => { :promotions => @promotions }
-  end
-
-  # this method is being used to return suggested results when onthing is searched 
+  # this method is being used to return suggested results when search result is returned 
   def suggested_paid
     romotions_before_query = PromotionPolicy::Scope.new(@owner, Promotion, params).resolve
-    if params[:catagory_id]
+    # filter results by category id
+    if params[:catagory_id] and params[:catagory_id].to_s != 'all'
       promotions_by_category = romotions_before_query.where({ :catagory_id => params[:catagory_id]})
-      if promotions_by_category.count < 1
-        raise EmptyList.new
-      end
     end
+    # filter results by distance
     result_by_distance = (promotions_by_category || romotions_before_query).with_in_radius(get_location, params[:within])
-    
+    # filter resutls by payment status
     paid_results = result_by_distance.query_by_params({ :subscripted => 'true' })
     queried_result = paid_results.query_by_params(request.query_parameters.except!(*(params_to_skip)))
-
-    if queried_result.count >= 10
-      randomized_results = []
-      while randomized_results.count < 10 do
-        i = rand(queried_result.count)
-        randomized_results << i unless randomized_results.include?(i)
-      end 
-      @promotions = randomized_results.map{|i| queried_result[i]}
-    else
-      @promotions = queried_result
+    num_to_get = (params[:num] || '10').to_i
+    count = queried_result.count
+    @promotions = queried_result.randomized(num_to_get)
+    while count > num_to_get and @promotions.count < num_to_get
+       @promotions = queried_result.randomized(num_to_get)
     end
-
+    
     render 'promotions/promotions', :locals => { :promotions => @promotions }
   end
 

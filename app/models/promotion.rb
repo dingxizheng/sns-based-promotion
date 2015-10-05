@@ -13,6 +13,7 @@ class Promotion
   include Mongoid::QueryHelper
   include Mongoid::GeoHelper
   include Mongoid::Keywordsable
+  include Mongoid::Randomizable
 
   geocoded_by :coordinates           # can also be an IP address
   # after_validation :geocode          # auto-fetch coordinates
@@ -33,8 +34,6 @@ class Promotion
   field :start_at, type: DateTime, default: Time.now
   field :expire_at, type: DateTime, default: Time.now + 2.weeks
 
-  # index({ coordinates: "2d" })
-
   # mark this model as reteable
   rate_config range: (0..5), raters: [User, Anonymity]
 
@@ -43,7 +42,11 @@ class Promotion
   belongs_to :catagory
   belongs_to :customer, class_name: 'User', inverse_of: :promotions
 
-  # sunspot
+  # indexes
+  # index({ coordinates: "2d" })
+  index({ subscripted: 1 })
+
+  # sunspot config 
   searchable do
     text :title, :description, :keywords
     text :catagory do

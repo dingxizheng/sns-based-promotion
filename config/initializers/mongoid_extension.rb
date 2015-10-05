@@ -68,3 +68,44 @@ module Mongoid
 
   end
 end
+
+module Mongoid
+  module Randomizable
+    extend ActiveSupport::Concern
+      
+      included do
+
+        before_save :set_random_num
+        field :random_num, type: Float, default: 0.0
+
+        index({:random_num => 1})
+
+        scope :randomized, -> (num) { 
+
+          count = self.count
+          queries = []
+
+          if num / count.to_f < 0.5
+            split = 60
+          else
+            split = count
+          end
+          
+          (0..50).each{|i|
+              random_start = rand * 1.4 - 0.2
+              random_end = random_start + (1.4 / split.to_f) * rand
+              queries.push(:$and => [{ :random_num.gt => random_start}, {:random_num.lte => random_end}])
+          }
+          
+          self.or(*queries).limit(num)
+
+        }
+
+      end
+
+      def set_random_num
+        self.random_num = rand
+      end
+
+  end
+end

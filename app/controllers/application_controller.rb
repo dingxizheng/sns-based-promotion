@@ -87,7 +87,11 @@ class ApplicationController < ActionController::Base
 
 	# params should be skipped in conditional query
 	def params_to_skip 
-		[:apitoken, :lat, :long, :page, :per_page, :within, :format, :user_role, :sortBy, :suggested, :suggested_paid]
+		[:apitoken, :lat, :long, 
+			:page, :per_page, :within, 
+			:format, :user_role, :sortBy, 
+			:suggested, :suggested_paid, :num
+		]
 	end
 
 	# raise an unauthorized error if no session created or session expired

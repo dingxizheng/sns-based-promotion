@@ -10,7 +10,7 @@ class UsersController < ApplicationController
     if params[:suggested]
       suggested_index
     elsif params[:suggested_paid]
-      suggested_paid
+      suggested_paid_ads
     else
       normal_index
     end
@@ -29,26 +29,19 @@ class UsersController < ApplicationController
     render 'users/users', :locals => { :users => @users }
   end
 
-  def suggested_paid
-    result_by_distance = User.with_in_radius(get_location, params[:within])
-    if params[:user_role]
-      result_by_role = result_by_distance.with_role(params[:user_role])
-      if result_by_role.count < 1
-        raise EmptyList.new
-      end
+  def suggested_paid_ads
+    result_by_distance = User.with_in_radius(get_location, params[:within])   
+    result_by_role = result_by_distance.with_role(:customer)
+    if result_by_role.count < 1
+      raise EmptyList.new
     end
     paid_result = (result_by_role || result_by_distance).query_by_params({ :subscripted => 'true' })
     queried_result = paid_result.query_by_params(request.query_parameters.except!(*(params_to_skip)))
     
-    if queried_result.count >= 10
-      randomized_results = []
-      while randomized_results.count < 10 do
-        i = rand(queried_result.count)
-        randomized_results << i unless randomized_results.include?(i)
-      end 
-      @users = randomized_results.map{|i| queried_result[i]}
-    else
-      @users = queried_result
+    count = queried_result.count
+    @users = queried_result.randomized(10)
+    while count > 10 and @users.count < 10
+      @users = queried_result.randomized(10)
     end
       
     render 'users/users', :locals => { :users => @users }

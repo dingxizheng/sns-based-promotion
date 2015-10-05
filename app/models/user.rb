@@ -14,6 +14,7 @@ class User
   include Mongoid::QueryHelper
   include Mongoid::GeoHelper
   include Mongoid::Keywordsable
+  include Mongoid::Randomizable
   
   geocoded_by :address 
   after_validation :geocode
@@ -42,8 +43,6 @@ class User
     :Thursday => { :from => '9:00', :to => '17:00' },
     :Friday => { :from => '9:00', :to => '17:00' }
   }
-
-  # index({ coordinates: "2d" })
 
   # mark this model as reteable
   rate_config range: (0..5), raters: [User, Anonymity]
@@ -96,6 +95,10 @@ class User
       :message => "must be a valid telephone number.",
       :with => /\(?([0-9]{3})\)?([ .-]?)([0-9]{3})\2([0-9]{4})/,
       :allow_blank => true
+
+  # indexes
+  # index({ coordinates: "2d" })
+  index({ subscripted: 1 })
 
   def set_subscripted_status
     self.subscripted = self.subscripted?
