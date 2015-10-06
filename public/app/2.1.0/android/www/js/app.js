@@ -29,7 +29,7 @@ angular.module('starter', ['ionic',
 
 .run(function($ionicPlatform, $cordovaSplashscreen, $cordovaDevice, $rootScope, Auth, Session, $state, $ionicLoading, Notification, $localstorage, $location, TrackService, $cordovaDialogs) {
   
-  localStorage.setItem("app_version", "2.0.3");
+  localStorage.setItem("app_version", "2.1.0");
 
   // underscore.js
   $rootScope._ = window._;
