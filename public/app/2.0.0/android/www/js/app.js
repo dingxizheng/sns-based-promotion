@@ -29,6 +29,8 @@ angular.module('starter', ['ionic',
 
 .run(function($ionicPlatform, $cordovaSplashscreen, $cordovaDevice, $rootScope, Auth, Session, $state, $ionicLoading, Notification, $localstorage, $location, TrackService, $cordovaDialogs) {
   
+  localStorage.setItem("app_version", "2.1.0");
+
   $ionicPlatform.ready(function() {
 
     $rootScope.$on('$cordovaNetwork:offline', function() {

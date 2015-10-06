@@ -1,0 +1,20 @@
+<ion-view>
+    <ion-nav-buttons side="right">
+        <button class="button button-icon ion-ios-search" ng-click="autoSuggest()">
+        </button>
+    </ion-nav-buttons>
+    <ion-nav-buttons side="left">
+        <button class="button button-icon icon ion-navicon" ng-if="!isBackButtonShown" ng-click="toggleLeft()"></button>
+    </ion-nav-buttons>
+    <ion-nav-title>
+        Browse Deals
+    </ion-nav-title>
+    <ion-content style="padding: 0">
+        <div ng-repeat="row in rows" class="row category-row">
+            <div ng-repeat="category in row" class="col category-box" ng-click="goToCategory(category)">
+                <img ng-if="category !== 'placeholder'" ng-src="{{ category.icon.image_url }}" fallback-src="img/placeholder.png" loading-src="img/placeholder.png" style="border-radius: 0; width: 12vw;">
+                <p ng-if="category !== 'placeholder'" style="color: #999; font-size: 80%">{{ category.name }}</p>
+            </div>
+        </div>
+    </ion-content>
+</ion-view>
