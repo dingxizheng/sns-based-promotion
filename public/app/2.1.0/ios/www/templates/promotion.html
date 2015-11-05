@@ -1,0 +1,82 @@
+<ion-view title="Deal">
+    <ion-nav-buttons side="right">
+        <!-- <a ng-if="editiable" class="button button-clear button-assertive" ng-click="edit()">
+            Edit
+        </a> -->
+        <a ng-if="!editiable" class="button button-clear ion-ios-chatboxes-outline button-assertive" ng-href="#/app/comments?promotion_id={{ promotion.id }}"> {{ promotion.comments.count < 1000 ? promotion.comments.count : '999+' }} </a>
+        <button ng-if="editiable" class="button button-icon ion-more" ng-click="showMoreMenu()">
+        </button>
+    </ion-nav-buttons>
+    <ion-nav-buttons side="left">
+        <button class="button button-icon icon ion-navicon" ng-if="!isBackButtonShown" ng-click="toggleLeft()"></button>
+    </ion-nav-buttons>
+    <ion-content class="" style="padding: 0">
+        
+        <div class="list" style="padding-top: 0; padding-bottom: 0; margin: 0">
+            <!-- <div class="item item-avatar">
+                
+            </div> -->
+            <div class="promotion-cover-box">
+                <img class="cover" ng-src="{{ promotion.cover.image_url }}" fallback-src="img/background.jpg" loading-src="img/background.jpg" />
+                <div class="promotion-cover-box-mask"></div>
+                <h3 class="promotion-cover-box-title">{{ promotion.title }}</h3>
+                <p class="promotion-cover-box-review"><span style="color: white; background-color: #C57477">&nbsp;{{ promotion.rating.toFixed(1) }} <i class="icon ion-ios-star"></i>&nbsp;</span> - {{ promotion.rates }} Reviews</p>
+            </div>
+
+            <!-- <a ng-href="" class="item item-icon-left">
+                <div class="icon">
+                    <img style="width:30px; height: 30px; border-radius: 50%" ng-src="{{ promotion.catagory.icon.thumb_url }}">
+                </div>
+                <p style="white-space: normal">{{ promotion.description }}</p>
+            </a> -->
+
+            <a ng-href="#/app/category?category_id={{ promotion.catagory.id }}&title={{ promotion.catagory.name }}" class="item item-icon-left">
+                <div class="icon">
+                    <img style="width:30px; height: 30px; border-radius: 50%" ng-src="{{ promotion.catagory.icon.thumb_url }}" fallback-src="img/profileholder.png" loading-src="img/profileholder.png">
+                </div>
+                <h3>{{ promotion.catagory.name }}</h3>
+                <p style="white-space: normal">{{ promotion.description }}</p>
+                <p style="white-space: normal; font-size: 80%" ng-if="promotion.keywords.length !== 0">
+                    <span ng-repeat="keyword in promotion.keywords" style="color: #C57477;">#{{ keyword }}<span style="display: inline-block; width: 0vw;"/></span>
+                </p>
+            </a>
+
+            <a ng-href="#/app/users/{{ customer.id }}" class="item item-icon-left">
+                <div class="icon">
+                    <img style="width:30px; height: 30px; border-radius: 50%" ng-src="{{ customer.logo.thumb_url }}" fallback-src="img/profileholder.png" loading-src="img/profileholder.png">
+                </div>
+                <h3>Posted by</h3>
+                <p style="white-space: normal">{{ customer.name }}</p>
+                <p><span style="color: #C57477; font-size: 90%">{{ promotion.created_at | relativeDate }}</span></p>
+            </a>
+
+            <a ng-href="#" class="item item-icon-left" ng-click="navigate()">
+                <i class="icon ion-ios-location-outline"></i>
+                <h3>Address</h3>
+                <p style="white-space: normal">{{ promotion.customer.address }}</p>
+                <p ng-if="promotion.distance"><span style="color: #C57477; font-size: 90%">{{ promotion.distance.toFixed(1) + ' kms away'}}</span></p>
+            </a>
+
+            <a ng-href="tel:{{ promotion.customer.phone }}" class="item item-icon-left">
+                <i class="icon ion-ios-telephone-outline"></i>
+                <h3>Phone</h3>
+                <p>{{ promotion.customer.phone }}</p>
+            </a>
+            <!-- <a ng-href="#" class="item item-icon-left" ng-click="">
+                <i class="icon ion-ios-pricetag-outline"></i>
+                <p style="white-space: normal">{{ promotion.catagory.name }}</p>
+            </a> -->
+            <div class="item tabs tabs-secondary tabs-icon-left">
+                <a class="tab-item" ng-click="review()">
+                    <i class="icon ion-ios-compose"></i> Review
+                </a>
+                <a class="tab-item" ng-click="share()">
+                    <i class="icon ion-share"></i> Share
+                </a>
+                <a class="tab-item" ng-click="report()">
+                    <i class="icon ion-ios-flag"></i> Report
+                </a>
+            </div>
+        </div>
+    </ion-content>
+</ion-view>

@@ -1,0 +1,105 @@
+<ion-modal-view>
+    <ion-header-bar>
+        <button class="button button-clear button-assertive" ng-click="editPromotionScope.cancel()">Cancel</button>
+        <h1 class="title">{{ editPromotionScope.title }}</h1>
+        <button class="button button-clear button-assertive" ng-show="editPromotionScope.saveable" ng-click="editPromotionScope.localDealForm.$valid && editPromotionScope.save(editPromotionScope.promotion)">Save</button>
+    </ion-header-bar>
+    <ion-content class="padding">
+        
+        <!-- <div class="card">
+          <div class="item item-text-wrap">
+            add cover picture
+          </div>
+        </div> -->
+    
+        <div ng-if="editPromotionScope.promotion.cover" class="item item-image">
+            <img style="object-fit: cover; height: 40vw" ng-src="{{ editPromotionScope.promotion.cover.image_url }}">
+        </div>
+        <a ng-href="" ng-click="editPromotionScope.addCover()" class="item item-icon-left" style="margin-bottom: 6px">
+            <i ng-if="!editPromotionScope.promotion.cover" class="icon ion-ios-plus-empty"></i>
+            <p ng-if="!editPromotionScope.promotion.cover">Add cover photo</p>
+            <i ng-if="editPromotionScope.promotion.cover" class="icon ion-ios-reverse-camera-outline"></i>
+            <p ng-if="editPromotionScope.promotion.cover">Change cover photo</p>
+        </a>
+
+        <div class="list">
+            <form name="dealForm" novalidates="">
+                
+                <div ng-init="editPromotionScope.localDealForm=dealForm"></div>
+
+                <label class="item item-input item-stacked-label" ng-class="{ 
+                    'has-error' : dealForm.title.$invalid,
+                    'valid'     : dealForm.title.$valid
+                    }">
+                    <span class="input-label">Title</span>
+                    <input type="text" placeholder="deal title" ng-model="editPromotionScope.promotion.title" name="title" required ng-minlength="5" ng-maxlength="75" ng-change="editPromotionScope.valueChanged();">
+                </label>
+                <div class="form-errors" ng-messages="dealForm.title.$error">
+                    <div class="form-error" ng-message="required">Titile cannot be blank</div>
+                    <div class="form-error" ng-message="minlength">Title is too short</div>
+                    <div class="form-error" ng-message="maxlength">Title is too long</div>
+                </div>
+
+                <label class="item item-input item-stacked-label" ng-class="{
+                    'has-error' : dealForm.description.$invalid,
+                    'valid'     : dealForm.description.$valid
+                    }">
+                    <span class="input-label">Descritpion</span>
+                    <textarea name="description" placeholder="brief description" ng-model="editPromotionScope.promotion.description" autoexpand required ng-minlength="10" ng-maxlength="100" ng-change="editPromotionScope.valueChanged();"></textarea>
+                    <!-- <input type="text" name="description" placeholder="brief description" ng-model="editPromotionScope.promotion.description" required ng-minlength="10" ng-maxlength="100"> -->
+                </label>
+                <div class="form-errors" ng-messages="dealForm.description.$error">
+                    <div class="form-error" ng-message="required">Description cannot be blank</div>
+                    <div class="form-error" ng-message="minlength">Description is too short</div>
+                    <div class="form-error" ng-message="maxlength">Description is too long</div>
+                </div>
+
+                <label class="item item-input item-stacked-label" ng-class="{
+                    'has-error' : dealForm.start_at.$invalid,
+                    'valid'     : dealForm.start_at.$valid
+                    }">
+                    <span class="input-label">Start Date</span>
+                    <input type="date" name="start_at" ng-model="editPromotionScope.promotion.start_at" placeholder="MMM dd, yyyy" 
+                    required ng-change="editPromotionScope.valueChanged();">
+                </label>
+                <div class="form-errors" ng-messages="dealForm.start_at.$error">
+                </div>
+
+                <label class="item item-input item-stacked-label" ng-class="{
+                    'has-error' : dealForm.expire_at.$invalid,
+                    'valid'     : dealForm.expire_at.$valid
+                    }">
+                    <span class="input-label">Expire Date</span>
+                    <input type="date" name="expire_at" ng-model="editPromotionScope.promotion.expire_at" placeholder="MMM dd, yyyy" 
+                    required ng-change="editPromotionScope.valueChanged();">
+                </label>
+                <div class="form-errors" ng-messages="dealForm.expire_at.$error">
+                    <!-- <div class="form-error" ng-message="min">Expire time cannot be earlier than Start time</div> -->
+                </div>
+
+                <label class="item item-input item-stacked-label" ng-class="{
+                    'has-error' : dealForm.catagory.$invalid,
+                    'valid'     : dealForm.catagory.$valid
+                    }">
+                    <span class="input-label">Category</span>
+                    <input readonly ng-click="editPromotionScope.selectCatagory()" type="text" name="catagory" ng-model="editPromotionScope.catagory " placeholder="None" required ng-change="editPromotionScope.valueChanged();">
+                </label>
+                <div class="form-errors" ng-messages="dealForm.catagory.$error">
+                    <div class="form-error" ng-message="required">Please slelect a category</div>
+                </div>
+
+                <label class="item item-input item-stacked-label" ng-class="{
+                    'has-error' : dealForm.keywords.$invalid,
+                    'valid'     : dealForm.keywords.$valid
+                    }">
+                    <span class="input-label">Keywords</span>
+                    <textarea readonly ng-click="editPromotionScope.editKeywords()" type="text" name="keywords" ng-model="editPromotionScope.keywords" autoexpand placeholder="None" ng-change="editPromotionScope.valueChanged();"></textarea>
+                </label>
+
+                <button ng-disabled="!editPromotionScope.saveable" class="button button-full button-dark" ng-click="dealForm.$valid && editPromotionScope.save(editPromotionScope.promotion)">
+                    Save
+                </button>
+            </form>
+        </div>
+    </ion-content>
+</ion-modal-view>
