@@ -196,18 +196,18 @@ class User
     UserMailer.welcome(self).deliver_now!
     UserMailer.new_user(self).deliver_now!
   end
-  handle_asynchronously :send_new_user_email, :run_at => Proc.new { 1.minutes.from_now }
+  # handle_asynchronously :send_new_user_email, :run_at => Proc.new { 1.minutes.from_now }
 
   def send_customer_confirmation_email
     UserMailer.customer_confirmation(self).deliver_now!
   end
-  handle_asynchronously :send_customer_confirmation_email, :run_at => Proc.new { 1.minutes.from_now }
+  # handle_asynchronously :send_customer_confirmation_email, :run_at => Proc.new { 1.minutes.from_now }
 
   # break user's info into small chunks and index them
   def index_terms
     Term.index_user_on_demand(self)
   end
-  handle_asynchronously :index_terms, :run_at => Proc.new { 3.minutes.from_now }
+  # handle_asynchronously :index_terms, :run_at => Proc.new { 3.minutes.from_now }
  
 	# encrypt password 
 	def encrypt_password
