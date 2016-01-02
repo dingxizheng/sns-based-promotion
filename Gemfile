@@ -50,3 +50,7 @@ gem 'gcm'
 gem 'thin'
 
 gem 'exception_notification'
+
+# gem 'RubyInline'
+
+# gem 'fastimage_resize'

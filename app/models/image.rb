@@ -34,6 +34,9 @@ class Image
     end
 
     unless filecontent.nil?
+      # require 'fastimage'
+      # size = FastImage.size(filecontent.path)
+      # puts size
       file = filecontent
     end
     
