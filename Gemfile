@@ -51,6 +51,8 @@ gem 'thin'
 
 gem 'exception_notification'
 
+# gem 'imgurapi'
+
 # gem 'RubyInline'
 
 # gem 'fastimage_resize'

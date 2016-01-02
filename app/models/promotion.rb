@@ -131,7 +131,7 @@ class Promotion
     message = Message.new(params)
     message.save
   end
-  handle_asynchronously :create_approval_msg, :run_at => Proc.new { 3.minutes.from_now }
+  # handle_asynchronously :create_approval_msg, :run_at => Proc.new { 3.minutes.from_now }
 
   # create a message asynchronously 
   def create_rejection_msg(admin = nil)
@@ -151,18 +151,18 @@ class Promotion
     message = Message.new(params)
     message.save
   end
-  handle_asynchronously :create_rejection_msg, :run_at => Proc.new { 3.minutes.from_now }
+  # handle_asynchronously :create_rejection_msg, :run_at => Proc.new { 3.minutes.from_now }
 
   # send email to admin users, when a new promotion is created
   def send_email
     PromotionMailer.notify_admin(self).deliver_now!
   end
-  handle_asynchronously :send_email, :run_at => Proc.new { 1.minutes.from_now }
+  # handle_asynchronously :send_email, :run_at => Proc.new { 1.minutes.from_now }
 
   def index_terms
     Term.index_promotion_on_demand(self)
   end
-  handle_asynchronously :index_terms, :run_at => Proc.new { 3.minutes.from_now }
+  # handle_asynchronously :index_terms, :run_at => Proc.new { 3.minutes.from_now }
 
   def set_coordinates
     self.coordinates = self.customer.coordinates
