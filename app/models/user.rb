@@ -18,9 +18,10 @@ class User
   
   geocoded_by :address 
   after_validation :geocode
-  after_save :send_new_user_email, :index_terms
+  after_save :index_terms
   before_create :encrypt_password, :set_default_role
   before_save :set_subscripted_status, :set_role, :check_address
+  after_create :send_new_user_email
 
   rolify
 
@@ -196,7 +197,7 @@ class User
     UserMailer.new_user(self).deliver_now!
   end
   handle_asynchronously :send_new_user_email, :run_at => Proc.new { 1.minutes.from_now }
-  
+
   def send_customer_confirmation_email
     UserMailer.customer_confirmation(self).deliver_now!
   end
