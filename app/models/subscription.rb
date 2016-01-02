@@ -121,6 +121,6 @@ class Subscription
   def send_email
     SubscriptionMailer.notify_admin(self).deliver_now!
   end
-  handle_asynchronously :send_email, :run_at => Proc.new { 1.minutes.from_now }
+  # handle_asynchronously :send_email, :run_at => Proc.new { 1.minutes.from_now }
 
 end
