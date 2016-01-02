@@ -21,8 +21,8 @@ class Imgur
 	  http
 	end
 
-	def self.upload(imagepath, name = 'image') 
-		img = File.open(imagepath, "rb") {|io| io.read}
+	def self.upload(img, name = 'image') 
+		# img = File.open(imagepath, "rb") {|io| io.read}
 		params = {:image =>  Base64.encode64(img),
 		          :gallery => "gallery",
 		          :name => name
