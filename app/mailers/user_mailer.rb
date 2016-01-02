@@ -1,5 +1,9 @@
 class UserMailer < ApplicationMailer
 
+  def test(user)
+    mail(:to => "dingxizheng@gmail.com", :subject => "Test mail", :body => "Test mail body")
+  end
+
   def new_user(user)
     @user = user
 
