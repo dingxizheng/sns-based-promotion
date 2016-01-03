@@ -21,14 +21,12 @@ class Subscription
   def set_expire_status
     if !self.cancel? and self.expire?
       self.expire
-      self.save
     end
   end
 
   def set_activated_status
     if !self.cancel? and !self.expire? and self.start?
       self.activate
-      self.save
     end
   end
 
@@ -67,21 +65,25 @@ class Subscription
   def approve
     self.status = 'unactivated'
     self.start_at = DateTime.now 
+    self.save
     self.reindex
   end
 
   def expire
     self.status = 'expired'
+    self.save
     self.reindex
   end
 
   def activate
     self.status = 'activated'
+    self.save
     self.reindex
   end
 
   def cancel
     self.status = 'canceled'
+    self.save
     self.reindex
   end
 

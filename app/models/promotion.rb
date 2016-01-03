@@ -19,7 +19,7 @@ class Promotion
   # after_validation :geocode          # auto-fetch coordinates
 
   after_create :send_email
-  before_save :set_coordinates, :set_subscripted_status
+  before_save :set_subscripted_status, :set_coordinates
   after_save :index_terms
 
   resourcify
