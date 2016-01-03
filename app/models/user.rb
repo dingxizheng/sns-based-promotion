@@ -81,6 +81,8 @@ class User
     	roles.map{ |r| r.name }.uniq
     end
 
+    time :start_at
+
     double :rating
     double :rate_count
 
@@ -174,7 +176,7 @@ class User
     else
       unless self.address.nil? or self.phone.nil? or self.description.nil?
         self.add_role :customer
-        # self.send_customer_confirmation_email
+        self.send_customer_confirmation_email
       end
     end
     return true

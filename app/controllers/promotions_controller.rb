@@ -65,8 +65,8 @@ class PromotionsController < ApplicationController
   # POST /promotions
   # POST /promotions.json
   def create
-    if @owner.promotions.in(:status => ['reviewed', 'submitted']).count >= 3
-      raise BadRequestError.new('you only can have 3 active promotions')
+    if @owner.promotions.in(:status => ['reviewed', 'submitted']).count >= 1
+      raise BadRequestError.new('you only can have 1 active promotions')
     end
     @promotion = @owner.promotions.build(promotion_params)
     authorize @promotion
