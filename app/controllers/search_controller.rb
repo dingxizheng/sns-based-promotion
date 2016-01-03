@@ -27,7 +27,7 @@ class SearchController < ApplicationController
 			# sort results
 			if finalOptions[:sortBy] == 'distance'
 				order_by_geodist(:location, get_location[:lat], get_location[:long]) if get_location.present?
-			elsif finalOptions[:sortBy] == 'start'
+			elsif finalOptions[:sortBy] == 'start' && model_names.include?('promotion')
 				order_by(:start_at, :asc)
 			elsif finalOptions[:sortBy] == 'rating'
 				order_by(:rating, :asc)

@@ -81,8 +81,6 @@ class User
     	roles.map{ |r| r.name }.uniq
     end
 
-    time :start_at
-
     double :rating
     double :rate_count
 
