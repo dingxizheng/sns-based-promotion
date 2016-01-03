@@ -82,7 +82,7 @@ class Image
     self.width         = response['data']['width']
     self.height        = response['data']['height']
     self.image_url     = response['data']['link']
-    self.thumb_url     = response['data']['link']
+    self.thumb_url     = response['data']['link'].sub(response['data']['id'], response['data']['id'] + 'b')
     self.medium_url    = response['data']['link']
     self.original_data = response
     return true

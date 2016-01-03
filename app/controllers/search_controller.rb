@@ -24,12 +24,6 @@ class SearchController < ApplicationController
 
 			with(:location).in_radius(get_location[:lat], get_location[:long], finalOptions[:distance]) if get_location.present?
 
-			# if the request is try to sort results by 'start_at' on user model
-			# set it to sort by 'score'
-			if finalOptions[:sortBy] == 'start' and model_names.include?('user')
-				finalOptions[:sortBy] = 'score'
-			end
-
 			# sort results
 			if finalOptions[:sortBy] == 'distance'
 				order_by_geodist(:location, get_location[:lat], get_location[:long]) if get_location.present?
