@@ -35,7 +35,7 @@ class Subscription
   def when_to_expire_subscription
     time_diff = 10000
     if self.product.present?
-      time_diff = self.expire_at.to_i - DateTime.now.to_i >= 0 ? self.expire_at.to_i - DateTime.now.to_i : 0
+      time_diff = self.expire_at.to_i - DateTime.now.to_i >= 0 ? self.expire_at.to_i - DateTime.now.to_i : 1000
     end
     time_diff.seconds.from_now
   end
@@ -43,7 +43,7 @@ class Subscription
   def when_to_activate_subscription
     time_diff = 100
     if self.product.present?
-      time_diff = self.start_at.to_i - DateTime.now.to_i >= 0 ? self.start_at.to_i - DateTime.now.to_i : 0
+      time_diff = self.start_at.to_i - DateTime.now.to_i >= 0 ? self.start_at.to_i - DateTime.now.to_i : 1000
     end
     time_diff.seconds.from_now
   end
