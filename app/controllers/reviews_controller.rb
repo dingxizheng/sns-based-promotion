@@ -1,6 +1,6 @@
 class ReviewsController < ApplicationController
 
-  before_action :restrict_access, only: [:update, :destory]
+  before_action :restrict_access, only: [:update, :destory, :create]
   before_action :set_review, only: [:show, :update, :destroy]
   before_action :set_user, except: []
 

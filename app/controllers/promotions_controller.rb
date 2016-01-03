@@ -1,7 +1,7 @@
 class PromotionsController < ApplicationController
 
   # always put this at top
-  before_action :restrict_access, only: [:create, :update, :destory, :approve, :reject, :add_keyword, :delete_keyword]
+  before_action :restrict_access, only: [:create, :update, :destory, :approve, :reject, :add_keyword, :delete_keyword, :rate]
   before_action :set_promotion, except: [:index, :create]
   before_action :set_owner, except:[]
 
