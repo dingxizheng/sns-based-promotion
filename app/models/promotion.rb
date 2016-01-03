@@ -85,7 +85,7 @@ class Promotion
   end
 
   def subscripted?
-    self.customer && self.customer.subscriptions.any? { |s| s.activate? }
+    self.customer.subscripted?
   end
 
   def lon
