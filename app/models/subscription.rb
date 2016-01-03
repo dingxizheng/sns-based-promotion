@@ -89,10 +89,22 @@ class Subscription
   # update the user's status and the status of 
   # all the promotions owned by this user
   def reindex
-    # save user will trigger reindex on user
+    self.delay(:run_at => Proc.new { 1.minutes.from_now }).reindex_user
+    self.delay(:run_at => Proc.new { 3.minutes.from_now }).reindex_promotions
+    # # save user will trigger reindex on user
+    # self.user.save
+    # # for each promotion owned by this user, call save to 
+    # # reindex each of them
+    # self.user.promotions.each { |promotion|
+    #   promotion.save
+    # }
+  end
+
+  def reindex_user
     self.user.save
-    # for each promotion owned by this user, call save to 
-    # reindex each of them
+  end
+
+  def reindex_promotions
     self.user.promotions.each { |promotion|
       promotion.save
     }

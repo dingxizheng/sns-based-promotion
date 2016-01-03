@@ -50,7 +50,7 @@ module Errors
 	class NotauthorizedError < GampError
 		def initialize
 			@code = 403
-			@error = 'you are not authorized'
+			@error = 'you are not authorized, please login.'
 		end
 	end
 
