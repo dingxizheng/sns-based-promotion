@@ -19,7 +19,7 @@ class Promotion
   # after_validation :geocode          # auto-fetch coordinates
 
   after_create :send_email
-  before_save :set_subscripted_status, :set_coordinates
+  before_save :set_coordinates
   after_save :index_terms
 
   resourcify
@@ -77,15 +77,6 @@ class Promotion
     latlon(:location){
       Sunspot::Util::Coordinates.new(lat , lon)
     }
-  end
-
-  def set_subscripted_status
-    self.subscripted = self.subscripted?
-    return true;
-  end
-
-  def subscripted?
-    self.customer.subscripted?
   end
 
   def lon

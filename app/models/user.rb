@@ -20,7 +20,7 @@ class User
   after_validation :geocode
   after_save :index_terms
   before_create :encrypt_password, :set_default_role
-  before_save :set_subscripted_status, :set_role, :check_address
+  before_save :set_role, :check_address
   after_create :send_new_user_email
 
   rolify
@@ -100,16 +100,6 @@ class User
   # indexes
   # index({ coordinates: "2d" })
   index({ subscripted: 1 })
-
-  def set_subscripted_status
-    self.subscripted = self.subscripted?
-    return true
-  end
-
-  # check if user still has any active subscriptions
-  def subscripted?
-    self.subscriptions.any? { |s| s.activate? }
-  end
 
   def lon
     if not self.coordinates.nil? then self.coordinates[0] else 0 end

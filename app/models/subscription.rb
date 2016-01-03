@@ -92,11 +92,11 @@ class Subscription
   # all the promotions owned by this user
   def reindex
     # save user will trigger reindex on user
-    self.user.save
+    self.user.update({ :subscripted => self.activate? })
     # for each promotion owned by this user, call save to 
     # reindex each of them
     self.user.promotions.each { |promotion|
-      promotion.save
+      promotion.update({ :subscripted => self.activate? })
     }
   end
 
