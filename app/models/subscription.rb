@@ -89,28 +89,26 @@ class Subscription
   # update the user's status and the status of 
   # all the promotions owned by this user
   def reindex
-    self.reindex_user
-    self.reindex_promotions
-    # # save user will trigger reindex on user
-    # self.user.save
-    # # for each promotion owned by this user, call save to 
-    # # reindex each of them
-    # self.user.promotions.each { |promotion|
-    #   promotion.save
-    # }
-  end
-
-  def reindex_user
+    # save user will trigger reindex on user
     self.user.save
-  end
-  handle_asynchronously :reindex_user, :run_at => Proc.new { 1.minutes.from_now }
-
-  def reindex_promotions
+    # for each promotion owned by this user, call save to 
+    # reindex each of them
     self.user.promotions.each { |promotion|
       promotion.save
     }
   end
-  handle_asynchronously :reindex_promotions, :run_at => Proc.new { 3.minutes.from_now }
+
+  # def reindex_user
+  #   self.user.save
+  # end
+  # handle_asynchronously :reindex_user, :run_at => Proc.new { 1.minutes.from_now }
+
+  # def reindex_promotions
+  #   self.user.promotions.each { |promotion|
+  #     promotion.save
+  #   }
+  # end
+  # handle_asynchronously :reindex_promotions, :run_at => Proc.new { 3.minutes.from_now }
 
   def set_expire_and_status
     if self.product.present?
