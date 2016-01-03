@@ -1,6 +1,6 @@
 require "simple-spreadsheet"
 
-users = SimpleSpreadsheet::Workbook.read("lib/tasks/files/dealsandusers.xlsx")
+users = SimpleSpreadsheet::Workbook.read("lib/tasks/files/users-2.xlsx")
 
 users.selected_sheet = users.sheets.first
 
@@ -10,23 +10,27 @@ users.first_row.upto(users.last_row) do |line|
 	# puts users.cell(line, 7).split('#').map{|w| w.strip }.select{|w| w.size > 2 }
 	if row_number > 0
 		user1 = {
-		  paid: users.cell(line, 1) == "Yes",
-		  name: users.cell(line, 2),
-		  email: users.cell(line, 3),
-		  password: users.cell(line, 4),
-		  phone: users.cell(line, 6),
-		  address: users.cell(line, 5),
-		  description: users.cell(line, 8),
-		  keywords: users.cell(line, 7).split('#').map{|w| w.strip }.select{|w| w.size > 2 },
+		  # paid: users.cell(line, 1) == "Yes",
+		  name: users.cell(line, 1),
+		  email: users.cell(line, 2),
+		  password: users.cell(line, 3),
+		  phone: users.cell(line, 5),
+		  address: users.cell(line, 4),
+		  description: users.cell(line, 7),
+		  keywords: users.cell(line, 6).split('#').map{|w| w.strip }.select{|w| w.size > 2 },
 		  hours: {}
 		}
 
-		for num in (10..16)
+		for num in (10..15)
 			if users.cell(line, num) != 'n/a'
-				user1[:hours][users.cell(first_row, num)] = {
-					from: users.cell(line, num).split('-')[0].strip,
-					to: users.cell(line, num).split('-')[1].strip
-				}
+				begin
+					user1[:hours][users.cell(first_row, num)] = {
+						from: users.cell(line, num).split('-')[0].strip,
+						to: users.cell(line, num).split('-')[1].strip
+					}
+				rescue
+					puts  "Error when reading #{ users.cell(first_row, num) }"
+				end
 			end
 		end
 
@@ -67,12 +71,15 @@ users.first_row.upto(users.last_row) do |line|
    #    			puts "subscription #{ u.name }"
 			# }
 			
-			u.promotions.each{|p| 
-				p.approve
-				p.save
-				puts "promotion approved #{ u.name }    #{ p.title }"
-			}
-
+			# u.promotions.each{|p| 
+			# 	p.approve
+			# 	p.save
+			# 	puts "promotion approved #{ u.name }    #{ p.title }"
+			# }
+		else
+			u = User.new(user1)
+			u.save
+			puts "user: #{u.name} added"
 		end
  
 		# u = User.new(user1)
