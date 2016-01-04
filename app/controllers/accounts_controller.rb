@@ -5,7 +5,7 @@ class AccountsController < ApplicationController
 
 	# POST /signin
 	def signin
-		@user = User.find_by(email: params[:email]) 
+		@user = User.find_by(email: params[:email].downcase) 
 		# if user is not found, raise a 400 error
 		raise BadRequestError.new('user does not exist') unless not @user.nil?
 		# if password does not match, raise a 400 error
