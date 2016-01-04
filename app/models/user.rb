@@ -20,8 +20,8 @@ class User
   after_validation :geocode
   after_save :index_terms
   before_create :encrypt_password, :set_default_role
-  before_save :set_role, :check_address
-  after_create :send_new_user_email
+  before_save :set_role, :check_address, :lowercase_email
+  after_create :lowercase_email, :send_new_user_email
 
   rolify
 
@@ -148,6 +148,10 @@ class User
     end
     self.photos.push(image);
     return true
+  end
+
+  def lowercase_email
+    self.email = self.email.downcase
   end
 
   # set user as normal user
