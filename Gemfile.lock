@@ -130,6 +130,9 @@ GEM
       moped (~> 2.0.0)
       origin (~> 2.1)
       tzinfo (>= 0.3.37)
+    mongoid_taggable (1.1.1)
+      mongoid (>= 3)
+      rake
     moped (2.0.5)
       bson (~> 3.0.4)
       connection_pool (~> 2.0)
@@ -216,6 +219,7 @@ GEM
       actionpack (>= 3.0)
       activesupport (>= 3.0)
       sprockets (>= 2.8, < 4.0)
+    streamio-ffmpeg (1.0.0)
     sunspot (2.2.0)
       pr_geohash (~> 1.0)
       rsolr (~> 1.0.7)
@@ -237,6 +241,7 @@ GEM
     tzinfo (1.2.2)
       thread_safe (~> 0.1)
     validates_phone_number (2.0.1)
+    voteable_mongo (0.9.3)
 
 PLATFORMS
   ruby
@@ -251,9 +256,11 @@ DEPENDENCIES
   gcm
   geocoder
   houston
+  i18n
   jbuilder
   kaminari
   mongoid (~> 4.0)
+  mongoid_taggable
   moped
   pundit
   rails
@@ -261,11 +268,13 @@ DEPENDENCIES
   rake
   rolify
   simple-spreadsheet
+  streamio-ffmpeg
   sunspot_mongoid2
   sunspot_rails
   sunspot_solr
   thin
   validates_phone_number (~> 2.0.1)
+  voteable_mongo
 
 BUNDLED WITH
    1.10.5

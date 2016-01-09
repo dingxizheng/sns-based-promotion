@@ -5,107 +5,88 @@ module Mongoid::Document
   end
 end
 
-module Mongoid
-  module Keywordsable
-    extend ActiveSupport::Concern
-
-    included do
-
-      before_save :keywords_validate
-
-      field :keywords, type: Array, default: []
-
-    end
-
-    # keywords validate
-    def keywords_validate
-      if self.keywords.count != self.keywords.uniq.count
-        self.errors.add :keywords, 'cannot add duplicate keyword'
-        return false
-      elsif self.keywords.count > 5
-        self.errors.add :keywords, 'cannot have more than 5 keywords'
-        return false
-      elsif self.keywords.any? { |keyword| keyword.size < 3 }
-        self.errors.add :keywords, 'a keyword should contain more than 3 characters'
-        return false
-      elsif self.keywords.any? { |keyword| keyword.size > 15 }
-        self.errors.add :keywords, 'a keyword should contain less than 15 characters'
-        return false
-      else
-        return true
+module GeoHelper
+  extend ActiveSupport::Concern
+  included do
+    # after_save :reindex_coordinates
+    scope :with_in_radius, ->(location, radius) {
+      if location and location[:lat] and location[:long] and radius
+        near([location[:lat], location[:long]], Float(radius), :units => :km)
       end
-    end
-
-    # def not_validate?(keyword)
-    #   if keyword.size < 3
-    #     return 'a keyword should contain more than 3 characters'
-    #   elsif keyword.size > 15
-    #     return 'a keyword should contain less than 15 characters'
-    #   else
-    #     return false
-    #   end
-    # end
-
-    # add keyword to user
-    def add_keyword(keyword)
-      if self.keywords.include?(keyword)
-        self.errors.add :keywords, 'cannot add duplicate keyword'
-        # return false if an error added
-        return false
-      elsif self.keywords.size == 5
-        self.errors.add :keywords, 'cannot have more than 5 keywords'
-        return false
-      elsif keyword.size < 3
-        self.errors.add :keywords, 'a keyword should contain more than 3 characters'
-        return false
-      elsif keyword.size > 15
-        self.errors.add :keywords, 'a keyword should contain less than 15 characters'
-        return false
-      else
-        self.push(keywords: keyword)
-      end
-    end
-
+    }
   end
+
+  # reindex coordinates after save
+  def reindex_coordinates
+    if self.coordinates_changed?
+      Thread.start{
+        require 'rake'
+        Rake::Task.clear
+        Rails.application.load_tasks
+        Rake::Task['db:mongoid:create_indexes'].invoke
+      }
+    end
+  end
+
 end
 
 module Mongoid
-  module Randomizable
+  module QueryHelper
     extend ActiveSupport::Concern
-      
-      included do
-
-        before_save :set_random_num
-        field :random_num, type: Float, default: 0.0
-
-        index({:random_num => 1})
-
-        scope :randomized, -> (num) { 
-
-          count = self.count
-          queries = []
-
-          if num / count.to_f < 0.5
-            split = 60
-          else
-            split = count
+    included do
+      scope :sortby, ->(sortBy) {
+        if sortBy.present? 
+          # multiple sortBy parameters must be seperated by ',,'
+          # for instance: 'sortBy=time,,name' ==> means sortBy 'time' and 'name'
+          order_by_params = sortBy.split(',,').map do |item|      
+            if item.start_with? '-'
+              [item[1..-1].to_sym, -1]
+            else
+              [item.to_sym, 1]
+            end
           end
-          
-          (0..50).each{|i|
-              random_start = rand * 1.4 - 0.2
-              random_end = random_start + (1.4 / split.to_f) * rand
-              queries.push(:$and => [{ :random_num.gt => random_start}, {:random_num.lte => random_end}])
-          }
-          
-          self.or(*queries).limit(num)
+          order_by(order_by_params)
+        end
+      }
 
-        }
+      scope :paginate, ->(page, per_page) {
+        # if pagenation is required, then return required page
+        if page.present? and per_page.present?
+          page(page).per(per_page)
+        end
+      }
 
-      end
+      scope :query_by_params, ->(query_parameters) {
+        query = {}
+        query_parameters.each do |key, value|
+          field = key.to_sym
 
-      def set_random_num
-        self.random_num = rand
-      end
-
+          if value.nil?
+            # do nothing
+          elsif value.start_with? '<='
+            query.store(field.lte, value[2..-1])
+          elsif value.start_with? '<'
+            query.store(field.lt, value[1..-1])
+          elsif value.start_with? '>='
+            query.store(field.gte, value[2..-1])
+          elsif value.start_with? '>'
+            query.store(field.gt, value[1..-1])
+          elsif value.start_with? '!='
+            if value == "!=null"
+              query.store(field.exists, false)
+            else
+              query.store(field.nin, value[2..-1].split(',,'))
+            end
+          else
+            if value == "null"
+              query.store(field.exists, true)
+            else
+              query.store(field.in, value.split(',,'))
+            end
+          end
+        end
+        where(query)
+      }
+    end
   end
 end

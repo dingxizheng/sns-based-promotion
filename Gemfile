@@ -9,6 +9,8 @@ gem 'rails'
 
 gem 'rails-api'
 
+gem 'i18n'
+
 gem 'bson'
 
 # gem 'moped', github: 'mongoid/moped'
@@ -16,6 +18,13 @@ gem 'moped'
 
 # gem 'mongoid', '~> 4', github: 'mongoid/mongoid'
 gem 'mongoid', '~> 4.0'
+
+gem 'mongoid_taggable'
+
+gem 'voteable_mongo'
+
+#  reading metadata and transcoding movies
+gem 'streamio-ffmpeg'
 
 gem 'bson_ext'
 

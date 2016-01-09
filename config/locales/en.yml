@@ -20,4 +20,10 @@
 # available at http://guides.rubyonrails.org/i18n.html.
 
 en:
-  hello: "Hello world"
+  errors:
+  	validations:
+	  email: "not a valid email address!"
+	  phone: "not a valid phone number!"
+	  address: "not a valid address!"
+	  address_ca: "not a valid Canada address!"
+	  image_file: "could not be processed!"
