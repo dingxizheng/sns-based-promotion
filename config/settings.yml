@@ -1,0 +1,21 @@
+image:
+    # image size limit
+    size_limit: 3
+
+video:
+    size_limit: 300
+    min_width: 100
+    max_width: 2000
+    min_height: -1
+    max_height: 1200
+    duration_limit: 30
+
+user:
+    # if lowercase email address
+    if_lowercase_email: true
+
+email_notificaion:
+    email_prefix:
+        - [VICINITY SERVER ERROR]
+    exception_recipients: [dingxizheng@gmail.com]
+    sender_address: dingxizheng@gmail.com

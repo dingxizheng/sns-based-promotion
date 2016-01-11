@@ -1,22 +1,21 @@
 require File.expand_path('../boot', __FILE__)
 
 # Pick the frameworks you want:
-# require "active_record/railtie"
 require "action_controller/railtie"
 require "action_mailer/railtie"
-require "sprockets/railtie"
+
 require "bson"
 require "moped"
-
 Moped::BSON = BSON
-# require "rails/test_unit/railtie"
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
 Bundler.require(:default, Rails.env)
- 
+
 module GampApi
   class Application < Rails::Application
+    # load configration
+    Config::Integration::Rails::Railtie.preload
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
@@ -42,13 +41,12 @@ module GampApi
     # custom logger
     config.logger = ActiveSupport::TaggedLogging.new(Logger.new("#{ Rails.root }/log/#{ Rails.env }-rails.log"))
 
-    config.exception_logger = ActiveSupport::TaggedLogging.new(Logger.new("#{ Rails.root }/log/#{ Rails.env }-rails-exceptions.log"))
-    
+    # exception notification setup
     config.middleware.use ExceptionNotification::Rack,
         :email => {
-            :email_prefix         => "[VICINITY SERVER ERROR]",
-            :sender_address       => %{ "vicinity notifier" info@vicinity.deals },
-            :exception_recipients => %w{ dingxizheng@gmail.com teepan.nanthakumar@gmail.com }
+            :email_prefix         => Settings.email_notificaion.email_prefix,
+            :sender_address       => Settings.email_notificaion.sender_address,
+            :exception_recipients => Settings.email_notificaion.exception_recipients
         }
 
     # config.force_ssl = true

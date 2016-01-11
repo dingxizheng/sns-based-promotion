@@ -2,12 +2,14 @@ source 'https://rubygems.org'
 
 gem 'dotenv-rails', :groups => [:development, :test, :production]
 
+gem 'config'
+
 gem 'rake'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails'
 
-gem 'rails-api'
+gem 'rspec-rails', :groups => [:development, :test]
 
 gem 'i18n'
 
@@ -21,7 +23,11 @@ gem 'mongoid', '~> 4.0'
 
 gem 'mongoid_taggable'
 
-gem 'voteable_mongo'
+gem 'carrierwave'
+
+gem 'mongoid-grid_fs', github: 'ahoward/mongoid-grid_fs'
+
+gem 'carrierwave-mongoid', require: "carrierwave/mongoid"
 
 #  reading metadata and transcoding movies
 gem 'streamio-ffmpeg'
@@ -34,7 +40,7 @@ gem 'jbuilder'
 
 gem 'sunspot_rails'
 
-gem 'sunspot_solr' # optional pre-packaged Solr distribution for use in development
+gem 'sunspot_solr', :groups => [:development]
 
 gem 'sunspot_mongoid2'
 
@@ -46,22 +52,12 @@ gem 'geocoder'
 
 gem 'delayed_job_mongoid'
 
-gem 'daemons'
+gem 'kaminari' # paginator for model
 
-gem 'kaminari'
+gem 'houston' # apple push notification
 
-gem 'houston'
-
-gem 'simple-spreadsheet'
-
-gem 'gcm'
+gem 'gcm' # google cloud messagin for Android
 
 gem 'thin'
 
 gem 'exception_notification'
-
-# gem 'imgurapi'
-
-# gem 'RubyInline'
-
-# gem 'fastimage_resize'

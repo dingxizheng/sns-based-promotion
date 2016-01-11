@@ -28,7 +28,6 @@ class User
   field :address, type: String
   field :description, type: String
   field :coordinates, type: Array
-  field :guest, type: Boolean, default: false
 
   # change tags separator to ;;
   tags_separator ';'
@@ -40,7 +39,7 @@ class User
   has_many :sessions
   
   # a user only has one logo
-  has_one  :logo, inverse_of: :logo_owner, class_name: 'Image'
+  has_one  :avatar, inverse_of: :avatar_owner, class_name: 'Image'
   # a user only has on background
   has_one  :background, inverse_of: :background_owner, class_name: 'Image'
   # a user could have many photos
@@ -70,10 +69,10 @@ class User
   # validaters
   validates_uniqueness_of :name, :email
   validates_format_of :email, 
-      :message => I18n.t 'errors.validations.email',
+      :message => I18n.t('errors.validations.email'),
       :with => /\A([\w+\-].?)+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z/i
   validates_format_of :phone,
-      :message => I18n.t 'errors.validations.phone',
+      :message => I18n.t('errors.validations.phone'),
       :with => /\(?([0-9]{3})\)?([ .-]?)([0-9]{3})\2([0-9]{4})/,
       :allow_blank => true
   
@@ -113,7 +112,8 @@ class User
   private
   # lowercase email address
   def lowercase_email
-    self.email = self.email.downcase
+    self.email = self.email.downcase unless not Settings.user.if_lowercase_email
+    return true;
   end
 
   # validate address
@@ -123,7 +123,7 @@ class User
       results = Geocoder.search(self.address)
       # if no result returned, then is not a valid address
       if results.count == 0
-        self.errors.add :address, I18n.t 'errors.validations.address'
+        self.errors.add :address, I18n.t('errors.validations.address')
         return false
       # otherwise, check if the address is a valid canada address
       else
@@ -131,7 +131,7 @@ class User
           addr.formatted_address.include? 'Canada'
         }
         if new_results.count == 0
-          self.errors.add :address, I18n.t 'errors.validations.address_ca'
+          self.errors.add :address, I18n.t('errors.validations.address_ca')
           return false
         else
           self.address = new_results[0].formatted_address
@@ -152,10 +152,9 @@ class User
 
   # destroy all related children
   def destroy_children
-    self.logo.destroy
+    self.avatar.destroy
     self.background.destroy
     self.photos.destroy_all
-
     self.promotions.destroy_all
   end
 

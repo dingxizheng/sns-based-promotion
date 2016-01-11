@@ -2,7 +2,7 @@
 # @Author: dingxizheng
 # @Date:   2016-01-07 16:44:51
 # @Last Modified by:   dingxizheng
-# @Last Modified time: 2016-01-07 17:14:50
+# @Last Modified time: 2016-01-11 11:23:45
 
 # is used to get video info
 require 'streamio-ffmpeg'
@@ -11,28 +11,54 @@ class Video
   include Mongoid::Document
   include Mongoid::Timestamps
 
-  # fields
-  field :file_name, type: String
-  field :extension, type: String
+  field :duration, type: BigDecimal
   field :size, type: BigDecimal
-  field :height, type: BigDecimal
-  field :width, type: BigDecimal
-  field :cover_url, type: String
-  field :thumb_url, type: String
-  field :medium_url, type: String
+  field :width, type: Integer
+  field :height, type: Integer
+  field :video_codec, type: String
+  field :video_stream, type: String
+  field :video_rate, type: Float
+  field :audio_stream , type: String
+  field :audio_codec, type: String
+  field :audio_channels, type: String
 
-  def store(data_from_request = nil, filecontent = nil)
+  mount_uploader :file, AdsVideoUploader
 
-	# 
-  	if not data_from_request.nil? 
-      file_name = data_from_request.original_filename  if  (data_from_request != '')    
-      file = data_from_request.read
-      self.file_name = file_name
-    end
+  validate :validates_video_content
 
-    unless filecontent.nil?
-      file = filecontent
-    end
+  private
+  # def validates_video
+  # 	if self.file.file.size.to_f/(1000*1000) > Settings.video.size_limit
+  # 		errors.add(:file, I18n.t('errors.validations.video_size') % Settings.video.size_limit)
+  # 	end
+  # end
+
+  def validates_video_content
+  	# read video info
+  	video = FFMPEG::Movie.new(Settings.video.test_file_one.strip)
+  	
+  	# validates video size
+  	if video.size.to_f / (1000 * 1000) > Settings.video.size_limit
+  		errors.add(:size, I18n.t('errors.validations.video_size') % Settings.video.size_limit )
+  	end
+
+  	# validates video width
+  	if video.width > Settings.video.max_width or
+  		video.width < Settings.video.min_width or
+  		errors.add(:width, I18n.t('errors.validations.video_width') % [Settings.video.min_width, Settings.video.max_width])
+  	end
+  	
+  	# validates video height
+  	if video.height > Settings.video.max_height or
+  		video.height < Settings.video.min_height
+  		errors.add(:height, I18n.t('errors.validations.video_height') % [Settings.video.min_height, Settings.video.max_height])
+  	end
+
+  	# validates video duration
+  	if video.duration > Settings.video.duration_limit
+  		errors.add(:duration, I18n.t('errors.validations.video_duration') % Settings.video.duration)
+  	end
+
   end
 
 end

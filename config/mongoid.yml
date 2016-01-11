@@ -1,30 +1,9 @@
 development:
   sessions:
     default:
-      database: vicinity_development
-      # database: gamp_api_development
+      database: video_ads_development
       hosts:
-        # - localhost:27017
-        - ec2-52-26-67-69.us-west-2.compute.amazonaws.com:27017
-      username: <%= ENV['MONGO_USERNAME'] %>
-      password: <%= ENV['MONGO_PASSWORD'] %>
-      options:
-        # Change the default write concern. (default = { w: 1 })
-        # write:
-        # w: 1
-
-        # Change the default consistency model to primary, secondary.
-        # 'secondary' will send reads to secondaries, 'primary' sends everything
-        # to master. (default: primary)
-        # read: secondary_preferred
-
-        # How many times Moped should attempt to retry an operation after
-        # failure. (default: The number of nodes in the cluster)
-        # max_retries: 20
-
-        # The time in seconds that Moped should wait before retrying an
-        # operation on failure. (default: 0.25)
-        # retry_interval: 0.25
+        - localhost:27017
   # Configure Mongoid specific options. (optional)
   options:
     # Includes the root model name in json serialization. (default: false)
@@ -56,7 +35,7 @@ development:
 test:
   sessions:
     default:
-      database: vicinity_test
+      database: video_ads_test
       hosts:
         - ec2-52-26-67-69.us-west-2.compute.amazonaws.com:27017
       username: <%= ENV['MONGO_USERNAME'] %>
@@ -73,7 +52,7 @@ test:
 production:
   sessions:
     default:
-      database: vicinity_production
+      database: video_ads_production
       hosts:
         - ec2-52-26-67-69.us-west-2.compute.amazonaws.com:27017
       username: <%= ENV['MONGO_USERNAME'] %>

@@ -4,7 +4,6 @@ class ApplicationController < ActionController::Base
 	include Errors
 	include Pundit
 
-	
 	before_action :get_geo_location, :load_loggedin_user
 
 	# set default response format to json
@@ -13,7 +12,7 @@ class ApplicationController < ActionController::Base
 	# return empty list
 	rescue_from EmptyList, :with => :render_empty_list
 
-	# capture all errors and pass them to functin render_error
+	# capture all errors and pass them to function render_error
 	rescue_from GampError, :with => :render_error
 
 	# capture all syntax errors
@@ -143,27 +142,8 @@ class ApplicationController < ActionController::Base
 
 	# handle general error
 	def handle_general_error(error)
-		log_id = Time.now.to_s
-		logger.tagged('ERROR', 'INTERNAL') { 
-			logger.info "Type: #{ error.class.to_s }" 
-			logger.info "Message: #{ error.to_s }" 
-			logger.info "Details: Please see '[#{ error.class.to_s }] [#{ log_id }]' in *-rails-exceptions.log"
-		}
-		# log the backtrace into a seperate log file
-		exception_logger.tagged(error.class.to_s, log_id) { 
-			exception_logger.info '--------------------------------'
-			exception_logger.info "       #{ error.class.to_s  }   "
-			exception_logger.info '--------------------------------'
-			error.backtrace.each do |line|
-				exception_logger.info line
-			end
-			exception_logger.info ''
-		}
-		# email error message to the developers
-		Thread.start {
-			ExceptionNotifier.notify_exception(error, :env => request.env)
-		}
-		render_error(InternalError.new(error.message));
+		Utility.log_exception(error)
+		render_error(InternalError.new(error.message))
 	end
 
 	# bind role 'moderator' to target
@@ -171,6 +151,7 @@ class ApplicationController < ActionController::Base
 		user.add_role :moderator, target
 	end
 
+	# set default response format
 	def set_default_response_format
 		if params[:format].present? and params[:format] == 'html'
 			request.format = :html
@@ -180,7 +161,6 @@ class ApplicationController < ActionController::Base
 	end
 
 	# helper functions
-	# 
 	def to_boolean(s)
 	  s and !!s.match(/^(true|t|yes|y|1)$/i)
 	end

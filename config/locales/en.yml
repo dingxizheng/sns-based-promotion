@@ -21,9 +21,14 @@
 
 en:
   errors:
-  	validations:
-	  email: "not a valid email address!"
-	  phone: "not a valid phone number!"
-	  address: "not a valid address!"
-	  address_ca: "not a valid Canada address!"
-	  image_file: "could not be processed!"
+    validations:
+      email: "not a valid email address!"
+      phone: "not a valid phone number!"
+      address: "not a valid address!"
+      address_ca: "not a valid Canada address!"
+      image_file: "could not be processed!"
+      image_size: "you can not upload a image file greater than %f MB!"
+      video_size: "you can not upload a video file greater than %f MB!"
+      video_width: "video width should be in %f to %f"
+      video_height: "video height should be in %f to %f"
+      video_duration: "video length should be less than %f seconds"
