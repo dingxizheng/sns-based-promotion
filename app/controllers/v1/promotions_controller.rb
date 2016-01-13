@@ -1,3 +1,4 @@
+module V1
 class PromotionsController < ApplicationController
 
   # always put this at top
@@ -277,4 +278,5 @@ class PromotionsController < ApplicationController
     end
   end
 
+end
 end

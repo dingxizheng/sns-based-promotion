@@ -102,7 +102,7 @@ class ApplicationController < ActionController::Base
 	# for every request, try to find the logged in user from the access token
 	# , and also refresh the session
 	def load_loggedin_user
-		@session = Session.find_by(access_token: loads_apikey)
+		@session = Session.find_by(access_token_hashed: loads_apikey)
 		@session.refresh if not @session.nil? and not @session.expire?
 		if not @session.nil? and not @session.expire?
 			logger.tagged('LOGGED IN USER') { logger.info "Name: #{@session.user.name} , Email: #{@session.user.email}" }

@@ -1,3 +1,4 @@
+module V1
 class SearchController < ApplicationController
 
 	def search_func(excludes = [])
@@ -150,4 +151,5 @@ class SearchController < ApplicationController
 		options.symbolize_keys
 	end
 
+end
 end

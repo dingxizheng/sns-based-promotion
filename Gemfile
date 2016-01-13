@@ -23,9 +23,13 @@ gem 'mongoid', '~> 4.0'
 
 gem 'mongoid_taggable'
 
+gem 'voteable_mongo'
+
+gem 'mini_magick'
+
 gem 'carrierwave'
 
-gem 'mongoid-grid_fs', github: 'ahoward/mongoid-grid_fs'
+gem 'mongoid-grid_fs', github: 'dingxizheng/mongoid-grid_fs'
 
 gem 'carrierwave-mongoid', require: "carrierwave/mongoid"
 
@@ -61,3 +65,5 @@ gem 'gcm' # google cloud messagin for Android
 gem 'thin'
 
 gem 'exception_notification'
+
+# gem 'impressionist'

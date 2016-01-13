@@ -3,4 +3,4 @@
 
 require File.expand_path('../config/application', __FILE__)
 
-GampApi::Application.load_tasks
+VideoAdsApi::Application.load_tasks

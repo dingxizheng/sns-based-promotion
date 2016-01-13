@@ -3,9 +3,11 @@ class Promotion
   include Mongoid::Timestamps
   include Sunspot::Mongoid2
   include Mongo::Voteable
+  include Mongoid::Taggable
   include Geocoder::Model::Mongoid
   include Mongoid::QueryHelper
   include Mongoid::GeoHelper
+  include Mongoid::Encryptable
 
   geocoded_by :coordinates
 
@@ -27,27 +29,27 @@ class Promotion
 
   # set points for each vote
   voteable self, :up => +1, :down => -1
+  encryptable :title, :description
 
   has_one  :video
   has_many :photos, inverse_of: :promotion, class_name: 'Image'
   has_many :reviews, inverse_of: :promotion, class_name: 'Review'
   belongs_to :customer, class_name: 'User', inverse_of: :promotions
 
-  # sunspot config 
-  searchable do
-    text :title, :description, :tags
-
-    time :expire_at, :start_at
-    
-    string :status
-
-    string :id do
-      get_id
-    end
-
-    latlon(:location){
-      Sunspot::Util::Coordinates.new(lat , lon)
-    }
+  # if fulltext search on promotion model is enabled
+  if Settings.sunspot.enable_promotion
+	# sunspot config 
+	searchable do
+	    text :title, :description, :tags
+	    time :expire_at, :start_at 
+	    string :status
+	    string :id do
+	      get_id
+	    end
+	    latlon(:location){
+	      Sunspot::Util::Coordinates.new(lat, lon)
+	    }
+	end
   end
 
   # retrieve longtitude info
@@ -60,6 +62,7 @@ class Promotion
     if not self.coordinates.nil? then self.coordinates[1] else 0 end
   end
 
+  # to enable the 
   def index_terms
     Term.index_promotion_on_demand(self)
   end

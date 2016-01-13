@@ -1,6 +1,6 @@
 GIT
-  remote: git://github.com/ahoward/mongoid-grid_fs.git
-  revision: e80532461d4f88a51b59d3cd394e10f87707b5d4
+  remote: git://github.com/dingxizheng/mongoid-grid_fs.git
+  revision: c310cb64bbae8c955a300f4df0414093bd19651d
   specs:
     mongoid-grid_fs (2.2.1)
       mime-types (>= 1.0, < 3.0)
@@ -108,6 +108,7 @@ GEM
     mail (2.6.3)
       mime-types (>= 1.16, < 3)
     mime-types (2.99)
+    mini_magick (4.3.6)
     mini_portile2 (2.0.0)
     minitest (5.8.3)
     mongoid (4.0.2)
@@ -211,6 +212,7 @@ GEM
     tzinfo (1.2.2)
       thread_safe (~> 0.1)
     validates_phone_number (2.0.1)
+    voteable_mongo (0.9.3)
 
 PLATFORMS
   ruby
@@ -230,6 +232,7 @@ DEPENDENCIES
   i18n
   jbuilder
   kaminari
+  mini_magick
   mongoid (~> 4.0)
   mongoid-grid_fs!
   mongoid_taggable
@@ -245,6 +248,7 @@ DEPENDENCIES
   sunspot_solr
   thin
   validates_phone_number (~> 2.0.1)
+  voteable_mongo
 
 BUNDLED WITH
    1.10.5

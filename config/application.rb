@@ -12,7 +12,7 @@ Moped::BSON = BSON
 # you've limited to :test, :development, or :production.
 Bundler.require(:default, Rails.env)
 
-module GampApi
+module VideoAdsApi
   class Application < Rails::Application
     # load configration
     Config::Integration::Rails::Railtie.preload
@@ -32,6 +32,7 @@ module GampApi
 
     # config.autoload_paths += Dir["#{Rails.root}/lib/modules/*"]
     config.autoload_paths += Dir[Rails.root.join('lib', 'modules', '*')]
+    config.autoload_paths += Dir[Rails.root.join(Rails.root, 'app', 'controllers', '**')]
     
     config.active_job.queue_adapter = :delayed_job
 

@@ -1,2 +1,6 @@
 video:
     test_file_one: /Users/mover/Downloads/WP_20160108_15_08_30_Pro.mp4
+
+sunspot:
+    enable_promotion: false
+    enable_user: false

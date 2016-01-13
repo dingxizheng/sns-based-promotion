@@ -1,3 +1,4 @@
+module V1
 class ReviewsController < ApplicationController
 
   before_action :restrict_access, only: [:update, :destory, :create]
@@ -82,4 +83,5 @@ class ReviewsController < ApplicationController
       end
     end
 
+end
 end

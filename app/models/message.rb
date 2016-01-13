@@ -1,5 +1,3 @@
-require 'query_helper'
-
 class Message
   include Mongoid::Document
   include Mongoid::Timestamps

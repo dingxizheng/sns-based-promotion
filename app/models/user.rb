@@ -1,6 +1,5 @@
 
 require 'digest'
-
 class User
   include Mongoid::Document
   include Mongoid::Timestamps
@@ -13,7 +12,6 @@ class User
   
   geocoded_by :address 
   after_validation :geocode
-  after_save :index_terms
   before_create :encrypt_password, :set_default_role
   before_save :lowercase_email, :validates_address
   before_destroy :destroy_children
@@ -28,6 +26,11 @@ class User
   field :address, type: String
   field :description, type: String
   field :coordinates, type: Array
+
+  # if user signed up via third parties
+  field :provider, type: String
+  field :id_from_provider, type: String
+  field :profile_picture, type: String
 
   # change tags separator to ;;
   tags_separator ';'
@@ -49,25 +52,8 @@ class User
   has_many :out_going_msgs, inverse_of: :sender, class_name: 'Message'
   has_many :in_coming_msgs, inverse_of: :receiver, class_name: 'Message'
 
-  # sunspot
-  searchable do   
-    text :name, :email, :description, :tags, :address, :phone
-
-    string :id do 
-      get_id
-    end
-
-    string :roles, :multiple => true do
-    	roles.map{ |r| r.name }.uniq
-    end
-
-    latlon(:location) {
-      Sunspot::Util::Coordinates.new(lat , lon)
-    }
-  end
-
   # validaters
-  validates_uniqueness_of :name, :email
+  validates_uniqueness_of :name, :email, :id_from_provider
   validates_format_of :email, 
       :message => I18n.t('errors.validations.email'),
       :with => /\A([\w+\-].?)+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z/i
@@ -102,13 +88,32 @@ class User
     self.has_role? :admin
   end
 
-  # break user's info into small chunks and index them
-  def index_terms
-    Term.index_user_on_demand(self)
+  # Search block
+  # 
+  if Settings.sunspot.enable_user
+    # sunspot
+    searchable do   
+      text :name, :email, :description, :tags, :address, :phone
+      string :id do 
+        get_id
+      end
+      string :roles, :multiple => true do
+        roles.map{ |r| r.name }.uniq
+      end
+      latlon(:location) {
+        Sunspot::Util::Coordinates.new(lat , lon)
+      }
+    end
+
+    #index terms after save
+    after_save :index_terms
+
+    # break user's info into small chunks and index them
+    def index_terms
+      Term.index_user_on_demand(self)
+    end
   end
-  # handle_asynchronously :index_terms, :run_at => Proc.new { 3.minutes.from_now }
-
-
+  
   private
   # lowercase email address
   def lowercase_email

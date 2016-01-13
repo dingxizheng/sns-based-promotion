@@ -6,6 +6,7 @@ module Mongoid::Document
 end
 
 module Mongoid
+  # geo helper module
   module GeoHelper
     extend ActiveSupport::Concern
     included do
@@ -28,11 +29,9 @@ module Mongoid
         }
       end
     end
-
   end
-end
 
-module Mongoid
+  # query module
   module QueryHelper
     extend ActiveSupport::Concern
     included do
@@ -91,4 +90,59 @@ module Mongoid
       }
     end
   end
+
+  # encryptable module
+  module Encryptable
+    extend ActiveSupport::Concern
+
+    PRIFIX = 'ENCRYPTEDPRIFIX'
+
+    # class methods
+    # 
+    # @params [Array] contains a list of fields
+    module ClassMethods
+      # Set fields that should be encrypted
+      def encryptable(*fields)
+        puts "fields #{fields}"
+        fields = fields.is_a?(Enumerable) ? fields : [fields]
+        fields.each do |field_name|
+          define_setter_and_getter(field_name)
+        end
+      end
+
+      def define_setter_and_getter(field_name)
+        # if field does not exists
+        if self.fields[field_name.to_s].nil?
+          puts "field: #{field_name} does not exists!"
+        elsif self.fields[field_name.to_s].options[:type] == String
+          puts "redefine setter and getter for field #{field_name}"
+          
+          define_method("#{field_name}=") do |value|
+            if not value.nil? and value[0..(PRIFIX.size - 1)] == PRIFIX
+              self[field_name] = value
+            elsif not value.nil? and value[0..(PRIFIX.size - 1)] != PRIFIX
+              self[field_name] = PRIFIX + Crypt.encrypt(value)
+            end
+          end
+
+          define_method("#{field_name}") do  
+            value = self[field_name]
+            if not value.nil? and value[0..(PRIFIX.size - 1)] == PRIFIX
+              return Crypt.decrypt(value[PRIFIX.size..-1])
+            else
+              return self[field_name]
+            end
+          end
+
+          define_method("#{field_name}_encrypted") do
+              return self[field_name]
+          end
+
+        else
+          puts "field: #{field_name} is not String!"
+        end
+      end
+    end
+  end
+
 end

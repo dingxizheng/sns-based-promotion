@@ -2,7 +2,7 @@
 # @Author: dingxizheng
 # @Date:   2016-01-07 16:44:51
 # @Last Modified by:   dingxizheng
-# @Last Modified time: 2016-01-11 11:23:45
+# @Last Modified time: 2016-01-11 12:43:43
 
 # is used to get video info
 require 'streamio-ffmpeg'
@@ -17,7 +17,7 @@ class Video
   field :height, type: Integer
   field :video_codec, type: String
   field :video_stream, type: String
-  field :video_rate, type: Float
+  # field :video_rate, type: Float
   field :audio_stream , type: String
   field :audio_codec, type: String
   field :audio_channels, type: String
@@ -58,6 +58,18 @@ class Video
   	if video.duration > Settings.video.duration_limit
   		errors.add(:duration, I18n.t('errors.validations.video_duration') % Settings.video.duration)
   	end
+    
+    # information
+    self.size = video.size
+    self.width = video.width
+    self.height = video.height
+    self.duration = video.duration
+    # self.video_rate = video.video_rate
+    self.video_codec = video.video_codec
+    self.video_stream = video.video_stream
+    self.audio_channels = video.audio_channels
+    self.audio_codec = video.audio_codec
+    self.audio_stream = video.video_stream
 
   end
 
