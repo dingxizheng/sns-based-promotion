@@ -2,7 +2,7 @@
 module Errors
 
 	# here defines the general error class
-	class GampError < Exception
+	class MyError < Exception
 
 		# constructor
 		def initialize(code, message)
@@ -40,14 +40,14 @@ module Errors
 		end
 	end
 
-	class BadRequestError < GampError
+	class BadRequestError < MyError
 		def initialize(message)
 			@code = 400
 			@error = message
 		end
 	end
 
-	class NotauthorizedError < GampError
+	class NotauthorizedError < MyError
 		def initialize
 			@code = 403
 			@error = 'you are not authorized, please login.'
@@ -55,7 +55,7 @@ module Errors
 	end
 
 	# Unauthenticated error
-	class UnauthenticatedError < GampError
+	class UnauthenticatedError < MyError
 		def initialize
 			@code = 401
 			@error = 'valid credential required to preform this action.'
@@ -63,7 +63,7 @@ module Errors
 	end
 
 	# mongodid error
-	class UnprocessableEntityError < GampError
+	class UnprocessableEntityError < MyError
 		def initialize(fields)
 			@code = 422
 			@error = 'the request contains unprocessable entities.'
@@ -85,7 +85,7 @@ module Errors
 	end
 
 	# routing error
-	class RoutingError < GampError
+	class RoutingError < MyError
 		def initialize(path)
 			@code = 404
 			@error = 'the resource requested: \'' + path + '\' could not be found.'
@@ -93,15 +93,15 @@ module Errors
 	end
 
 	# not found error
-	class NotfoundError < GampError
-		def initialize(classname, query)
+	class NotfoundError < MyError
+		def initialize(message)
 			@code = 404
-			@error =  classname + ': \'' + query + '\' could not be found.'
+			@error =  message || (I18n.t('errors.requests.default_not_found') % request.path)
 		end
 	end
 
 	#  
-	class DuplicateError < GampError
+	class DuplicateError < MyError
 		def initialize(message)
 			@code = 409
 			@error = message
@@ -110,7 +110,7 @@ module Errors
 
 	# internal server msssage.
 	# devmessage should not be shown to users
-	class InternalError < GampError
+	class InternalError < MyError
 		def initialize(message)
 			@code = 500
 			@error = 'oops! something went wrong on server.'

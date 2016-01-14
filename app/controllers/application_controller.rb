@@ -4,7 +4,7 @@ class ApplicationController < ActionController::Base
 	include Errors
 	include Pundit
 
-	before_action :get_geo_location, :load_loggedin_user
+	before_action :get_geo_location, :find_session
 
 	# set default response format to json
 	before_filter :set_default_response_format
@@ -12,8 +12,8 @@ class ApplicationController < ActionController::Base
 	# return empty list
 	rescue_from EmptyList, :with => :render_empty_list
 
-	# capture all errors and pass them to function render_error
-	rescue_from GampError, :with => :render_error
+	# capture all standard http errors
+	rescue_from MyError, :with => :handle_http_error
 
 	# capture all syntax errors
 	rescue_from SyntaxError, :with => :handle_general_error
@@ -80,17 +80,29 @@ class ApplicationController < ActionController::Base
 		end
 	end
 
-	def exception_logger
-		Rails.application.config.exception_logger
-	end
-
 	# params should be skipped in conditional query
 	def params_to_skip 
-		[:apitoken, :lat, :long, 
+		[:access_token, :lat, :long, 
 			:page, :per_page, :within, 
-			:format, :user_role, :sortBy, 
-			:suggested, :suggested_paid, :num
+			:format, :user_role, :sortBy
 		]
+	end
+
+	# return valid query parameters
+	def query_params
+		request.query_parameters.except!(*(params_to_skip)
+	end
+
+	def sortBy
+		request.headers['sortBy']
+	end
+
+	def page
+		request.headers['page']
+	end
+
+	def per_page
+		request.headers['per_page']
 	end
 
 	# raise an unauthorized error if no session created or session expired
@@ -101,21 +113,13 @@ class ApplicationController < ActionController::Base
 
 	# for every request, try to find the logged in user from the access token
 	# , and also refresh the session
-	def load_loggedin_user
-		@session = Session.find_by(access_token_hashed: loads_apikey)
-		@session.refresh if not @session.nil? and not @session.expire?
-		if not @session.nil? and not @session.expire?
-			logger.tagged('LOGGED IN USER') { logger.info "Name: #{@session.user.name} , Email: #{@session.user.email}" }
+	def find_session
+		@session = Session.find_by(access_token_hashed: params[:access_token])
+		@session.refresh unless @session.nil? or @session.expire?
+		unless @session.nil? or @session.expire?
+			logger.tagged('SESSION FOUND') { logger.info "Name: #{@session.user.name} , Email: #{@session.user.email}" }
 			@current_user = @session.user
-		else
-			logger.tagged('LOGGED IN USER') { logger.info "None" }
-			@current_user = nil
 		end
-	end
-
-	# get the apitoken from the request
-	def loads_apikey
-		@apitoken = params[:apitoken]
 	end
 
 	# return empty list
@@ -123,10 +127,14 @@ class ApplicationController < ActionController::Base
 		render :json => []
 	end
 
-	# render errors
 	def render_error(error)
-		logger.tagged('ERROR', error.status) { logger.info "#{ error.error }" }
 		render :json => error, :status => error.status
+	end
+
+	# render standard http errors
+	def handle_http_error(error)
+		logger.tagged('ERROR', error.status) { logger.info "#{ error.error }" }
+		render_error(error)
 	end
 
 	# get current user
@@ -142,7 +150,7 @@ class ApplicationController < ActionController::Base
 
 	# handle general error
 	def handle_general_error(error)
-		Utility.log_exception(error)
+		Utility.log_exception(error, {})
 		render_error(InternalError.new(error.message))
 	end
 
@@ -160,9 +168,15 @@ class ApplicationController < ActionController::Base
 		end
 	end
 
-	# helper functions
-	def to_boolean(s)
-	  s and !!s.match(/^(true|t|yes|y|1)$/i)
+	# render json reponse by using jbuilder
+	def render_json(*args)
+		view_path, params = *args
+		namespace = controller_path.split('/').first
+		if namespace.size > 1
+			render "#{namespace}/#{view_path}", params
+		else
+			render "#{view_path}", params
+		end
 	end
 
 end

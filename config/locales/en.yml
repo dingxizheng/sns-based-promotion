@@ -34,3 +34,5 @@ en:
       video_duration: "video length should be less than %f seconds"
     requests:
       invalid_access_token: "not a valid access token"
+      no_commentee: "the resource to be commented is not found"
+      default_not_found: "resource \"%s\" could not be found"

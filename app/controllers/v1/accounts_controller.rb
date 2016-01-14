@@ -25,8 +25,8 @@ class V1::AccountsController < ApplicationController
 
   end
 
-  # POST /signout
-  def signout
+  # DELETE /signout
+  def destroy
     @session.destroy
     head :no_content
   end
@@ -35,7 +35,7 @@ class V1::AccountsController < ApplicationController
   def signup_with_email
     @user = User.new(signup_params)
     raise UnprocessableEntityError.new(@user.errors) unless @user.save
-    render partial: "users/user", :locals => { :user => @user }, status: :created
+    render_json 'users/user', :locals => { :user => @user  }, status: :created
   end
 
   # GET /me
@@ -46,8 +46,11 @@ class V1::AccountsController < ApplicationController
 
   # POST /signin/facebook
   def signin_with_facebook
-    # validate facebook access token
-    # raise BadRequestError.new(I18n.t('errors.requests.invalid_access_token')) unless Utility.is_facebook_token_valid? signin_with_fb_params[:provider_access_token]
+
+    if Settings.facebook.enable_validate_token
+      # validate facebook access token
+      raise BadRequestError.new(I18n.t('errors.requests.invalid_access_token')) unless Utility.is_facebook_token_valid? signin_with_fb_params[:provider_access_token]
+    end
     
     @user = User.find_by(id_from_provider: signin_with_fb_params[:id])
     # create a new user if user does not exists  
@@ -63,7 +66,7 @@ class V1::AccountsController < ApplicationController
     end
 
     # delete all expired sessions
-    @user.sessions.each{|s| s.destroy unless not s.expire?}
+    @user.sessions.each{|s| s.destroy unless not s.expire? }
 
     # create a new session
     @session = @user.sessions.build({
@@ -72,8 +75,9 @@ class V1::AccountsController < ApplicationController
        :expire_at => signin_with_fb_params[:expire_at],
       })
 
-    # return session object
-    render :partial => 'users/session', :locals => { :session => @session  }
+    @session.save!
+
+    render_json 'users/session', :locals => { :session => @session  }
   end
 
   # private methods

@@ -2,13 +2,17 @@
 # @Author: dingxizheng
 # @Date:   2016-01-10 22:37:38
 # @Last Modified by:   dingxizheng
-# @Last Modified time: 2016-01-12 19:08:43
+# @Last Modified time: 2016-01-14 16:42:22
 
 require 'net/http'
 require 'net/https'
 require 'open-uri'
 
 class Utility
+
+	def self.to_boolean(s)
+	  s and !!s.match(/^(true|t|yes|y|1)$/i)
+	end
 
 	def self.is_facebook_token_valid? token
 		res = Utility.http_get(Settings.facebook.graph_api.profile, { :access_token => token})
@@ -40,9 +44,9 @@ class Utility
 		request = args[:request]
 		env = request ? request.env : nil
 		if env
-			ExceptionNotifier::Notifier.exception_notification(env, e, :data => {:message => "Exception: #{extra_info}"}).deliver
+			ExceptionNotifier::Notifier.exception_notification(env, e, :data => {:message => "Exception: #{extra_info}"}).deliver_now
    		else
-      		ExceptionNotifier::Notifier.background_exception_notification(e, :data => {:message => "Exception: #{extra_info}"}).deliver
+      		ExceptionNotifier::Notifier.background_exception_notification(e, :data => {:message => "Exception: #{extra_info}"}).deliver_now
      	end
 	end
 end

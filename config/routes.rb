@@ -1,8 +1,8 @@
 VideoAdsApi::Application.routes.draw do
 
   # first api version
-  namespace :v1 do
-    
+  namespace 'v1' do
+
     # common reviewable routes
     concern :reviewable do
       resources :reviews, except: [:new, :edit] 
@@ -13,16 +13,22 @@ VideoAdsApi::Application.routes.draw do
     end
 
     concern :commentable do
-      
+      resources :comments, except: [:new, :edit], :concerns[:voteable]
     end
 
-    resources :users, except: [:new, :edit], concerns:[:reviewable] do
+    concern :voteable do
+      post 'like', action: :vote_up
+      post 'dislike', action: :vote_down
+    end
+
+    resources :users, except: [:new, :edit], 
+                      concerns:[:voteable, :commentable] do
 
     end
 
-    # namespace :accounts do 
-		post 'accounts/facebooklogin', :controller => "accounts", :action => "signin_with_facebook"
-    # end
+    namespace :accounts do 
+  		post 'facebooklogin', :action => "signin_with_facebook"
+    end
   end
 
   match 'v:api/*path', :to => redirect("/api/v1/%{path}"), :via => :all

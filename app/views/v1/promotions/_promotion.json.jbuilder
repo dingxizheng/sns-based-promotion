@@ -1,5 +1,5 @@
 
-json.url promotion_url( promotion )
+json.url resource_path_to('promotion_url' promotion)
 json.id promotion.get_id
 json.extract! promotion, :title, :description, :subscripted, :keywords, :status, :created_at, :updated_at, :expire_at, :start_at
 

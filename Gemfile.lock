@@ -65,6 +65,7 @@ GEM
       deep_merge (~> 1.0.0)
     connection_pool (2.2.0)
     daemons (1.2.3)
+    database_cleaner (1.5.1)
     deep_merge (1.0.1)
     delayed_job (4.1.1)
       activesupport (>= 3.0, < 5.0)
@@ -119,6 +120,8 @@ GEM
     mongoid-compatibility (0.3.1)
       activesupport
       mongoid (>= 2.0)
+    mongoid-enum (0.3.0)
+      mongoid (~> 4.0)
     mongoid_taggable (1.1.1)
       mongoid (>= 3)
       rake
@@ -223,6 +226,7 @@ DEPENDENCIES
   carrierwave
   carrierwave-mongoid
   config
+  database_cleaner
   delayed_job_mongoid
   dotenv-rails
   exception_notification
@@ -234,6 +238,7 @@ DEPENDENCIES
   kaminari
   mini_magick
   mongoid (~> 4.0)
+  mongoid-enum
   mongoid-grid_fs!
   mongoid_taggable
   moped

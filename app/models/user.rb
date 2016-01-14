@@ -6,17 +6,19 @@ class User
   include Sunspot::Mongoid2
   include Mongo::Voter
   include Mongoid::Taggable
+  include Mongoid::Enum
   include Geocoder::Model::Mongoid
   include Mongoid::QueryHelper
   include Mongoid::GeoHelper
+  include Mongoid::Encryptable
   
-  geocoded_by :address 
+  rolify
+
+  geocoded_by :address
   after_validation :geocode
   before_create :encrypt_password, :set_default_role
   before_save :lowercase_email, :validates_address
   before_destroy :destroy_children
-
-  rolify
 
   # fields
   field :name, type: String
@@ -32,15 +34,18 @@ class User
   field :id_from_provider, type: String
   field :profile_picture, type: String
 
+  encryptable :email, :address, :phone
+  enum :status, [:approved, :pending, :declined]
+
   # change tags separator to ;;
   tags_separator ';'
-  
+
   # relations
-  has_many :reviews, inverse_of: :customer, class_name: 'Review'
-  has_many :opinions, inverse_of: :reviewer, class_name: 'Review'
+  has_many :comments, inverse_of: :commentee, class_name: 'Comment'
+  has_many :opinions, inverse_of: :commenteer, class_name: 'Comment'
   has_many :promotions
   has_many :sessions
-  
+
   # a user only has one logo
   has_one  :avatar, inverse_of: :avatar_owner, class_name: 'Image'
   # a user only has on background
@@ -54,12 +59,12 @@ class User
 
   # validaters
   validates_uniqueness_of :name, :email, :id_from_provider
-  validates_format_of :email, 
-      :message => I18n.t('errors.validations.email'),
-      :with => /\A([\w+\-].?)+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z/i
+  validates_format_of :email,
+    :message => I18n.t('errors.validations.email'),
+    :with => /\A([\w+\-].?)+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z/i
   validates_format_of :phone,
-      :message => I18n.t('errors.validations.phone'),
-      :with => /\(?([0-9]{3})\)?([ .-]?)([0-9]{3})\2([0-9]{4})/,
+    :message => I18n.t('errors.validations.phone'),
+    :with => /\(?([0-9]{3})\)?([ .-]?)([0-9]{3})\2([0-9]{4})/,
       :allow_blank => true
   
   # get longtitude
@@ -74,7 +79,7 @@ class User
 
   # see if password matches or not
   def password_match?(password)
-  	self.password == Digest::SHA2.hexdigest(password)
+    self.password == Digest::SHA2.hexdigest(password)
   end
 
   # reset user's password
@@ -86,6 +91,14 @@ class User
   # is admin
   def is_admin?
     self.has_role? :admin
+  end
+
+  def get_avatar
+    if self.avatar
+      self.avatar.file.url
+    else
+      self.profile_picture
+    end
   end
 
   # Search block
@@ -161,6 +174,7 @@ class User
     self.background.destroy
     self.photos.destroy_all
     self.promotions.destroy_all
+    sefl.sessions.destroy_all
   end
 
 end

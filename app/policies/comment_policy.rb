@@ -1,18 +1,18 @@
-class ReviewPolicy < ApplicationPolicy
+class CommentPolicy < ApplicationPolicy
 
   class Scope < Scope
     def resolve
-      scope.all
+      if user.has_role? :admin
+        scope.all
+      else
+        scope.approved
+      end
     end
   end
 
   # user can not comment him/her self nor the promotions belong to them
   def create?
-    if record.customer.present?
-      user.id != record.customer.id
-    else
-      user.id != record.promotion.customer.id
-    end
+    
   end
 
   def update?

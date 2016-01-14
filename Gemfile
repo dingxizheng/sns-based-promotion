@@ -11,6 +11,8 @@ gem 'rails'
 
 gem 'rspec-rails', :groups => [:development, :test]
 
+gem 'database_cleaner', :groups => [:development, :test]
+
 gem 'i18n'
 
 gem 'bson'
@@ -24,6 +26,8 @@ gem 'mongoid', '~> 4.0'
 gem 'mongoid_taggable'
 
 gem 'voteable_mongo'
+
+gem 'mongoid-enum'
 
 gem 'mini_magick'
 

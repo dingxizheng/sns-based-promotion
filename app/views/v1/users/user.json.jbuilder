@@ -1,8 +1,8 @@
 json.id user.get_id
 
-json.url user_url(user)
+json.url resource_path_to('user_url', user)
 
-json.extract! user, :name, :email, :address, :keywords, :subscripted, :phone, :created_at, :updated_at
+json.extract! user, :name, :email, :address, :tags, :phone, :description, :created_at, :updated_at
 
 json.rates user.rate_count
 
@@ -16,6 +16,10 @@ end
 json.coordinates user.coordinates
 
 json.roles user.roles.pluck :name
+
+if user.has_role?(:customer)
+	json.hours user.hours
+end
 
 if Rails.application.config.request_location.present? and user.has_role? :customer and not user.coordinates.nil? and not user.address.nil?
 	json.distance user.distance_to([Rails.application.config.request_location[:lat], Rails.application.config.request_location[:long]]) * 1.60934
@@ -32,5 +36,12 @@ if not user.background.nil?
 	json.background do
 		json.image_url user.background.image_url
 		json.thumb_url user.background.thumb_url
+	end
+end
+
+json.photos do
+	json.array! user.photos do |p|
+		json.image_url p.image_url
+		json.thumb_url p.thumb_url
 	end
 end
