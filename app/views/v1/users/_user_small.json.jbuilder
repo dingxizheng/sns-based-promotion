@@ -7,5 +7,7 @@ json.name user.name
 json.description user.description
 
 if not user.get_avatar.nil?
-	json.avatar json, render_user_avatar(user)
+	json.avatar do 
+		render_user_avatar(json, user)
+	end
 end

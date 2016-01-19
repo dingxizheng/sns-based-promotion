@@ -16,9 +16,9 @@ class Comment
   enum :status, [:approved, :pending, :declined]
 
   # relationships
-  belongs_to :commentee, inverse_of: :comments, class_name: 'User'
-  belongs_to :commenteer, inverse_of: :opinions, class_name: 'User'
-  belongs_to :promotion
+  belongs_to :commentee, inverse_of: :comments, class_name: 'User', autosave: true
+  belongs_to :commenteer, inverse_of: :opinions, class_name: 'User', autosave: true
+  belongs_to :promotion, autosave: true
 
   validates_presence_of :body
   validates_length_of :body, minimum: 1, maximum: 300

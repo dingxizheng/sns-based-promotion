@@ -16,9 +16,21 @@ json.roles user.get_roles
 json.distance resource_distance(user)
 
 if not user.get_avatar.nil?
-	json.avatar json, render_user_avatar(user)
+	json.avatar do 
+		render_user_avatar(json, user)
+	end
 end
 
 if not user.background.nil?
-	json.background json, render_image(user.background)
+	json.background do 
+		render_image(json, user.background)
+	end
+end
+
+json.likes do
+	json.count user.likes
+end
+
+json.dislikes do
+	json.count user.dislikes
 end

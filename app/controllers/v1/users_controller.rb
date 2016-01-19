@@ -12,7 +12,6 @@ class V1::UsersController < ApplicationController
   before_action :restrict_access, except: [:index, :show]
   before_action :set_user, except: [:create, :index]
 
-
   # GET /users
   # GET /users.json
   def index
@@ -30,7 +29,7 @@ class V1::UsersController < ApplicationController
   # GET /users/1
   # GET /users/1.json
   def show
-    render_json "users/user", :locals => { :user => @user }
+    render_json "users/user_full", :locals => { :user => @user }
   end
 
   # POST /users
@@ -38,16 +37,20 @@ class V1::UsersController < ApplicationController
   def create
     @user = User.new(user_params)
     authorize @user
+    @user.set_avatar params[:avatar] if params[:avatar]
+    @user.set_background params[:background] if params[:background]
     raise UnprocessableEntityError.new(@user.errors) unless @user.save
-    render_json "users/user", :locals => { :user => @user }, status: :created
+    render_json "users/user_full", :locals => { :user => @user }, status: :created
   end
 
   # PATCH/PUT /users/1
   # PATCH/PUT /users/1.json
   def update
     authorize @user
+    @user.set_avatar params[:avatar] if params[:avatar]
+    @user.set_background params[:background] if params[:background]
     raise UnprocessableEntityError.new(@user.errors) unless @user.update(user_params)
-    render_json "users/user", :locals => { :user => @user }
+    render_json "users/user_full", :locals => { :user => @user }
   end
 
   # DELETE /users/1
@@ -65,7 +68,7 @@ class V1::UsersController < ApplicationController
   end
 
   def user_params
-    params.permit(:name, :phone, :email, :address, :avatar_file, :background_file, :description, :password, :tags => [])
+    params.permit(:name, :phone, :email, :address, :description, :password, :tags => [])
   end
 
 end

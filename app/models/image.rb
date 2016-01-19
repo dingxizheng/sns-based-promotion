@@ -2,7 +2,7 @@
 # @Author: dingxizheng
 # @Date:   2016-01-09 22:43:24
 # @Last Modified by:   dingxizheng
-# @Last Modified time: 2016-01-18 19:11:41
+# @Last Modified time: 2016-01-19 17:24:38
 
 class Image
   include Mongoid::Document
@@ -16,7 +16,7 @@ class Image
 
   belongs_to :avatar_owner, inverse_of: :avatar, class_name: 'User'
   belongs_to :background_owner, inverse_of: :background, class_name: 'User'
-  belongs_to :photos_owner, inverse_of: :photos, class_name: 'User'
+  belongs_to :promotion, inverse_of: :photos, class_name: 'User'
 
   private 
   def validate_size

@@ -28,8 +28,8 @@ class V1::CommentsController < ApplicationController
   # POST /comments
   def create
     @comment = @commentee.comments.build(comment_params.merge!(commenteer_id: current_user.get_id))
-    moderatorize current_user, @comment
     raise UnprocessableEntityError.new(@comment.errors) unless @comment.save
+    moderatorize current_user, @comment
     render_json 'comments/comment', :locals => { :comment => @comment }, status: :created
   end
 
@@ -50,7 +50,7 @@ class V1::CommentsController < ApplicationController
   private
     def set_commentee
       @commentee = nil
-      COMMENTABLES.each do |model|
+      COMMENTABLES.reverse.each do |model|
         id_name = "#{model.name.downcase}_id".to_sym
         @commentee = model.find(params[id_name])
         break unless @commentee.nil?

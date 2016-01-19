@@ -30,14 +30,18 @@ VideoAdsApi::Application.routes.draw do
       post 'follow', :action => :follow
       post 'unfollow', :action => :unfollow
       get 'followers', :action => :followers
+      get 'followees', :action => :followees
+    end
+
+    resources :promotions, except: [:new, :edit], concerns: [:voteable, :commentable, :tag_and_untag, :followable] do  
+      get 'reposts',   :action => "reposts"
+      get 'ancestors', :action => "ancestors"
     end
 
     resources :users, except: [:new, :edit], concerns: [:voteable, :commentable, :tag_and_untag, :followable] do
-      
-    end
-
-    resources :promotions, except: [:new, :edit], concerns: [:voteable, :commentable] do
-        
+      resources :promotions, except: [:new, :edit], concerns: [:voteable, :commentable, :tag_and_untag, :followable] do
+          
+      end
     end
 
     namespace :accounts do 
@@ -47,6 +51,8 @@ VideoAdsApi::Application.routes.draw do
       get  'me',            :action => "me"
     end
   end
+  match 'uploads/image/file/:image_id/:filename' => 'gridfs#image', :via => :get
+  match 'uploads/video/file/:video_id/:filename' => 'gridfs#video', :via => :get
 
   match 'v:api/*path', :to => redirect("/api/v1/%{path}"), :via => :all
 

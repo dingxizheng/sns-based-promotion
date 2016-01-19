@@ -2,7 +2,7 @@
 # @Author: dingxizheng
 # @Date:   2016-01-18 17:26:05
 # @Last Modified by:   dingxizheng
-# @Last Modified time: 2016-01-18 18:48:23
+# @Last Modified time: 2016-01-19 17:34:43
 
 module FollowableActions
 	extend ActiveSupport::Concern
@@ -44,6 +44,15 @@ module FollowableActions
 	def followers
 		users = get_followable.all_followers
 		render_json "users/users", :locals => { :users => users }
+	end
+
+	def followees
+		if get_followable.respond_to? "all_followees"
+			users = get_followable.all_followees
+			render_json "users/users", :locals => { :users => users }
+		else
+			render_json "users/users", :locals => { :users => [] }
+		end
 	end
 
 	private

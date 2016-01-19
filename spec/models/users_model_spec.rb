@@ -2,7 +2,7 @@
 # @Author: dingxizheng
 # @Date:   2016-01-17 14:35:06
 # @Last Modified by:   dingxizheng
-# @Last Modified time: 2016-01-18 21:06:42
+# @Last Modified time: 2016-01-19 17:15:42
 
 
 require "rails_helper"
@@ -92,13 +92,14 @@ RSpec.describe User, :type => :model do
 				:password => "dai1234"
 			})
 
-		one.set_avatar File.open("/Users/mover/Documents/SkyDrive/图片/本机照片/20121001_015204000_iOS.jpg")
+		image = Image.create({
+				:file => File.open("/Users/mover/Documents/SkyDrive/图片/本机照片/20121001_015204000_iOS.jpg")
+			})
 
-		one.save
+		one.set_photos [image.get_id, File.open("/Users/mover/Documents/SkyDrive/图片/本机照片/20121001_015204000_iOS.jpg")]
+		one.save	
 
-		one.errors.to_hash.each do |key, value|
-			puts "#{key} >>> #{value}"
-		end
-		
+		expect(one.photos[0]).not_to be nil	
+		expect(one.photos[1]).not_to be nil	
 	end
 end

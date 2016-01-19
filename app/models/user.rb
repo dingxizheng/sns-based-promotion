@@ -12,7 +12,7 @@ class User
   include Mongoid::QueryHelper
   include Mongoid::GeoHelper
   include Mongoid::Encryptable
-  include Mongoid::Imageable
+  include Mongoid::FileUploader
   
   rolify
 
@@ -36,25 +36,25 @@ class User
   field :id_from_provider, type: String
   field :profile_picture, type: String
 
-  imageable   :avatar, :background
+  imageable   :avatar, :background, :photos
   encryptable :address, :phone
-  enum :status, [:approved, :pending, :declined]
+  enum :status, [:approved, :pending, :declined, :muted]
 
   # change tags separator to ;;
   tags_separator ';'
 
   # relations
-  has_many :comments, inverse_of: :commentee, class_name: 'Comment'
-  has_many :opinions, inverse_of: :commenteer, class_name: 'Comment'
-  has_many :promotions
-  has_many :sessions
+  has_many :comments, inverse_of: :commentee, class_name: 'Comment', autosave: true, dependent: :destroy
+  has_many :opinions, inverse_of: :commenteer, class_name: 'Comment', autosave: true
+  has_many :promotions, autosave: true, dependent: :destroy
+  has_many :sessions, autosave: true, dependent: :destroy
 
   # a user only has one logo
-  has_one  :avatar, inverse_of: :avatar_owner, class_name: 'Image', autosave: true
+  has_one  :avatar, inverse_of: :avatar_owner, class_name: 'Image', autosave: true, dependent: :destroy
   # a user only has on background
-  has_one  :background, inverse_of: :background_owner, class_name: 'Image', autosave: true
+  has_one  :background, inverse_of: :background_owner, class_name: 'Image', autosave: true, dependent: :destroy
   # a user could have many photos
-  has_many :photos, inverse_of: :photos_owner, class_name: 'Image', autosave: true
+  has_many :photos, inverse_of: :photos_owner, class_name: 'Image', autosave: true, dependent: :destroy
 
   # messages
   has_many :out_going_msgs, inverse_of: :sender, class_name: 'Message'
@@ -179,11 +179,6 @@ class User
 
   # destroy all related children
   def destroy_children
-    self.avatar.destroy
-    self.background.destroy
-    self.photos.destroy_all
-    self.promotions.destroy_all
-    sefl.sessions.destroy_all
   end
 
 end

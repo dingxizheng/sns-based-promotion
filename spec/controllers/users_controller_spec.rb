@@ -2,7 +2,7 @@
 # @Author: dingxizheng
 # @Date:   2016-01-16 15:59:09
 # @Last Modified by:   dingxizheng
-# @Last Modified time: 2016-01-18 18:52:52
+# @Last Modified time: 2016-01-18 21:46:35
 
 require 'spec_helper'
 require 'rails_helper'
@@ -153,6 +153,23 @@ RSpec.describe V1::UsersController, :type => :controller do
 			expect(response.body).to include(tong.get_id)
 			expect(response.body).not_to include(three.get_id)
 
+		end
+
+		it "wang tong wants to update his profile" do
+			session = tong.sessions.build()
+			session.save!
+
+			put :update, :id => tong.get_id,
+						 :access_token => session.access_token,
+						 :name => "dingdada2",
+						 :avatar => fixture_file_upload('/Users/mover/Documents/SkyDrive/图片/本机照片/20121001_015204000_iOS.jpg', 'image/jpg'),
+						 :background => fixture_file_upload('/Users/mover/Documents/SkyDrive/图片/本机照片/20121001_015204000_iOS.jpg', 'image/jpg')
+			
+			get :show, :id => tong.get_id
+					   # :access_token => session.access_token
+
+			puts JSON.pretty_generate(JSON.parse(response.body))
+			expect(response.body).to include("dingdada")
 		end
 	end
 end
