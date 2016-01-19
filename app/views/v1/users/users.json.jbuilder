@@ -1,3 +1,3 @@
-json.array! @users do |user|
-	json.partial! partial: 'users/listitem', :locals => { user: user }
+json.array! users do |user|
+	render_partial json, 'users/user_small', { :user => user }
 end

@@ -1,23 +1,25 @@
-
 require 'digest'
 class User
   include Mongoid::Document
   include Mongoid::Timestamps
   include Sunspot::Mongoid2
-  include Mongo::Voter
   include Mongoid::Taggable
+  include Mongoid::Likeable
+  include Mongoid::Followable
+  include Mongoid::Follower
   include Mongoid::Enum
   include Geocoder::Model::Mongoid
   include Mongoid::QueryHelper
   include Mongoid::GeoHelper
   include Mongoid::Encryptable
+  include Mongoid::Imageable
   
   rolify
 
   geocoded_by :address
   after_validation :geocode
   before_create :encrypt_password, :set_default_role
-  before_save :lowercase_email, :validates_address
+  before_save :validates_address
   before_destroy :destroy_children
 
   # fields
@@ -34,7 +36,8 @@ class User
   field :id_from_provider, type: String
   field :profile_picture, type: String
 
-  encryptable :email, :address, :phone
+  imageable   :avatar, :background
+  encryptable :address, :phone
   enum :status, [:approved, :pending, :declined]
 
   # change tags separator to ;;
@@ -47,25 +50,33 @@ class User
   has_many :sessions
 
   # a user only has one logo
-  has_one  :avatar, inverse_of: :avatar_owner, class_name: 'Image'
+  has_one  :avatar, inverse_of: :avatar_owner, class_name: 'Image', autosave: true
   # a user only has on background
-  has_one  :background, inverse_of: :background_owner, class_name: 'Image'
+  has_one  :background, inverse_of: :background_owner, class_name: 'Image', autosave: true
   # a user could have many photos
-  has_many :photos, inverse_of: :photos_owner, class_name: 'Image'
+  has_many :photos, inverse_of: :photos_owner, class_name: 'Image', autosave: true
 
   # messages
   has_many :out_going_msgs, inverse_of: :sender, class_name: 'Message'
   has_many :in_coming_msgs, inverse_of: :receiver, class_name: 'Message'
 
   # validaters
-  validates_uniqueness_of :name, :email, :id_from_provider
-  validates_format_of :email,
-    :message => I18n.t('errors.validations.email'),
-    :with => /\A([\w+\-].?)+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z/i
-  validates_format_of :phone,
-    :message => I18n.t('errors.validations.phone'),
-    :with => /\(?([0-9]{3})\)?([ .-]?)([0-9]{3})\2([0-9]{4})/,
-      :allow_blank => true
+  validates_uniqueness_of :name, :email
+  validates_uniqueness_of :id_from_provider, :allow_nil => true
+  validates_uniqueness_of :phone, :allow_nil => true
+  validate :email_format, :phone_format
+  
+  def email_format
+    if (self.email =~ /\A([\w+\-].?)+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z/i).nil?
+      self.errors.add(:email, I18n.t('errors.validations.email'))
+    end
+  end
+
+  def phone_format
+    if self.phone.present? and (self.phone =~ /\(?([0-9]{3})\)?([ .-]?)([0-9]{3})\2([0-9]{4})/i).nil?
+      self.errors.add(:phone, I18n.t('errors.validations.phone'))
+    end
+  end
   
   # get longtitude
   def lon
@@ -101,6 +112,10 @@ class User
     end
   end
 
+  def get_roles
+
+  end
+
   # Search block
   # 
   if Settings.sunspot.enable_user
@@ -128,12 +143,6 @@ class User
   end
   
   private
-  # lowercase email address
-  def lowercase_email
-    self.email = self.email.downcase unless not Settings.user.if_lowercase_email
-    return true;
-  end
-
   # validate address
   def validates_address
     if self.address_changed?

@@ -1,7 +1,7 @@
 class Comment
   include Mongoid::Document
   include Mongoid::Timestamps
-  include Mongo::Voter
+  include Mongoid::Likeable
   include Mongoid::Enum
   include Mongoid::QueryHelper
 
@@ -21,9 +21,7 @@ class Comment
   belongs_to :promotion
 
   validates_presence_of :body
-  validate_length_of :body, minimum: 1, maximum: 300
-
-  voteable self, :up => +1, :down => -1
+  validates_length_of :body, minimum: 1, maximum: 300
 
   # return replies
   def replies

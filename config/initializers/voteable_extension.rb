@@ -2,7 +2,7 @@
 # @Author: dingxizheng
 # @Date:   2016-01-14 01:13:38
 # @Last Modified by:   dingxizheng
-# @Last Modified time: 2016-01-14 02:14:27
+# @Last Modified time: 2016-01-18 17:26:21
 
 # module Voteable
 # 
@@ -10,21 +10,29 @@
 # controller that handle vote and unvote logic
 # 
 module VoteableActions
-
+	extend ActiveSupport::Concern
+	
+	class_variable_set(:@@before_callbacks, [])
+	class_variable_set(:@@voteable, nil)
+	
 	def vote_up
-		@@before_callbacks.each {|cb| send(cb) }
-		current_user.vote(:votee => instance_variable_get(:"@#{@@voteable.to_s}"), value => :up)
-		head :no_content
+		puts "GET CALLED #{ self.class.class_variable_get(:@@voteable)}"
+		self.class.class_variable_get(:@@before_callbacks).each {|cb| send(cb) }
+		instance_variable_get(:"@#{@@voteable.to_s}").like current_user
+		render :json => {
+				likes: instance_variable_get(:"@#{@@voteable.to_s}").likes
+			}, :status => 200
 	end
 
 	def vote_down
-		@@before_callbacks.each {|cb| send(cb) }
-		current_user.vote(:votee => instance_variable_get(:"@#{@@voteable.to_s}"), value => :down)
-		head :no_content
+		self.class.class_variable_get(:@@before_callbacks).each {|cb| send(cb) }
+		instance_variable_get(:"@#{@@voteable.to_s}").dislike current_user
+		render :json => {
+				likes: instance_variable_get(:"@#{@@voteable.to_s}").dislikes
+			}, :status => 200
 	end
 
-	def likes
-		
+	def likes	
 	end
 
 	def dislkes
@@ -32,13 +40,17 @@ module VoteableActions
 
 	module ClassMethods
 		def before_vote(actions)
-			@@before_callbacks = actions
+			self.class_variable_set(:@@before_callbacks, actions)
+			# @@before_callbacks = actions
 		end
 
 		def voteable(resource)
-			@@voteable = resource
+			self.class_variable_set(:@@voteable, resource)
+			# @@voteable = resource
+		end
+
+		def get_variable
+			@@voteable
 		end
 	end
-
 end
-

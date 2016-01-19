@@ -1,6 +1,6 @@
 json.id comment.get_id
 
-json.url resource_path_to('comment_url', comment) 
+# json.url resource_path_to('comment_url', comment) 
 
 json.extract! comment, :created_at, :updated_at, :body
 
@@ -11,23 +11,23 @@ if comment.parent_id
 	end
 end
 
-json.commenteer do
-	json.id comment.commenteer.get_id
-	json.name comment.commenteer.name
-	json.avatar comment.commenteer.get_avatar
+if comment.commenteer.present?
+	json.commenteer do
+		render_partial_small(json, :user, comment.commenteer)
+	end
 end
 
 if comment.get_commentee
 	json.type comment.get_commentee.class.name.downcase
 	json.commentee do
-		render_partial_small comment.get_commentee.class.name.downcase.to_sym, comment.get_commentee
+		render_partial_small json, comment.get_commentee.class.name.downcase.to_sym, comment.get_commentee
 	end
 end
 
 json.likes do
-	json.count comment.up_vote_count
+	json.count comment.likes
 end
 
 json.dislikes do
-	json.count comment.down_vote_count
+	json.count comment.dislikes
 end

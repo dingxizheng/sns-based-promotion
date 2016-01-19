@@ -13,20 +13,4 @@ class UserPolicy < ApplicationPolicy
   	user.is_admin?
   end
 
-  def reset_password?
-    user.is_admin?
-  end
-
-  def set_logo?
-  	user.is_admin? or user.id == record.id
-  end
-
-  def add_keyword?
-  	user.is_admin? or user.id == record.id
-  end
-
-  def delete_keyword?
-  	user.is_admin? or user.id == record.id
-  end
-
 end

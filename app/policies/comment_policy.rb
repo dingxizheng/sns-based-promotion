@@ -2,7 +2,7 @@ class CommentPolicy < ApplicationPolicy
 
   class Scope < Scope
     def resolve
-      if user.has_role? :admin
+      if user.present? and user.has_role? :admin
         scope.all
       else
         scope.approved

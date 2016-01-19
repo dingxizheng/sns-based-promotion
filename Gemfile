@@ -23,9 +23,11 @@ gem 'moped'
 # gem 'mongoid', '~> 4', github: 'mongoid/mongoid'
 gem 'mongoid', '~> 4.0'
 
-gem 'mongoid_taggable'
+# gem 'mongoid_taggable'
 
-gem 'voteable_mongo'
+gem 'mongoid_followable', "~> 0.1.9"
+
+gem 'mongoid-likeable', github: 'dingxizheng/mongoid-likeable'
 
 gem 'mongoid-enum'
 

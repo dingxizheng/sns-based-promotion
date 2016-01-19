@@ -1,5 +1,5 @@
 json.array!(comments) do |comment|
 
-	render_partial 'comments/comment', :locals => { :comment => comment }
+	render_partial json, 'comments/comment', { :comment => comment }
 
 end

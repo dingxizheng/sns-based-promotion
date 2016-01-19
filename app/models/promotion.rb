@@ -2,7 +2,7 @@ class Promotion
   include Mongoid::Document
   include Mongoid::Timestamps
   include Sunspot::Mongoid2
-  include Mongo::Voteable
+  include Mongoid::Likeable
   include Mongoid::Taggable
   include Mongoid::Enum
   include Geocoder::Model::Mongoid
@@ -26,9 +26,9 @@ class Promotion
 
   enum :status, [:approved, :pending, :declined]
 
-  # set points for each vote
-  voteable self, :up => +1, :down => -1
   encryptable :title, :description
+
+  tags_separator ';'
 
   belongs_to :customer
 

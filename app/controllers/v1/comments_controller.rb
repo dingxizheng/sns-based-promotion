@@ -4,7 +4,7 @@ class V1::CommentsController < ApplicationController
   voteable :comment
 
   before_action :restrict_access, only: [:update, :destory, :create, :vote_up, :vote_down]
-  before_action :set_comment, except: [:index]
+  before_action :set_comment, except: [:index, :create]
   before_action :set_commentee, except: []
 
   # models that could be commented on
@@ -27,7 +27,7 @@ class V1::CommentsController < ApplicationController
 
   # POST /comments
   def create
-    @comment = @commentee.comments.build(comment_params)
+    @comment = @commentee.comments.build(comment_params.merge!(commenteer_id: current_user.get_id))
     moderatorize current_user, @comment
     raise UnprocessableEntityError.new(@comment.errors) unless @comment.save
     render_json 'comments/comment', :locals => { :comment => @comment }, status: :created
@@ -59,8 +59,8 @@ class V1::CommentsController < ApplicationController
     end
 
     def set_comment
-      @comment = Comment.find(params[:id] || params(:comment_id))
-      raise NotfoundError.new if @comment.nil?
+      @comment = Comment.find(params[:id] || params[:comment_id])
+      raise NotfoundError.new(I18n.t('errors.requests.default_not_found') % request.path) if @comment.nil?
     end
 
     def comment_params  

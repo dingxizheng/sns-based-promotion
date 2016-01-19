@@ -32,7 +32,10 @@ en:
       video_width: "video width should be in %f to %f"
       video_height: "video height should be in %f to %f"
       video_duration: "video length should be less than %f seconds"
+      tag: "a tag should not contain any of the fellowing chars: < > @ ! # $ % ^ & * ( ) _ + [ ] { } ? : ; | ' \" . / ~ ` - "
     requests:
       invalid_access_token: "not a valid access token"
       no_commentee: "the resource to be commented is not found"
       default_not_found: "resource \"%s\" could not be found"
+      invalid_username: "the credentidals do not match our records"
+      invalid_password: "the credentidals do not match our records"

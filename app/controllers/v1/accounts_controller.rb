@@ -4,25 +4,24 @@ class V1::AccountsController < ApplicationController
 
   # POST /signin
   def signin
-    @user = User.find_by(email: params[:email].downcase)
+    @user = User.find_by(email: /#{params[:email]}/i)
     # if user is not found, raise a 400 error
-    raise BadRequestError.new('user does not exist') unless not @user.nil?
+    raise BadRequestError.new(I18n.t('errors.requests.invalid_username')) unless not @user.nil?
     # if password does not match, raise a 400 error
-    raise BadRequestError.new('wrong password') unless @user.password_match?(params[:password])
+    raise BadRequestError.new(I18n.t('errors.requests.invalid_password')) unless @user.password_match?(params[:password])
 
     # @user.session.destroy unless not @user.session.presence
 
     # delete expired sessions
     @user.sessions.each{|s| s.destroy unless not s.expire?}
 
-    # otherwise create a new seession
-    session = Session.new
-    session.save
-    session.refresh
-    @user.sessions << session
+    # create a new session
+    @session = @user.sessions.build
 
-    render :partial => 'users/session', :locals => { :session => session }
+    # save session
+    @session.save!
 
+    render_json 'users/session', :locals => { :session => @session  }
   end
 
   # DELETE /signout
@@ -41,7 +40,7 @@ class V1::AccountsController < ApplicationController
   # GET /me
   def me
     # get current user's information
-    render :partial => 'users/session', :locals => { :session => @session }
+     render_json 'users/user_full', :locals => { :user => @session.user  }
   end
 
   # POST /signin/facebook

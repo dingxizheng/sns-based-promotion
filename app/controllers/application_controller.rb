@@ -1,3 +1,4 @@
+require 'digest'
 class ApplicationController < ActionController::Base
 
 	include ActionController::HttpAuthentication::Token::ControllerMethods
@@ -29,6 +30,8 @@ class ApplicationController < ActionController::Base
 		raise RoutingError.new(request.original_url)
 	end
 
+	helper_method :get_location
+
 	# private methods
 	protected
 
@@ -42,9 +45,6 @@ class ApplicationController < ActionController::Base
 
 	# get geo information form the request
 	def get_geo_location
-		
-		# puts "From...: #{ request.user_agent }"
-
 		Rails.application.config.request_location = nil;
 		# get the location info from the request
 		if (true if Float(params[:lat]) rescue false) and (true if Float(params[:long]) rescue false)
@@ -67,7 +67,6 @@ class ApplicationController < ActionController::Base
 				})
 			end
 		end
-
 		logger.tagged('LOCATION') { logger.info "#{ get_location }" } 
 	end
 
@@ -83,14 +82,14 @@ class ApplicationController < ActionController::Base
 	# params should be skipped in conditional query
 	def params_to_skip 
 		[:access_token, :lat, :long, 
-			:page, :per_page, :within, 
+			:page, :per_page, :distance, 
 			:format, :user_role, :sortBy
 		]
 	end
 
 	# return valid query parameters
 	def query_params
-		request.query_parameters.except!(*(params_to_skip)
+		request.query_parameters.except!(*params_to_skip)
 	end
 
 	def sortBy
@@ -105,6 +104,14 @@ class ApplicationController < ActionController::Base
 		request.headers['per_page']
 	end
 
+	def distance
+		params[:distance]
+	end
+
+	def user_role
+		params[:user_role] || 'user'
+	end
+
 	# raise an unauthorized error if no session created or session expired
 	# this function is called wherever is restricted for accessing
 	def restrict_access
@@ -114,7 +121,8 @@ class ApplicationController < ActionController::Base
 	# for every request, try to find the logged in user from the access token
 	# , and also refresh the session
 	def find_session
-		@session = Session.find_by(access_token_hashed: params[:access_token])
+		hashed_token = Digest::SHA2.hexdigest(params[:access_token] || "")
+      	@session = Session.find_by(access_token_hashed: hashed_token)
 		@session.refresh unless @session.nil? or @session.expire?
 		unless @session.nil? or @session.expire?
 			logger.tagged('SESSION FOUND') { logger.info "Name: #{@session.user.name} , Email: #{@session.user.email}" }
@@ -140,7 +148,7 @@ class ApplicationController < ActionController::Base
 	# get current user
 	# create a guest if no user is found
 	def current_user
-		@current_user ||= User.new({ :guest => true })
+		@current_user
 	end
 
 	# if permission denied, send a unauthorized error with code 403

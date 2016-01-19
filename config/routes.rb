@@ -13,21 +13,38 @@ VideoAdsApi::Application.routes.draw do
     end
 
     concern :commentable do
-      resources :comments, except: [:new, :edit], :concerns[:voteable]
+      resources :comments, except: [:new, :edit], concerns: [:voteable]
     end
 
     concern :voteable do
-      post 'like', action: :vote_up
-      post 'dislike', action: :vote_down
+      post 'like', :action => :vote_up
+      post 'dislike', :action => :vote_down
     end
 
-    resources :users, except: [:new, :edit], 
-                      concerns:[:voteable, :commentable] do
+    concern :tag_and_untag do
+      post 'tag', :action => :tag
+      post 'untag', :action => :untag
+    end
 
+    concern :followable do
+      post 'follow', :action => :follow
+      post 'unfollow', :action => :unfollow
+      get 'followers', :action => :followers
+    end
+
+    resources :users, except: [:new, :edit], concerns: [:voteable, :commentable, :tag_and_untag, :followable] do
+      
+    end
+
+    resources :promotions, except: [:new, :edit], concerns: [:voteable, :commentable] do
+        
     end
 
     namespace :accounts do 
   		post 'facebooklogin', :action => "signin_with_facebook"
+      post 'signup',        :action => "signup_with_email"
+      post 'signin',        :action => "signin"
+      get  'me',            :action => "me"
     end
   end
 

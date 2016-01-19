@@ -96,7 +96,7 @@ module Errors
 	class NotfoundError < MyError
 		def initialize(message)
 			@code = 404
-			@error =  message || (I18n.t('errors.requests.default_not_found') % request.path)
+			@error = message
 		end
 	end
 
