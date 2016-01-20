@@ -1,5 +1,4 @@
-module V1
-class SearchController < ApplicationController
+class V1::SearchController < ApplicationController
 
 	def search_func(excludes = [])
 		model_names = @model_names
@@ -123,7 +122,6 @@ class SearchController < ApplicationController
 
 
 	private
-
 	# get the final search options
 	def finalOptions
 		defaultOptions.merge!(searchOptions)
@@ -151,5 +149,4 @@ class SearchController < ApplicationController
 		options.symbolize_keys
 	end
 
-end
 end

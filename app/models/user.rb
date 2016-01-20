@@ -2,6 +2,7 @@ require 'digest'
 class User
   include Mongoid::Document
   include Mongoid::Timestamps
+  include Mongoid::Search
   include Sunspot::Mongoid2
   include Mongoid::Taggable
   include Mongoid::Likeable
@@ -13,6 +14,7 @@ class User
   include Mongoid::GeoHelper
   include Mongoid::Encryptable
   include Mongoid::FileUploader
+  include Mongoid::RelationCounter
   
   rolify
 
@@ -39,6 +41,8 @@ class User
   imageable   :avatar, :background, :photos
   encryptable :address, :phone
   enum :status, [:approved, :pending, :declined, :muted]
+
+  count_relations :comments, :opinions, :promotions, :sessions, :photos
 
   # change tags separator to ;;
   tags_separator ';'
@@ -116,15 +120,21 @@ class User
 
   end
 
+  # setting mongoid search fields
+  search_in :name, :email, :address, :description
+
   # Search block
   # 
   if Settings.sunspot.enable_user
     # sunspot
     searchable do   
       text :name, :email, :description, :tags, :address, :phone
+      string :status
       string :id do 
         get_id
       end
+      time :created_at
+      time :updated_at
       string :roles, :multiple => true do
         roles.map{ |r| r.name }.uniq
       end
@@ -133,13 +143,13 @@ class User
       }
     end
 
-    #index terms after save
-    after_save :index_terms
+    # #index terms after save
+    # after_save :index_terms
 
-    # break user's info into small chunks and index them
-    def index_terms
-      Term.index_user_on_demand(self)
-    end
+    # # break user's info into small chunks and index them
+    # def index_terms
+    #   Term.index_user_on_demand(self)
+    # end
   end
   
   private

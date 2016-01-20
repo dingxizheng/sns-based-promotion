@@ -23,6 +23,8 @@ email_notificaion:
 sunspot:
     enable_promotion: false
     enable_user: false
+    enable_tag: false
+    enable_comment: false
 
 facebook:
     graph_api: 

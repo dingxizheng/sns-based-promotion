@@ -44,6 +44,9 @@ VideoAdsApi::Application.routes.draw do
       end
     end
 
+    resources :tags, except: [:new, :edit] do
+    end
+
     namespace :accounts do 
   		post 'facebooklogin', :action => "signin_with_facebook"
       post 'signup',        :action => "signup_with_email"

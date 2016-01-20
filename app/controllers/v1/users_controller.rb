@@ -19,6 +19,7 @@ class V1::UsersController < ApplicationController
     @users = @users.with_role(user_role)
     if @users.count > 1
       @users = @users.query_by_params(query_params)
+                     .query_by_text(search)
                      .sortby(sortBy)
                      .paginate(page, per_page)
     end

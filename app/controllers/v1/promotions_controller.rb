@@ -21,6 +21,7 @@ class V1::PromotionsController < ApplicationController
                     .resolve
                     .with_in_radius(get_location, distance)
                     .query_by_params(query_params)
+                    .query_by_text(search)
                     .sortby(sortBy)
                     .paginate(page, per_page)
 
@@ -40,6 +41,7 @@ class V1::PromotionsController < ApplicationController
                 .resolve
                 .with_in_radius(get_location, distance)
                 .query_by_params(query_params)
+                .query_by_text(search)
                 .sortby(sortBy)
                 .paginate(page, per_page)
 
@@ -52,6 +54,7 @@ class V1::PromotionsController < ApplicationController
                 .resolve
                 .with_in_radius(get_location, distance)
                 .query_by_params(query_params)
+                .query_by_text(search)
                 .sortby(sortBy)
                 .paginate(page, per_page)
 
@@ -61,7 +64,10 @@ class V1::PromotionsController < ApplicationController
   # POST /promotions
   # POST /promotions.json
   def create
-    @promotion = (@owner || current_user).promotions.new(promotion_params)
+    if get_location and get_location[:lat]
+      promotion_params_with_geo = promotion_params.merge({:coordinates => [get_location[:long], get_location[:lat]]})
+    end
+    @promotion = (@owner || current_user).promotions.new(promotion_params_with_geo || promotion_params)
     authorize @promotion
     @promotion.set_photos params[:photos] if params[:photos]
     @promotion.set_photos params[:video] if params[:video]

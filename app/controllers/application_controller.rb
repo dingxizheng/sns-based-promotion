@@ -83,13 +83,17 @@ class ApplicationController < ActionController::Base
 	def params_to_skip 
 		[:access_token, :lat, :long, 
 			:page, :per_page, :distance, 
-			:format, :user_role, :sortBy
+			:format, :user_role, :sortBy, :search
 		]
 	end
 
 	# return valid query parameters
 	def query_params
 		request.query_parameters.except!(*params_to_skip)
+	end
+
+	def search
+		params[:search]
 	end
 
 	def sortBy

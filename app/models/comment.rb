@@ -1,5 +1,6 @@
 class Comment
   include Mongoid::Document
+  include Mongoid::Search
   include Mongoid::Timestamps
   include Mongoid::Likeable
   include Mongoid::Enum
@@ -22,6 +23,22 @@ class Comment
 
   validates_presence_of :body
   validates_length_of :body, minimum: 1, maximum: 300
+
+  # mongoid full text search
+  search_in :body, :promotion => :body
+  
+  # if fulltext search on comment is enabled
+  if Settings.sunspot.enable_comment
+    # sunspot config 
+    searchable do
+        text :body
+        time :created_at, :updated_at
+        string :status
+        string :id do
+          get_id
+        end
+    end
+  end
 
   # return replies
   def replies

@@ -1,6 +1,7 @@
 class Promotion
   include Mongoid::Document
   include Mongoid::Timestamps
+  include Mongoid::Search
   include Sunspot::Mongoid2
   include Mongoid::Likeable
   include Mongoid::Taggable
@@ -9,10 +10,10 @@ class Promotion
   include Mongoid::QueryHelper
   include Mongoid::GeoHelper
   include Mongoid::FileUploader
+  include Mongoid::RelationCounter
   # include Mongoid::Encryptable
 
   geocoded_by :coordinates
-  # before_save :set_coordinates
   after_save  :set_ancestors
   before_destroy :destroy_children
 
@@ -29,6 +30,8 @@ class Promotion
   enum :status, [:approved, :pending, :declined, :expired, :ongoing, :deleted], :multiple => true
 
   tags_separator ';'
+
+  count_relations :leaves, :reposts, :ancestors, :comments, :photos
 
   belongs_to :user
 
@@ -52,12 +55,15 @@ class Promotion
   imageable :photos
   videoable :video
 
+  # mongoid full text search
+  search_in :body, :user => :name, :parent => :body
+
   # if fulltext search on promotion model is enabled
   if Settings.sunspot.enable_promotion
   	# sunspot config 
   	searchable do
-  	    text :title, :description, :tags
-  	    time :expire_at, :start_at 
+  	    text :body, :tags
+  	    time :expire_at, :start_at, :created_at, :updated_at
   	    string :status
   	    string :id do
   	      get_id
@@ -67,11 +73,11 @@ class Promotion
   	    }
   	end
 
-    after_save :index_terms
-    # to enable the 
-    def index_terms
-      Term.index_promotion_on_demand(self)
-    end
+    # after_save :index_terms
+    # # to enable the 
+    # def index_terms
+    #   Term.index_promotion_on_demand(self)
+    # end
   end
 
   # retrieve longtitude info
@@ -85,11 +91,6 @@ class Promotion
   end
 
   private
-  # set the coordinates of promotion
-  def set_coordinates
-    self.coordinates = self.customer.coordinates
-    return true
-  end
 
   def set_ancestors
     if self.parent.present? and self.root.nil?

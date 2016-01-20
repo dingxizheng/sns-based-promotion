@@ -6,6 +6,32 @@ module Mongoid::Document
 end
 
 module Mongoid
+
+  # count relations
+  module RelationCounter
+    extend ActiveSupport::Concern
+
+    module ClassMethods
+      def count_relations(*relations)
+        
+        relations = relations.is_a?(Enumerable) ? relations : [relations]
+        relations.each do |relation_name|  
+          # puts "field #{relation_name}_count, type: Integer, :default: 0"
+          field "#{relation_name}_count".to_sym, type: Integer, default: 0      
+          before_save :update_relation_counts
+        end
+
+        define_method(:update_relation_counts) do
+          relations.each do |relation_name|
+            self["#{relation_name}_count".to_sym] = self.send("#{relation_name}").count
+          end
+        end
+
+      end
+    end
+
+  end
+
   # geo helper module
   module GeoHelper
     extend ActiveSupport::Concern
@@ -38,9 +64,9 @@ module Mongoid
     included do
       scope :sortby, ->(sortBy) {
         if sortBy.present? 
-          # multiple sortBy parameters must be seperated by ',,'
-          # for instance: 'sortBy=time,,name' ==> means sortBy 'time' and 'name'
-          order_by_params = sortBy.split(',,').map do |item|      
+          # multiple sortBy parameters must be seperated by '&&'
+          # for instance: 'sortBy=time&&name' ==> means sortBy 'time' and 'name'
+          order_by_params = sortBy.split('&&').map do |item|      
             if item.start_with? '-'
               [item[1..-1].to_sym, -1]
             else
@@ -55,6 +81,12 @@ module Mongoid
         # if pagenation is required, then return required page
         if page.present? and per_page.present?
           page(page).per(per_page)
+        end
+      }
+
+      scope :query_by_text, -> (text) {
+        if text.present? and text.kind_of? String
+          full_text_search(text) if respond_to? "full_text_search"
         end
       }
 
@@ -77,13 +109,18 @@ module Mongoid
             if value == "!=null"
               query.store(field.exists, false)
             else
-              query.store(field.nin, value[2..-1].split(',,'))
+              query.store(field.nin, value[2..-1].split('&&'))
             end
           else
             if value == "null"
               query.store(field.exists, true)
             else
-              query.store(field.in, value.split(',,'))
+              if value.split('&&').size < 1
+                query.store(field.in, value.split('||'))
+              else
+                puts "QUERY >>> AND"
+                value.split('&&').each{|val|  query.store(field.in, val.split('||')) }
+              end
             end
           end
         end

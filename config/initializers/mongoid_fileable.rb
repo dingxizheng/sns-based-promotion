@@ -2,7 +2,7 @@
 # @Author: dingxizheng
 # @Date:   2016-01-18 20:04:41
 # @Last Modified by:   dingxizheng
-# @Last Modified time: 2016-01-19 17:12:15
+# @Last Modified time: 2016-01-20 15:22:57
 
 module Mongoid
   # geo helper module
@@ -37,7 +37,7 @@ module Mongoid
     	def fileable(field_name, model)
     		define_method("set_#{field_name}") do |value|
     			if value.respond_to? "each" and not value.respond_to?("read")
-    				puts "value >>> #{ value }"
+    				# puts "value >>> #{ value }"
     				self.save if self.new_record?
     				self.send("#{field_name}=", [])
     				files = self.send("#{field_name}")

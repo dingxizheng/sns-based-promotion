@@ -15,6 +15,7 @@ class V1::CommentsController < ApplicationController
     @comments = CommentPolicy::Scope.new(current_user, @commentee.comments)
                   .resolve
                   .query_by_params(query_params)
+                  .query_by_text(search)
                   .sortby(sortBy)
                   .paginate(page, per_page)
     render_json 'comments/comments', :locals => { :comments => @comments }
