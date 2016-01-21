@@ -6,6 +6,7 @@ class User
   include Sunspot::Mongoid2
   include Mongoid::Taggable
   include Mongoid::Likeable
+  include Mongoid::Liker
   include Mongoid::Followable
   include Mongoid::Follower
   include Mongoid::Enum
@@ -15,6 +16,7 @@ class User
   include Mongoid::Encryptable
   include Mongoid::FileUploader
   include Mongoid::RelationCounter
+  include PublicActivity::Common
   
   rolify
 
@@ -23,6 +25,10 @@ class User
   before_create :encrypt_password, :set_default_role
   before_save :validates_address
   before_destroy :destroy_children
+
+  # after_save    :add_create_activity
+  after_update  :add_update_activity
+  # after_destroy :add_destroy_activity
 
   # fields
   field :name, type: String
@@ -42,7 +48,7 @@ class User
   encryptable :address, :phone
   enum :status, [:approved, :pending, :declined, :muted]
 
-  count_relations :comments, :opinions, :promotions, :sessions, :photos
+  count_relations :comments, :opinions, :promotions, :sessions, :photos, :likers, :dislikers
 
   # change tags separator to ;;
   tags_separator ';'
@@ -185,6 +191,12 @@ class User
   # set user as normal user
   def set_default_role
     self.add_role :user
+  end
+
+  def add_update_activity
+    if self.name_changed?
+      self.create_activity key: 'user.updated_name', owner: self
+    end
   end
 
   # destroy all related children

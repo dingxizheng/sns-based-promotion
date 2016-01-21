@@ -2,7 +2,7 @@
 # @Author: dingxizheng
 # @Date:   2016-01-17 14:35:06
 # @Last Modified by:   dingxizheng
-# @Last Modified time: 2016-01-19 17:15:42
+# @Last Modified time: 2016-01-21 02:25:08
 
 
 require "rails_helper"
@@ -101,5 +101,30 @@ RSpec.describe User, :type => :model do
 
 		expect(one.photos[0]).not_to be nil	
 		expect(one.photos[1]).not_to be nil	
+	end
+
+	it "test likes" do 
+		one = User.new({
+				:name => "daixiaochuan",
+				:email => "daixiaochuan@gmail.com",
+				:password => "dai1234"
+			})
+		one.save
+
+		two = User.new({
+				:name => "wangtong",
+				:email => "wangtong@gmail.com",
+				:password => "dai1234"
+			})
+		two.save
+
+		one.like(two)
+		expect(User.find(two.get_id).likers.find(one.get_id)).not_to be_nil
+
+		one.unlike(two)
+		expect(User.find(two.get_id).likers.find(one.get_id)).to be_nil
+
+		expect(User.find(one.get_id)).not_to be_nil
+
 	end
 end

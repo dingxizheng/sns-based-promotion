@@ -2,7 +2,7 @@
 # @Author: dingxizheng
 # @Date:   2016-01-19 13:06:23
 # @Last Modified by:   dingxizheng
-# @Last Modified time: 2016-01-19 14:19:53
+# @Last Modified time: 2016-01-20 22:02:27
 require "rails_helper"
 require 'database_cleaner'
 DatabaseCleaner[:mongoid].strategy = :truncation
@@ -63,7 +63,6 @@ RSpec.describe Promotion, :type => :model do
 				:body => "tong is right",
 				:parent_id => repost.get_id
 			})
-
 		tong.save
 
 		expect(repost.body).to eq("dai is so right")
@@ -82,34 +81,55 @@ RSpec.describe Promotion, :type => :model do
 		expect(promotion.leaves).to eq([repost, repost2])
 	end
 
-	it "tong comments on dai's promotion" do
-		# dai makes a promotion
+	# it "tong comments on dai's promotion" do
+	# 	# dai makes a promotion
+	# 	promotion = dai.promotions.build({
+	# 			:body => "this is so great!!!!"
+	# 		})
+	# 	dai.save
+
+	# 	# tong reposts dai's promotion
+	# 	repost = tong.promotions.build({
+	# 			:body => "dai is so right",
+	# 			:parent_id => promotion.get_id
+	# 		})
+	# 	tong.save
+
+	# 	# dai makes a comment on tong's repost
+	# 	comment = repost.comments.build({
+	# 			:body => "this is a very good comment",
+	# 			:commenteer_id => dai.get_id
+	# 		})
+	# 	repost.save
+
+	# 	# now the repost should have a comment that matches the comment dai just create
+	# 	expect(repost.comments.find(comment.get_id).body).to eq("this is a very good comment")
+
+	# 	# dai should have the comment he has made
+	# 	expect(dai.opinions.find(comment.get_id).body).to eq("this is a very good comment")
+
+	# 	# dai should not have any comments that is made on himself
+	# 	expect(dai.comments.find(comment.get_id)).to be_nil
+	# end
+
+	it "create promotions should generate activities" do
 		promotion = dai.promotions.build({
 				:body => "this is so great!!!!"
 			})
 		dai.save
 
-		# tong reposts dai's promotion
 		repost = tong.promotions.build({
 				:body => "dai is so right",
 				:parent_id => promotion.get_id
 			})
 		tong.save
 
-		# dai makes a comment on tong's repost
-		comment = repost.comments.build({
-				:body => "this is a very good comment",
-				:commenteer_id => dai.get_id
+		repost2 = tong.promotions.build({
+				:body => "tong is right",
+				:parent_id => repost.get_id
 			})
-		repost.save
+		tong.save
 
-		# now the repost should have a comment that matches the comment dai just create
-		expect(repost.comments.find(comment.get_id).body).to eq("this is a very good comment")
-
-		# dai should have the comment he has made
-		expect(dai.opinions.find(comment.get_id).body).to eq("this is a very good comment")
-
-		# dai should not have any comments that is made on himself
-		expect(dai.comments.find(comment.get_id)).to be_nil
+		puts "activities: #{PublicActivity::Activity.all[1].to_yaml}"
 	end
 end

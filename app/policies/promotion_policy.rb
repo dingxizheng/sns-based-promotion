@@ -19,10 +19,11 @@ class PromotionPolicy < ApplicationPolicy
   end
 
   def show?
+    # puts record.status
     if record.approved?
       true
     else 
-      user.has_role?(:admin) or user.has_role?(:moderator, record)
+      user.present? and (user.has_role?(:admin) or user.has_role?(:moderator, record))
     end
   end
 

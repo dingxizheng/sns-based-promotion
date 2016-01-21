@@ -37,12 +37,38 @@ module Mongoid
     extend ActiveSupport::Concern
     
     included do
-      # after_save :reindex_coordinates
+      before_save :convert_coordinates
+      # before_save :reindex_coordinates
       scope :with_in_radius, ->(location, radius) {
         if location and location[:lat] and location[:long] and radius
-          near([location[:lat], location[:long]], Float(radius), :units => :km)
+          puts "$NEAR >> #{ radius.to_f * 1000 }"
+          # near([location[:lat], location[:long]], Float(radius), :units => :km)
+          where({
+              :coordinates => {
+                '$near' => {
+                  '$geometry' => { 
+                    type: "Point", 
+                    coordinates: [location[:long].to_f, location[:lat].to_f]
+                  },
+                  '$minDistance' => 0,
+                  '$maxDistance' => radius.to_f * 1000
+                }
+                # '$minDistance' => 0,
+                # '$maxDistance' => radius.to_f * 1000
+              }
+            })
         end
       }
+
+      # index coordinates
+      index({ coordinates: "2dsphere" })
+    end
+
+    def convert_coordinates
+      if self.coordinates_changed?
+        self.coordinates = [self.coordinates[0].to_f, self.coordinates[1].to_f]
+      end
+      true
     end
 
     # reindex coordinates after save
@@ -118,7 +144,7 @@ module Mongoid
               if value.split('&&').size < 1
                 query.store(field.in, value.split('||'))
               else
-                puts "QUERY >>> AND"
+                # puts "QUERY >>> AND"
                 value.split('&&').each{|val|  query.store(field.in, val.split('||')) }
               end
             end

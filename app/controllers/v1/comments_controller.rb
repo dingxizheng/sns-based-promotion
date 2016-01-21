@@ -53,7 +53,7 @@ class V1::CommentsController < ApplicationController
       @commentee = nil
       COMMENTABLES.reverse.each do |model|
         id_name = "#{model.name.downcase}_id".to_sym
-        @commentee = model.find(params[id_name])
+        @commentee = model.find(params[id_name] || "")
         break unless @commentee.nil?
       end
       raise BadRequestError.new(I18n.t('errors.requests.no_commentee')) if @commentee.nil?

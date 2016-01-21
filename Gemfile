@@ -23,13 +23,15 @@ gem 'moped'
 # gem 'mongoid', '~> 4', github: 'mongoid/mongoid'
 gem 'mongoid', '~> 4.0'
 
+gem 'public_activity' #=> for tracking public activites
+
 gem 'mongoid_search'
 
 # gem 'mongoid_taggable'
 
 gem 'mongoid_followable', "~> 0.1.9"
 
-gem 'mongoid-likeable', github: 'dingxizheng/mongoid-likeable'
+# gem 'mongoid-likeable', github: 'dingxizheng/mongoid-likeable'
 
 gem 'mongoid-enum'
 

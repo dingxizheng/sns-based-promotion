@@ -2,10 +2,16 @@
 # @Author: dingxizheng
 # @Date:   2016-01-13 18:22:32
 # @Last Modified by:   dingxizheng
-# @Last Modified time: 2016-01-19 17:26:30
+# @Last Modified time: 2016-01-20 19:15:36
 
 module ViewHelper
 
+	# converts a standard url helper method to a versionfied one
+	# 
+	# For converting 'user_url' to a versionfied
+	# 	
+	# 	resource_path_to('user_url', user1) #=> v1_user_url(user1)
+	# 
 	def resource_path_to(function_name, resource)
 		namespace = controller_path.split('/').first
 		if namespace.size > 1
@@ -26,8 +32,8 @@ module ViewHelper
 	end
 
 	def resource_distance(resource)
-		if resource.coordinates.present? and geo_location[:lat].present?
-			resource.distance_to(geo_location) * 1.60934
+		if resource.respond_to?("distance_to") and resource.coordinates.present? and get_location[:lat].present?
+			resource.distance_to([get_location[:lat], get_location[:long]]) * 1.60934
 		else
 			-1
 		end

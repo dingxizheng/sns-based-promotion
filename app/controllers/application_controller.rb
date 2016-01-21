@@ -4,6 +4,7 @@ class ApplicationController < ActionController::Base
 	include ActionController::HttpAuthentication::Token::ControllerMethods
 	include Errors
 	include Pundit
+	include PublicActivity::StoreController
 
 	before_action :get_geo_location, :find_session
 
@@ -101,11 +102,11 @@ class ApplicationController < ActionController::Base
 	end
 
 	def page
-		request.headers['page']
+		request.headers['page'] || 1 #=> return the first page by default
 	end
 
 	def per_page
-		request.headers['per_page']
+		request.headers['per_page'] || 8 #=> default items per_page is set to 8
 	end
 
 	def distance

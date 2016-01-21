@@ -2,7 +2,7 @@
 # @Author: dingxizheng
 # @Date:   2016-01-14 01:13:38
 # @Last Modified by:   dingxizheng
-# @Last Modified time: 2016-01-18 17:26:21
+# @Last Modified time: 2016-01-21 02:34:20
 
 # module Voteable
 # 
@@ -18,17 +18,26 @@ module VoteableActions
 	def vote_up
 		puts "GET CALLED #{ self.class.class_variable_get(:@@voteable)}"
 		self.class.class_variable_get(:@@before_callbacks).each {|cb| send(cb) }
-		instance_variable_get(:"@#{@@voteable.to_s}").like current_user
+
+		if current_user.liked? get_variable_voteable
+			current_user.unlike get_variable_voteable
+		else
+			current_user.like get_variable_voteable
+		end	
 		render :json => {
-				likes: instance_variable_get(:"@#{@@voteable.to_s}").likes
+				likes: get_variable_voteable.likes
 			}, :status => 200
 	end
 
 	def vote_down
 		self.class.class_variable_get(:@@before_callbacks).each {|cb| send(cb) }
-		instance_variable_get(:"@#{@@voteable.to_s}").dislike current_user
+		if current_user.disliked? get_variable_voteable
+			current_user.undislike get_variable_voteable
+		else
+			current_user.dislike get_variable_voteable
+		end	
 		render :json => {
-				likes: instance_variable_get(:"@#{@@voteable.to_s}").dislikes
+				likes: get_variable_voteable.dislikes
 			}, :status => 200
 	end
 
@@ -36,6 +45,11 @@ module VoteableActions
 	end
 
 	def dislkes
+	end
+
+	private
+	def get_variable_voteable
+		instance_variable_get(:"@#{@@voteable.to_s}")
 	end
 
 	module ClassMethods

@@ -11,11 +11,15 @@ class Promotion
   include Mongoid::GeoHelper
   include Mongoid::FileUploader
   include Mongoid::RelationCounter
+  include PublicActivity::Common
   # include Mongoid::Encryptable
 
-  geocoded_by :coordinates
-  after_save  :set_ancestors
-  before_destroy :destroy_children
+  geocoded_by   :coordinates
+  after_save    :set_ancestors
+  after_create  :add_create_activity
+  after_update  :add_update_activity
+  after_destroy :add_destroy_activity
+  after_destroy :destroy_children
 
   resourcify
 
@@ -27,11 +31,11 @@ class Promotion
   
   # field :cover_id
 
-  enum :status, [:approved, :pending, :declined, :expired, :ongoing, :deleted], :multiple => true
+  enum :status, [:approved, :pending, :declined, :expired, :ongoing, :deleted], :multiple => true, :default => [:approved]
 
   tags_separator ';'
 
-  count_relations :leaves, :reposts, :ancestors, :comments, :photos
+  count_relations :leaves, :reposts, :ancestors, :comments, :photos, :likers, :dislikers
 
   belongs_to :user
 
@@ -46,7 +50,7 @@ class Promotion
   # has_and_belongs_to_many  :descendants, inverse_of: :ancestors, class_name: 'Promotion'
 
   has_one  :video, autosave: true, dependent: :destroy
-  has_many :comments, autosave: true, dependent: :destroy
+  has_many :comments, inverse_of: :commentee, class_name: 'Comment', autosave: true, dependent: :destroy
   has_many :photos, inverse_of: :promotion, class_name: 'Image', autosave: true, dependent: :destroy
 
   validates_presence_of :body
@@ -99,6 +103,24 @@ class Promotion
       self.ancestors << self.parent
       self.save
     end
+  end
+
+  def add_create_activity
+    if self.parent.present?
+      self.create_activity key: 'promotion.reposted', owner: self.user, recipient: self.parent.user 
+    else
+      self.create_activity key: 'promotion.created', owner: self.user
+    end
+  end
+
+  def add_update_activity
+    # if self.body_changed?
+    #   self.create_activity key: 'promotion.updated', owner: self.user
+    # end
+  end
+
+  def add_destroy_activity
+    self.create_activity key: 'promotion.deleted', owner: self.user
   end
 
   # destroy all children

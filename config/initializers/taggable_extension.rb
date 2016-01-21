@@ -2,7 +2,7 @@
 # @Author: dingxizheng
 # @Date:   2016-01-17 00:39:39
 # @Last Modified by:   dingxizheng
-# @Last Modified time: 2016-01-18 16:51:48
+# @Last Modified time: 2016-01-21 02:17:33
 
 # This module introduces
 # 	tag and untag actions to controllers
@@ -91,7 +91,7 @@ module Mongoid
 	  Mongoid.class_variable_get(:@@init_callback).call(self.name.to_s.downcase) if Mongoid.class_variable_get(:@@init_callback)
 
       field :tags, type: Array, default: []
-      has_and_belongs_to_many :tag_objects , class_name: 'Tag', autosave: true
+      has_and_belongs_to_many :tag_objects , inverse_of: "tagged_#{self.name.to_s.downcase}s".to_sym, class_name: 'Tag', autosave: true
       # belongs_to :tag_model, as:, class_name: 'Tag'
     end
 
@@ -169,12 +169,12 @@ module Mongoid
 
     private
     def add_models_to_tag(tag)
-       method_name = self.class.name.downcase + 's'
+       method_name = 'tagged_' + self.class.name.downcase + 's'
        tag.send(method_name + '=', tag.send(method_name) + [self])
     end
 
     def remove_models_from_tag(tag)
-       method_name = self.class.name.downcase + 's'
+       method_name = 'tagged_' + self.class.name.downcase + 's'
        tag.send(method_name + '=', tag.send(method_name) - [self])
     end
 
@@ -234,7 +234,7 @@ module Mongoid
 
       def add_relations_to_model(model_name)
       	puts "ADD RELATION TO MODEL #{model_name}"
-      	has_and_belongs_to_many "#{model_name}s".to_sym
+      	has_and_belongs_to_many "tagged_#{model_name}s".to_sym, inverse_of: :tag_objects, class_name: model_name.capitalize
       end
 
       def make_as_tag_model
