@@ -21,6 +21,8 @@ VideoAdsApi::Application.routes.draw do
       post 'dislike', :action => :vote_down
     end
 
+    resources :comments, except: [:new, :edit], concerns: [:voteable]
+
     concern :tag_and_untag do
       post 'tag', :action => :tag
       post 'untag', :action => :untag

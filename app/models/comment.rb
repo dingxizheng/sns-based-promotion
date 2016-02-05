@@ -62,7 +62,7 @@ class Comment
   end
 
   def add_create_activity
-    self.create_activity key: 'user.made_comment', owner: self.commenteer, recipient: (self.commentee.respond_to? "user" ? self.commentee.user : self.commentee)
+    self.create_activity key: 'user.made_comment', owner: self.commenteer, recipient: (self.commentee.respond_to?("user") ? self.commentee.user : self.commentee)
     if self.parent_id
       # self.create_activity key: 'user.replied_to_comment', owner: self.commenteer, recipient: self.promotion.user
     end
@@ -70,7 +70,7 @@ class Comment
   
   def add_update_activity
     if self.body_changed?
-      self.create_activity key: 'user.updated_comment', owner: self.commenteer, recipient: (self.commentee.respond_to? "user" ? self.commentee.user : self.commentee)
+      self.create_activity key: 'user.updated_comment', owner: self.commenteer, recipient: (self.commentee.respond_to?("user") ? self.commentee.user : self.commentee)
       if self.parent_id
         # self.create_activity key: 'user.replied_to_comment', owner: self.commenteer, recipient: self.promotion.user
       end
@@ -78,7 +78,7 @@ class Comment
   end
   
   def add_destroy_activity
-    self.create_activity key: 'user.deleted_comment', owner: self.commenteer, recipient: (self.commentee.respond_to? "user" ? self.commentee.user : self.commentee)
+    self.create_activity key: 'user.deleted_comment', owner: self.commenteer, recipient: (self.commentee.respond_to?("user") ? self.commentee.user : self.commentee)
     if self.parent_id
       # self.create_activity key: 'user.replied_to_comment', owner: self.commenteer, recipient: self.promotion.user
     end

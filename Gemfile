@@ -31,7 +31,7 @@ gem 'mongoid_search'
 
 gem 'mongoid_followable', "~> 0.1.9"
 
-# gem 'mongoid-likeable', github: 'dingxizheng/mongoid-likeable'
+gem 'mongoid-likes', github: 'dingxizheng/mongoid_likes'
 
 gem 'mongoid-enum'
 
