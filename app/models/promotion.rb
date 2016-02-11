@@ -26,6 +26,7 @@ class Promotion
   # fields
   field :body, type: String
   field :coordinates, type: Array
+  field :price, type: Float, default: -1
   field :start_at, type: DateTime, default: Time.now
   field :expire_at, type: DateTime, default: Time.now + 2.weeks
   
@@ -35,9 +36,9 @@ class Promotion
 
   tags_separator ';'
 
-  count_relations :leaves, :reposts, :ancestors, :comments, :photos, :likers, :dislikers
+  count_relations :leaves, :reposts, :ancestors, :comments, :photos, :likers, :dislikers, :tag_objects
 
-  belongs_to :user
+  belongs_to :user, inverse_of: :promotions, class_name: 'User'
 
   belongs_to :root, inverse_of: :leaves , class_name: 'Promotion'
   has_many   :leaves, inverse_of: :root, class_name: 'Promotion'
@@ -94,7 +95,7 @@ class Promotion
     if not self.coordinates.nil? then self.coordinates[1] else 0 end
   end
 
-  private
+  # private
 
   def set_ancestors
     if self.parent.present? and self.root.nil?
@@ -109,7 +110,7 @@ class Promotion
     if self.parent.present?
       self.create_activity key: 'promotion.reposted', owner: self.user, recipient: self.parent.user 
     else
-      self.create_activity key: 'promotion.created', owner: self.user
+      self.create_activity key: 'promotion.created',  owner: self.user
     end
   end
 
@@ -118,6 +119,23 @@ class Promotion
     #   self.create_activity key: 'promotion.updated', owner: self.user
     # end
   end
+
+  def add_subscribable_activity
+    if self.tags.size > 1
+      quries = []
+      2.upto(self.tags.size) do |s|
+        self.tags.combination(s).to_a.each do |arr|
+          quries << {:tags.all => arr}
+        end
+      end
+      if quries.size > 0
+        Subscribable.or(*quries).and({:minimum_price.lte => self.price}, {:maximum_price.gte => self.price}).each do |sub|
+          self.create_activity key: 'promotion.subscribable.new', owner: sub, recipient: self.user
+        end
+      end
+    end
+  end
+  # handle_asynchronously :add_subscribable_activity, :run_at => Proc.new { 3.minutes.from_now }
 
   def add_destroy_activity
     self.create_activity key: 'promotion.deleted', owner: self.user

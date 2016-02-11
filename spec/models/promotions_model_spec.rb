@@ -2,7 +2,7 @@
 # @Author: dingxizheng
 # @Date:   2016-01-19 13:06:23
 # @Last Modified by:   dingxizheng
-# @Last Modified time: 2016-01-20 22:02:27
+# @Last Modified time: 2016-02-10 20:19:42
 require "rails_helper"
 require 'database_cleaner'
 DatabaseCleaner[:mongoid].strategy = :truncation
@@ -36,50 +36,50 @@ RSpec.describe Promotion, :type => :model do
 			})
 	}
 
-	it "create a new promotion" do
-		promotion = dai.promotions.build({
-				:body => "this is so great!!!!"
-			})
+	# it "create a new promotion" do
+	# 	promotion = dai.promotions.build({
+	# 			:body => "this is so great!!!!"
+	# 		})
 
-		dai.save
+	# 	dai.save
 
-		expect(promotion.body).to eq("this is so great!!!!")
-		expect(promotion.parent).to be_nil
-	end
+	# 	expect(promotion.body).to eq("this is so great!!!!")
+	# 	expect(promotion.parent).to be_nil
+	# end
 
-	it "tong reposts dai's promotion" do
-		promotion = dai.promotions.build({
-				:body => "this is so great!!!!"
-			})
-		dai.save
+	# it "tong reposts dai's promotion" do
+	# 	promotion = dai.promotions.build({
+	# 			:body => "this is so great!!!!"
+	# 		})
+	# 	dai.save
 
-		repost = tong.promotions.build({
-				:body => "dai is so right",
-				:parent_id => promotion.get_id
-			})
-		tong.save
+	# 	repost = tong.promotions.build({
+	# 			:body => "dai is so right",
+	# 			:parent_id => promotion.get_id
+	# 		})
+	# 	tong.save
 
-		repost2 = tong.promotions.build({
-				:body => "tong is right",
-				:parent_id => repost.get_id
-			})
-		tong.save
+	# 	repost2 = tong.promotions.build({
+	# 			:body => "tong is right",
+	# 			:parent_id => repost.get_id
+	# 		})
+	# 	tong.save
 
-		expect(repost.body).to eq("dai is so right")
-		expect(repost.parent).to eq(promotion)
-		expect(repost.root).to eq(promotion)
+	# 	expect(repost.body).to eq("dai is so right")
+	# 	expect(repost.parent).to eq(promotion)
+	# 	expect(repost.root).to eq(promotion)
 
-		expect(repost2.parent).to eq(repost)
-		expect(repost2.root).to eq(promotion)
+	# 	expect(repost2.parent).to eq(repost)
+	# 	expect(repost2.root).to eq(promotion)
 
-		expect(repost2.ancestors[0]).to eq(promotion)
-		expect(repost2.ancestors[1]).to eq(repost)
+	# 	expect(repost2.ancestors[0]).to eq(promotion)
+	# 	expect(repost2.ancestors[1]).to eq(repost)
 
-		expect(promotion.reposts[0]).to eq(repost)
-		expect(repost.reposts[0]).to eq(repost2)
+	# 	expect(promotion.reposts[0]).to eq(repost)
+	# 	expect(repost.reposts[0]).to eq(repost2)
 
-		expect(promotion.leaves).to eq([repost, repost2])
-	end
+	# 	expect(promotion.leaves).to eq([repost, repost2])
+	# end
 
 	# it "tong comments on dai's promotion" do
 	# 	# dai makes a promotion
@@ -112,24 +112,62 @@ RSpec.describe Promotion, :type => :model do
 	# 	expect(dai.comments.find(comment.get_id)).to be_nil
 	# end
 
-	it "create promotions should generate activities" do
+	# it "create promotions should generate activities" do
+	# 	promotion = dai.promotions.build({
+	# 			:body => "this is so great!!!!"
+	# 		})
+	# 	dai.save
+
+	# 	repost = tong.promotions.build({
+	# 			:body => "dai is so right",
+	# 			:parent_id => promotion.get_id
+	# 		})
+	# 	tong.save
+
+	# 	repost2 = tong.promotions.build({
+	# 			:body => "tong is right",
+	# 			:parent_id => repost.get_id
+	# 		})
+	# 	tong.save
+
+	# 	# puts "activities: #{PublicActivity::Activity.all[1].to_yaml}"
+	# end
+
+	it "query multiple tags" do 
+		sub = Subscribable.new
+		sub.tags = ["iphone", "pink"]
+		sub.maximum_price = 100
+		sub.save
+
+		sub2 = Subscribable.new
+		sub2.tags = ["iphone", "daio"]
+		sub2.save
+
 		promotion = dai.promotions.build({
-				:body => "this is so great!!!!"
+				:body => "this is so great!!!!1",
+				:price => 100
 			})
-		dai.save
+		promotion.add_tags ["iphone", "pink", "dai"]
 
-		repost = tong.promotions.build({
-				:body => "dai is so right",
-				:parent_id => promotion.get_id
+		promotion2 = dai.promotions.build({
+				:body => "this is so great!!!!2",
+				:tags => ["iphone", "green"]
 			})
-		tong.save
 
-		repost2 = tong.promotions.build({
-				:body => "tong is right",
-				:parent_id => repost.get_id
+		promotion3 = dai.promotions.build({
+				:body => "this is so great!!!!3",
+				:tags => ["android", "pink"]
 			})
-		tong.save
 
-		puts "activities: #{PublicActivity::Activity.all[1].to_yaml}"
+		promotion.save
+		promotion2.save
+		promotion3.save
+
+		promotion.add_subscribable_activity
+
+		# puts Promotion.where({:tags.all => ["iphone", "pink"]}).all.map(&:body)
+		PublicActivity::Activity.all.each do |a|
+			puts a
+		end
 	end
 end

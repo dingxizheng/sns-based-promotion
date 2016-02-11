@@ -54,9 +54,10 @@ class User
   tags_separator ';'
 
   # relations
+  has_many :subscribables, inverse_of: :user, class_name: 'Subscribable', autosave: true, dependent: :destroy
   has_many :comments, inverse_of: :commentee, class_name: 'Comment', autosave: true, dependent: :destroy
   has_many :opinions, inverse_of: :commenteer, class_name: 'Comment', autosave: true
-  has_many :promotions, autosave: true, dependent: :destroy
+  has_many :promotions, inverse_of: :user, class_name: 'Promotion', autosave: true, dependent: :destroy
   has_many :sessions, autosave: true, dependent: :destroy
 
   # a user only has one logo

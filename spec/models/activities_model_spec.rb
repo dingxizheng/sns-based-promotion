@@ -2,7 +2,7 @@
 # @Author: dingxizheng
 # @Date:   2016-01-20 22:03:34
 # @Last Modified by:   dingxizheng
-# @Last Modified time: 2016-01-21 00:13:02
+# @Last Modified time: 2016-02-10 21:38:24
 
 require "rails_helper"
 require 'database_cleaner'
@@ -91,18 +91,40 @@ RSpec.describe PublicActivity::Activity, :type => :model do
 		one.follow(three)
 		three.follow(one)
 
+		# ====== subscribables =======
+		sub = Subscribable.new
+		sub.tags = ["iphone", "pink"]
+		# sub.maximum_price = 100
+		sub.save
+
+		sub2 = Subscribable.new
+		sub2.tags = ["iphone", "dai"]
+		sub2.save
+
+		sub3 = Subscribable.new
+		sub3.tags = ["green", "dai"]
+		sub3.save
+
+		one.follow sub
+		one.follow sub2
+
+
 		# ====== promotions ========
-		p1 = two.promotions.build({ :body => "promotion one"})
+		p1 = two.promotions.build({ :body => "promotion one", :tags => ["iphone", "pink"]})
 		two.save
+		p1.add_subscribable_activity
 
 		p2 = three.promotions.build({ :body => "promotion two", :parent_id => p1.get_id })
 		three.save
+		p2.add_subscribable_activity
 
-		p3 = one.promotions.build({ :body => "promotion three" })
+		p3 = one.promotions.build({ :body => "promotion three" , :tags => ["iphone", "green", "dai"]})
 		one.save
+		p3.add_subscribable_activity
 
-		p4 = four.promotions.build({ :body => "promotion four" })
+		p4 = four.promotions.build({ :body => "promotion four", :tags => ["green", "dai"] })
 		four.save
+		p4.add_subscribable_activity
 
 		# ====== comments ========
 		c1 = p1.comments.build({
@@ -119,10 +141,11 @@ RSpec.describe PublicActivity::Activity, :type => :model do
 
 		three.update({ :name => "yuanmiao @@" })
 
+		one = two
 		puts "\n===== #{one.name}'s timeline (most recent first)====="
 		PublicActivity::Activity.all
 		    .or(
-		    	{ :owner_id.in => one.followees_by_type("user").map(&:_id) << one.get_id },
+		    	{ :owner_id.in => one.followees_by_type("user").map(&:_id) << one.followees_by_type("subscribable").map(&:_id) << one.get_id},
 		    	{ :recipient_id => one.get_id }
 		    )
 		    .order_by(created_at: :desc)

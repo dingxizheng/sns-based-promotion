@@ -2,7 +2,7 @@
 # @Author: dingxizheng
 # @Date:   2016-01-17 16:31:19
 # @Last Modified by:   dingxizheng
-# @Last Modified time: 2016-01-20 15:10:25
+# @Last Modified time: 2016-02-10 16:06:33
 
 class Tag
   include Mongoid::Document
@@ -17,7 +17,6 @@ class Tag
   # fields
   field :body,       type: String
   field :decription, type: String
-  field :category,   type: Boolean, :default => false
 
   enum :status, [:approved, :pending, :declined]
 

@@ -70,6 +70,8 @@ gem 'kaminari' # paginator for model
 
 gem 'houston' # apple push notification
 
+gem "daemons"
+
 gem 'gcm' # google cloud messagin for Android
 
 gem 'thin'

@@ -240,6 +240,7 @@ DEPENDENCIES
   carrierwave
   carrierwave-mongoid
   config
+  daemons
   database_cleaner
   delayed_job_mongoid
   dotenv-rails

@@ -2,7 +2,7 @@
 # @Author: dingxizheng
 # @Date:   2016-01-17 00:39:39
 # @Last Modified by:   dingxizheng
-# @Last Modified time: 2016-01-21 02:17:33
+# @Last Modified time: 2016-02-10 19:01:11
 
 # This module introduces
 # 	tag and untag actions to controllers
@@ -196,7 +196,7 @@ module Mongoid
       tags.each { |tag|
       	tag_to_add = Tag.find_or_create_by(body: tag)
       	add_models_to_tag(tag_to_add)
-        self.tag_objects += [tag_to_add]
+        self.tag_objects << tag_to_add
       }
       self.save
     end

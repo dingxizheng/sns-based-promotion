@@ -40,6 +40,8 @@ VideoAdsApi::Application.routes.draw do
       get 'ancestors', :action => "ancestors"
     end
 
+    resources :subscribables, except: [:new, :edit], concerns: [:voteable, :tag_and_untag, :followable]
+
     resources :users, except: [:new, :edit], concerns: [:voteable, :commentable, :tag_and_untag, :followable] do
       resources :promotions, except: [:new, :edit], concerns: [:voteable, :commentable, :tag_and_untag, :followable] do
           
