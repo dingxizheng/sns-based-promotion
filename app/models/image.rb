@@ -2,7 +2,7 @@
 # @Author: dingxizheng
 # @Date:   2016-01-09 22:43:24
 # @Last Modified by:   dingxizheng
-# @Last Modified time: 2016-01-21 01:54:03
+# @Last Modified time: 2016-02-20 20:04:10
 
 class Image
   include Mongoid::Document
@@ -21,7 +21,7 @@ class Image
 
   private 
   def validate_size
-  	if file.file.size.to_f / (1000*1000) > Settings.image.size_limit
+  	if self.file.size.to_f / (1000*1000) > Settings.image.size_limit
   		errors.add(:file, I18n.t('errors.validations.image_size') % Settings.image.size_limit)
   	end
   end

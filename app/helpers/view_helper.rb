@@ -2,7 +2,7 @@
 # @Author: dingxizheng
 # @Date:   2016-01-13 18:22:32
 # @Last Modified by:   dingxizheng
-# @Last Modified time: 2016-01-20 19:15:36
+# @Last Modified time: 2016-02-19 22:36:23
 
 module ViewHelper
 
@@ -41,8 +41,8 @@ module ViewHelper
 
 	def render_user_avatar(json, user)
 		if user.avatar.nil?
-			json.image_url user.avatar.file.url
-			json.thumb_url user.avatar.file.thumb.url
+			json.image_url user.get_avatar
+			json.thumb_url user.get_avatar
 		else 
 			render_image(json, user.avatar)	
 		end

@@ -5,8 +5,9 @@ end
 json.expire_at session.expire_at
 
 json.user do
-	json.id session.user.get_id
-	json.url v1_user_url(session.user)
+	render_partial json, 'users/user_small', { :user => session.user }
+	# json.id session.user.get_id
+	# json.url v1_user_url(session.user)
 
-	json.extract! session.user, :name, :description, :created_at, :updated_at
+	# json.extract! session.user, :name, :description, :created_at, :updated_at
 end

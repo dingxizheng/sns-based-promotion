@@ -2,9 +2,19 @@
 # @Author: dingxizheng
 # @Date:   2016-01-18 22:32:23
 # @Last Modified by:   dingxizheng
-# @Last Modified time: 2016-01-18 23:02:57
+# @Last Modified time: 2016-02-20 20:06:17
 
 class GridfsController < ApplicationController
+
+	before_action :restrict_access, only: [:upload_image]
+
+	# POST /images
+	def upload_image
+		# puts params[:file].read
+		@image = current_user.photos.build({:file => params[:file]})
+		raise UnprocessableEntityError.new(@image.errors) unless @image.save
+		render :json => { image: @image.get_id }, :status => 201
+	end
 
 	def image
 		img = Image.find(params[:image_id])

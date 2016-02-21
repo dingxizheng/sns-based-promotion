@@ -67,6 +67,7 @@ class Comment
       # self.create_activity key: 'user.replied_to_comment', owner: self.commenteer, recipient: self.promotion.user
     end
   end
+  handle_asynchronously :add_create_activity, :run_at => Proc.new { 2.minutes.from_now }
   
   def add_update_activity
     if self.body_changed?
@@ -76,6 +77,7 @@ class Comment
       end
     end
   end
+  handle_asynchronously :add_update_activity, :run_at => Proc.new { 2.minutes.from_now }
   
   def add_destroy_activity
     self.create_activity key: 'user.deleted_comment', owner: self.commenteer, recipient: (self.commentee.respond_to?("user") ? self.commentee.user : self.commentee)
@@ -83,6 +85,7 @@ class Comment
       # self.create_activity key: 'user.replied_to_comment', owner: self.commenteer, recipient: self.promotion.user
     end
   end
+  handle_asynchronously :add_destroy_activity, :run_at => Proc.new { 2.minutes.from_now }
 
   # def self.commented_by?(user, query)
   #   if user.class.name == 'User'

@@ -57,7 +57,11 @@ VideoAdsApi::Application.routes.draw do
       post 'signin',        :action => "signin"
       get  'me',            :action => "me"
     end
+
+    match 'feeds' => 'feeds#timeline', :via => :get
   end
+
+  match 'uploads/images' => 'gridfs#upload_image', :via => :post
   match 'uploads/image/file/:image_id/:filename' => 'gridfs#image', :via => :get
   match 'uploads/video/file/:video_id/:filename' => 'gridfs#video', :via => :get
 

@@ -69,9 +69,10 @@ class V1::PromotionsController < ApplicationController
     end
     @promotion = (@owner || current_user).promotions.new(promotion_params_with_geo || promotion_params)
     authorize @promotion
-    @promotion.set_photos params[:photos] if params[:photos]
-    @promotion.set_photos params[:video] if params[:video]
-    raise UnprocessableEntityError.new(@promotion.errors) unless @promotion.save  
+    # @promotion.set_photos params[:video] if params[:video]
+    raise UnprocessableEntityError.new(@promotion.errors) unless @promotion.save
+    @promotion.set_photos params[:photos] if params[:photos] 
+    
     moderatorize current_user, @promotion
     render_json 'promotions/promotion_full', :locals => { :promotion => @promotion }, status: :created
   end
@@ -80,6 +81,8 @@ class V1::PromotionsController < ApplicationController
   # PATCH/PUT /promotions/1.json
   def update
     authorize @promotion
+    @promotion.set_photos params[:photos] if params[:photos]
+    # @promotion.set_photos params[:video] if params[:video]
     raise UnprocessableEntityError.new(@promotion.errors) unless @promotion.update(promotion_update_params)     
     render_json 'promotions/promotion_full', :locals => { :promotion => @promotion }
   end
@@ -103,14 +106,14 @@ class V1::PromotionsController < ApplicationController
   end
 
   def promotion_update_params
-    params.permit(:body, :start_at, :expire_at, :tags => [])
+    params.permit(:body, :price, :start_at, :expire_at, :tags => [])
   end
 
   def promotion_params
     if params[:parent_id]
       params.permit(:body, :parent_id)
     else
-      params.permit(:body, :start_at, :expire_at, :tags => [])
+      params.permit(:body, :price, :start_at, :expire_at, :tags => [])
     end
   end
 

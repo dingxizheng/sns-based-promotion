@@ -70,8 +70,8 @@ class V1::AccountsController < ApplicationController
     # create a new session
     @session = @user.sessions.build({
        :provider => 'facebook',
-       :provider_access_token => signin_with_fb_params[:provider_access_token],
-       :expire_at => signin_with_fb_params[:expire_at],
+       :provider_access_token => signin_with_fb_params[:provider_access_token]
+       # :expire_at => signin_with_fb_params[:expire_at],
       })
 
     @session.save!
