@@ -64,7 +64,7 @@ class V1::PromotionsController < ApplicationController
   # POST /promotions
   # POST /promotions.json
   def create
-    if get_location and get_location[:lat]
+    if promotion_params[:address].nil? and promotion_params[:coordinates].nil? and get_location and get_location[:lat]
       promotion_params_with_geo = promotion_params.merge({:coordinates => [get_location[:long], get_location[:lat]]})
     end
     @promotion = (@owner || current_user).promotions.new(promotion_params_with_geo || promotion_params)
@@ -113,7 +113,7 @@ class V1::PromotionsController < ApplicationController
     if params[:parent_id]
       params.permit(:body, :parent_id)
     else
-      params.permit(:body, :price, :start_at, :expire_at, :tags => [])
+      params.permit(:body, :price, :start_at, :expire_at, :address, :tags => [], :coordinates => [])
     end
   end
 

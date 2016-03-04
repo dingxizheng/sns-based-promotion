@@ -23,7 +23,7 @@ class User
   geocoded_by :address
   after_validation :geocode
   before_create :encrypt_password, :set_default_role
-  before_save :validates_address
+  before_validation :validates_address
   before_destroy :destroy_children
 
   # after_save    :add_create_activity

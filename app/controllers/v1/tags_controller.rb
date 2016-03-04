@@ -2,7 +2,7 @@
 # @Author: dingxizheng
 # @Date:   2016-01-19 17:49:11
 # @Last Modified by:   dingxizheng
-# @Last Modified time: 2016-01-20 15:19:45
+# @Last Modified time: 2016-02-22 19:29:18
 class V1::TagsController < ApplicationController
 	
 	before_action :set_tag, :except => [:index]

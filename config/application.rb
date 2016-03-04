@@ -50,6 +50,8 @@ module VideoAdsApi
             :exception_recipients => Settings.email_notificaion.exception_recipients
         }
 
-    # config.force_ssl = true
+    config.after_initialize do 
+       PublicActivity::Activity.send(:include, Mongoid::QueryHelper)
+    end
   end
 end

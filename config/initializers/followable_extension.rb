@@ -2,18 +2,12 @@
 # @Author: dingxizheng
 # @Date:   2016-01-18 17:26:05
 # @Last Modified by:   dingxizheng
-# @Last Modified time: 2016-01-19 17:34:43
+# @Last Modified time: 2016-03-03 23:25:35
 
 module FollowableActions
 	extend ActiveSupport::Concern
 	
-	class_variable_set(:@@before_callbacks, [])
-	class_variable_set(:@@followable, nil)
-	class_variable_set(:@@after_follow, nil)
-	class_variable_set(:@@after_unfollow, nil)
-	
 	def follow
-		self.class.class_variable_get(:@@before_callbacks).each {|cb| send(cb) }
 		if current_user.nil?
 			raise MyError.new(500, "current user is not found, please make sure that method :current_user is defined and it returns the current user")
 		else
@@ -27,7 +21,6 @@ module FollowableActions
 	end
 
 	def unfollow
-		self.class.class_variable_get(:@@before_callbacks).each {|cb| send(cb) }
 		if current_user.nil?
 			raise MyError.new(500, "current user is not found, please make sure that method :current_user is defined and it returns the current user")
 		else
@@ -37,6 +30,17 @@ module FollowableActions
 			else
 				render :json => {}, :status => 200
 			end
+		end
+	end
+
+	def friendship
+		if current_user.nil?
+			raise MyError.new(500, "current user is not found, please make sure that method :current_user is defined and it returns the current user")
+		else
+			render :json => {
+				follower: current_user.follower_of?(get_followable),
+				followee: current_user.followee_of?(get_followable)
+			}
 		end
 	end
 
@@ -57,26 +61,30 @@ module FollowableActions
 
 	private
 	def get_followable
-		instance_variable_get(:"@#{@@followable.to_s}")
+		instance_variable_get(:"@#{self.class.followable_object.to_s}")
 	end
 
 	module ClassMethods
 		def before_follow(actions)
-			self.class_variable_set(:@@before_callbacks, actions)
+			# self.class_variable_set(:@@before_callbacks, actions)
 			# @@before_callbacks = actions
 		end
 
 		def followable(resource)
-			self.class_variable_set(:@@followable, resource)
+			@followable_object = resource
 			# @@voteable = resource
 		end
 
+		def followable_object
+			@followable_object
+		end
+
 		def after_follow(method)
-			self.class_variable_set(:@@after_follow, method)
+			# self.class_variable_set(:@@after_follow, method)
 		end
 
 		def after_unfollow(method)
-			self.class_variable_set(:@@after_unfollow, method)
+			# self.class_variable_set(:@@after_unfollow, method)
 		end
 	end
 end

@@ -133,13 +133,13 @@ module Mongoid
             query.store(field.gt, value[1..-1])
           elsif value.start_with? '!='
             if value == "!=null"
-              query.store(field.exists, false)
+              query.store(field.exists, true)
             else
               query.store(field.nin, value[2..-1].split('&&'))
             end
           else
             if value == "null"
-              query.store(field.exists, true)
+              query.store(field.exists, false)
             else
               if value.split('&&').size < 1
                 query.store(field.in, value.split('||'))

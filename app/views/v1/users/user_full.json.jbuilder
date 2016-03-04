@@ -2,7 +2,7 @@ json.id user.get_id
 
 json.url resource_path_to('user_url', user)
 
-json.extract! user, :name, :email, :address, :tags, :phone, :description, :created_at, :updated_at
+json.extract! user, :name, :email, :address, :tags, :phone, :description, :created_at, :updated_at, :comments_count, :promotions_count, :likers_count, :photos_count, :opinions_count
 
 json.comments do
 	json.count user.comments.count
@@ -15,14 +15,14 @@ json.roles user.get_roles
 
 json.distance resource_distance(user)
 
-if not user.get_avatar.nil?
-	json.avatar do 
+json.avatar do
+	if not user.get_avatar.nil?
 		render_user_avatar(json, user)
 	end
 end
 
-if not user.background.nil?
-	json.background do 
+json.background do 
+	if not user.background.nil?
 		render_image(json, user.background)
 	end
 end

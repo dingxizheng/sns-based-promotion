@@ -2,14 +2,27 @@ json.id promotion.get_id
 
 json.url resource_path_to('promotion_url', promotion)
 
-json.extract! promotion, :body, :tags, :created_at, :updated_at, :start_at, :expire_at, :status
+json.extract! promotion, :body, :tags, :created_at, :updated_at, :start_at, :expire_at, :status, :price
 
 json.comments do
 	json.count promotion.comments.count
 	json.url resource_path_to('promotion_comments_url', promotion)
 end
 
-json.coordinates promotion.coordinates
+if current_user.present?
+	json.liked current_user.liked?(promotion)
+end
+
+if promotion.user.present? 
+	json.address promotion.user.address
+end
+
+if promotion.coordinates
+	json.coordinates promotion.coordinates
+else
+	json.coordinates promotion.user.coordinates
+end
+
 
 json.distance resource_distance(promotion)
 
@@ -19,6 +32,10 @@ end
 
 json.dislikes do
 	json.count promotion.dislikes
+end
+
+json.reposts do
+	json.count promotion.reposts_count
 end
 
 if promotion.user.present?
@@ -41,7 +58,7 @@ end
 
 if promotion.root
 	json.root do
-		render_partial json, 'promotions/promotion_small', { :promotion => promotion.root }
+		render_partial json, 'promotions/promotion', { :promotion => promotion.root }
 	end
 end
 

@@ -2,7 +2,7 @@
 # @Author: dingxizheng
 # @Date:   2016-01-13 18:22:32
 # @Last Modified by:   dingxizheng
-# @Last Modified time: 2016-02-19 22:36:23
+# @Last Modified time: 2016-02-25 15:03:29
 
 module ViewHelper
 
@@ -32,11 +32,15 @@ module ViewHelper
 	end
 
 	def resource_distance(resource)
-		if resource.respond_to?("distance_to") and resource.coordinates.present? and get_location[:lat].present?
+		if resource.respond_to?("distance_to") and resource.coordinates.present? and get_location.present? && get_location[:lat].present?
 			resource.distance_to([get_location[:lat], get_location[:long]]) * 1.60934
 		else
 			-1
 		end
+	end
+
+	def get_current_user
+		current_user
 	end
 
 	def render_user_avatar(json, user)
@@ -51,13 +55,13 @@ module ViewHelper
 	def render_image(json, image)
 		if image.file.present?
 			json.id image.get_id
-			json.image_url image.file.url
+			json.image_url "http://#{ENV['HOST']}/origin/#{image.file.url}"
 			if image.file.thumb.present?
-				json.thumb_url image.file.thumb.url
+				json.thumb_url "http://#{ENV['HOST']}/thumb/#{image.file.thumb.url}"
 			end
 			if image.file.tiny_thumb.present?
-				json.tiny_thumb_url image.file.tiny_thumb.url
+				json.tiny_thumb_url "http://#{ENV['HOST']}/tiny/#{image.file.tiny_thumb.url}"
 			end
-		end
+		end 
 	end
 end

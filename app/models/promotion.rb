@@ -14,9 +14,12 @@ class Promotion
   include PublicActivity::Common
   # include Mongoid::Encryptable
 
-  geocoded_by   :coordinates
+  geocoded_by         :address
+  before_validation   :geocode, if: ->(obj){ obj.address_changed? or obj.coordinates.nil? or (obj.coordinates.present? and obj.coordinates[0].nil?) }
+  # geocoded_by           :address
+
   after_save    :set_ancestors
-  after_create  :add_create_activity
+  after_create  :add_create_activity, :add_subscribable_activity
   after_update  :add_update_activity
   after_destroy :add_destroy_activity
   after_destroy :destroy_children
@@ -26,6 +29,7 @@ class Promotion
   # fields
   field :body, type: String
   field :coordinates, type: Array
+  field :address, type: String
   field :price, type: Float, default: -1
   field :start_at, type: DateTime, default: Time.now
   field :expire_at, type: DateTime, default: Time.now + 2.weeks
@@ -90,10 +94,14 @@ class Promotion
     if not self.coordinates.nil? then self.coordinates[0] else 0 end
   end
 
+  alias longitude lon
+
   # retrieve latitude info
   def lat
     if not self.coordinates.nil? then self.coordinates[1] else 0 end
   end
+
+  alias latitude lat
 
   # private
 
@@ -139,7 +147,7 @@ class Promotion
   handle_asynchronously :add_subscribable_activity, :run_at => Proc.new { 2.minutes.from_now }
 
   def add_destroy_activity
-    self.create_activity key: 'promotion.deleted', owner: self.user
+    # self.create_activity key: 'promotion.deleted', owner: self.user
   end
 
   # destroy all children

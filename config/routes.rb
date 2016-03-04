@@ -19,6 +19,8 @@ VideoAdsApi::Application.routes.draw do
     concern :voteable do
       post 'like', :action => :vote_up
       post 'dislike', :action => :vote_down
+      get  'likers', :action => :likers
+      get  'dislikers', :action => :dislikers
     end
 
     resources :comments, except: [:new, :edit], concerns: [:voteable]
@@ -33,6 +35,7 @@ VideoAdsApi::Application.routes.draw do
       post 'unfollow', :action => :unfollow
       get 'followers', :action => :followers
       get 'followees', :action => :followees
+      get 'friendship',:action => :friendship
     end
 
     resources :promotions, except: [:new, :edit], concerns: [:voteable, :commentable, :tag_and_untag, :followable] do  
@@ -62,10 +65,10 @@ VideoAdsApi::Application.routes.draw do
   end
 
   match 'uploads/images' => 'gridfs#upload_image', :via => :post
-  match 'uploads/image/file/:image_id/:filename' => 'gridfs#image', :via => :get
-  match 'uploads/video/file/:video_id/:filename' => 'gridfs#video', :via => :get
+  match ':size/uploads/image/file/:image_id/:filename' => 'gridfs#image', :via => :get
+  match ':size/uploads/video/file/:video_id/:filename' => 'gridfs#video', :via => :get
 
-  match 'v:api/*path', :to => redirect("/api/v1/%{path}"), :via => :all
+  match 'api/v:api/*path', :to => redirect("v1/%{path}"), :via => :all
 
   # resources :promotions, except: [:new, :edit] do 
   #   post 'report' => 'promotions#report'

@@ -14,7 +14,7 @@ class V1::CommentsController < ApplicationController
   def index
     @comments = CommentPolicy::Scope.new(current_user, @commentee.comments)
                   .resolve
-                  .query_by_params(query_params)
+                  .query_by_params(query_params.except(@id_name))
                   .query_by_text(search)
                   .sortby(sortBy)
                   .paginate(page, per_page)
@@ -29,6 +29,7 @@ class V1::CommentsController < ApplicationController
   # POST /comments
   def create
     @comment = @commentee.comments.build(comment_params.merge!(commenteer_id: current_user.get_id))
+    @comment.commentee_type = @commentee.class.name
     raise UnprocessableEntityError.new(@comment.errors) unless @comment.save
     moderatorize current_user, @comment
     render_json 'comments/comment', :locals => { :comment => @comment }, status: :created
@@ -51,9 +52,10 @@ class V1::CommentsController < ApplicationController
   private
     def set_commentee
       @commentee = nil
+      @id_name = :good
       COMMENTABLES.reverse.each do |model|
-        id_name = "#{model.name.downcase}_id".to_sym
-        @commentee = model.find(params[id_name] || "")
+        @id_name = "#{model.name.downcase}_id".to_sym
+        @commentee = model.find(params[@id_name] || "")
         break unless @commentee.nil?
       end
       raise BadRequestError.new(I18n.t('errors.requests.no_commentee')) if @commentee.nil?

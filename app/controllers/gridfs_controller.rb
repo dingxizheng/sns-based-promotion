@@ -2,7 +2,7 @@
 # @Author: dingxizheng
 # @Date:   2016-01-18 22:32:23
 # @Last Modified by:   dingxizheng
-# @Last Modified time: 2016-02-20 20:06:17
+# @Last Modified time: 2016-02-25 15:18:09
 
 class GridfsController < ApplicationController
 
@@ -18,8 +18,16 @@ class GridfsController < ApplicationController
 
 	def image
 		img = Image.find(params[:image_id])
+		puts params[:size]
 		if img.present?
-			content = img.file.thumb.read
+			if params[:size] == 'thumb'
+				content = img.file.thumb.read
+			elsif params[:size] == 'tiny'
+				content = img.file.tiny_thumb.read
+			else
+			 	content = img.file.read
+			end
+
 			send_data content, type: img.file.content_type, disposition: "inline"
 		end
 	end

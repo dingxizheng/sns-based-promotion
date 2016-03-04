@@ -9,6 +9,10 @@ json.comments do
 	json.url resource_path_to('promotion_comments_url', promotion)
 end
 
+if current_user.present?
+	json.liked current_user.liked?(promotion)
+end
+
 json.coordinates promotion.coordinates
 
 json.distance resource_distance(promotion)
@@ -19,6 +23,10 @@ end
 
 json.dislikes do
 	json.count promotion.dislikes
+end
+
+json.reposts do
+	json.count promotion.reposts_count
 end
 
 if promotion.user.present?

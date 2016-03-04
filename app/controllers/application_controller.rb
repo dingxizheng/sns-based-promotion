@@ -31,7 +31,7 @@ class ApplicationController < ActionController::Base
 		raise RoutingError.new(request.original_url)
 	end
 
-	helper_method :get_location
+	helper_method :get_location, :current_user
 
 	# private methods
 	protected
@@ -98,15 +98,15 @@ class ApplicationController < ActionController::Base
 	end
 
 	def sortBy
-		request.headers['sortBy']
+		request.headers['HTTP_SORTBY']
 	end
 
 	def page
-		request.headers['page'] || 1 #=> return the first page by default
+		request.headers['HTTP_PAGE'] || 1 #=> return the first page by default
 	end
 
 	def per_page
-		request.headers['per_page'] || 8 #=> default items per_page is set to 8
+		request.headers['HTTP_PER_PAGE'] || 8 #=> default items per_page is set to 8
 	end
 
 	def distance
