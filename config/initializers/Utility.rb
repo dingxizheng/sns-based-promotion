@@ -1,8 +1,8 @@
 #!/usr/bin/ruby
 # @Author: dingxizheng
 # @Date:   2016-01-10 22:37:38
-# @Last Modified by:   dingxizheng
-# @Last Modified time: 2016-01-14 16:42:22
+# @Last Modified by:   mover
+# @Last Modified time: 2016-03-30 15:02:08
 
 require 'net/http'
 require 'net/https'
@@ -22,14 +22,10 @@ class Utility
 	def self.http_get(url, params)
 		uri = URI.parse(url)
 		http = Net::HTTP.new(uri.host, uri.port)
-		if uri.scheme == 'https'
-			http.use_ssl = true
-		end
+		http.use_ssl = uri.scheme == 'https' ? true : false
 		headers = {'Content-Type'=> 'application/x-www-form-urlencoded'}
-		uri.query = URI.encode_www_form(params)
-		request = Net::HTTP::Get.new(uri.request_uri)
-		response = http.request(request)
-		response
+		uri.query = URI.encode_www_form(params) 
+		http.request Net::HTTP::Get.new(uri.request_uri)
 	end
 
 	def self.log_exception e, args
@@ -37,8 +33,7 @@ class Utility
 
 		Rails.logger.error extra_info if extra_info
 		Rails.logger.error e.message
-		st = e.backtrace.join("\n")
-		Rails.logger.error st
+		Rails.logger.error e.backtrace.join("\n")
 
 		extra_info ||= "<NO DETAILS>"
 		request = args[:request]

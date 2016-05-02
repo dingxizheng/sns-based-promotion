@@ -2,7 +2,7 @@
 # @Author: dingxizheng
 # @Date:   2016-01-18 17:26:05
 # @Last Modified by:   dingxizheng
-# @Last Modified time: 2016-03-03 23:25:35
+# @Last Modified time: 2016-03-27 23:43:52
 
 module FollowableActions
 	extend ActiveSupport::Concern

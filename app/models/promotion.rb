@@ -121,7 +121,7 @@ class Promotion
       self.create_activity key: 'promotion.created', owner: self.user, recipient: nil
     end
   end
-  handle_asynchronously :add_create_activity, :run_at => Proc.new { 2.minutes.from_now }
+  handle_asynchronously :add_create_activity, :run_at => Proc.new { 10.seconds.from_now }
 
   def add_update_activity
     # if self.body_changed?
@@ -144,7 +144,7 @@ class Promotion
       end
     end
   end
-  handle_asynchronously :add_subscribable_activity, :run_at => Proc.new { 2.minutes.from_now }
+  handle_asynchronously :add_subscribable_activity, :run_at => Proc.new { 20.seconds.from_now }
 
   def add_destroy_activity
     # self.create_activity key: 'promotion.deleted', owner: self.user

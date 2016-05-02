@@ -41,7 +41,6 @@ module Mongoid
       # before_save :reindex_coordinates
       scope :with_in_radius, ->(location, radius) {
         if location and location[:lat] and location[:long] and radius
-          puts "$NEAR >> #{ radius.to_f * 1000 }"
           # near([location[:lat], location[:long]], Float(radius), :units => :km)
           where({
               :coordinates => {

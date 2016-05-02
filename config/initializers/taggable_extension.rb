@@ -1,12 +1,13 @@
 #!/usr/bin/ruby
 # @Author: dingxizheng
 # @Date:   2016-01-17 00:39:39
-# @Last Modified by:   dingxizheng
-# @Last Modified time: 2016-02-10 19:01:11
+# @Last Modified by:   mover
+# @Last Modified time: 2016-03-30 15:02:08
 
 # This module introduces
-# 	tag and untag actions to controllers
-#
+#   tag and untag actions to controllers
+
+
 module TaggableActions
   extend ActiveSupport::Concern
 
@@ -32,21 +33,21 @@ module TaggableActions
   end
 
   def render_after_tag
-  	render :json => { :tags => get_taggable.tags }
+    render :json => { :tags => get_taggable.tags }
   end
 
   def render_after_untag
-  	render :json => { :tags => get_taggable.tags }
+    render :json => { :tags => get_taggable.tags }
   end
 
   private
   def get_tags
-  	tags_name = self.class.class_variable_get(:@@taggable_param)
-  	params[tags_name.to_sym]
+    tags_name = self.class.class_variable_get(:@@taggable_param)
+    params[tags_name.to_sym]
   end
 
   def get_taggable
-  	instance_variable_get(:"@#{@@taggable.to_s}")
+    instance_variable_get(:"@#{@@taggable.to_s}")
   end
 
   module ClassMethods
@@ -65,11 +66,11 @@ module TaggableActions
     end
 
     def after_tag(method_name)
-    	self.class_variable_set(:@@after_tag, model_name)
+      self.class_variable_set(:@@after_tag, model_name)
     end
 
     def after_untag(method_name)
-    	self.class_variable_set(:@@after_untag, model_name)
+      self.class_variable_set(:@@after_untag, model_name)
     end
 
   end
@@ -86,13 +87,12 @@ module Mongoid
     class_variable_set(:@@maximun_tags, 20)
 
     included do
-	  models = Mongoid.class_variable_get(:@@taggable_models)
-	  Mongoid.class_variable_set(:@@taggable_models, models << self.name.to_s.downcase)
-	  Mongoid.class_variable_get(:@@init_callback).call(self.name.to_s.downcase) if Mongoid.class_variable_get(:@@init_callback)
+      models = Mongoid.class_variable_get(:@@taggable_models)
+      Mongoid.class_variable_set(:@@taggable_models, models << self.name.to_s.downcase)
+      Mongoid.class_variable_get(:@@init_callback).call(self.name.to_s.downcase) if Mongoid.class_variable_get(:@@init_callback)
 
       field :tags, type: Array, default: []
       has_and_belongs_to_many :tag_objects , inverse_of: "tagged_#{self.name.to_s.downcase}s".to_sym, class_name: 'Tag', autosave: true
-      # belongs_to :tag_model, as:, class_name: 'Tag'
     end
 
     module ClassMethods
@@ -151,31 +151,31 @@ module Mongoid
 
     def remove_tags(tags)
       if tags.respond_to? "each"
-      	 if tags.size < 1
-      	 	return
-	     elsif tags.all? {|tag| tag.kind_of? String }
-	     	remove_array tags
-	     elsif tags.all? {|tag| tag.is_a? Tag }
-	     	remove_tags(tags.map(&:body))
-	     else
-	     	raise ArgumentError.new("The type of items in array should be either a Tag or a String")
-	     end
-	  elsif tags.kind_of? String
-	  	remove_array tags.split(self.class.class_variable_get(:@@tags_separator))
-	  else
-	  	raise ArgumentError.new("Only arrays are allowed")
-      end			
+        if tags.size < 1
+          return
+        elsif tags.all? {|tag| tag.kind_of? String }
+          remove_array tags
+        elsif tags.all? {|tag| tag.is_a? Tag }
+          remove_tags(tags.map(&:body))
+        else
+          raise ArgumentError.new("The type of items in array should be either a Tag or a String")
+        end
+      elsif tags.kind_of? String
+        remove_array tags.split(self.class.class_variable_get(:@@tags_separator))
+      else
+        raise ArgumentError.new("Only arrays are allowed")
+      end
     end
 
     private
     def add_models_to_tag(tag)
-       method_name = 'tagged_' + self.class.name.downcase + 's'
-       tag.send(method_name + '=', tag.send(method_name) + [self])
+      method_name = 'tagged_' + self.class.name.downcase + 's'
+      tag.send(method_name + '=', tag.send(method_name) + [self])
     end
 
     def remove_models_from_tag(tag)
-       method_name = 'tagged_' + self.class.name.downcase + 's'
-       tag.send(method_name + '=', tag.send(method_name) - [self])
+      method_name = 'tagged_' + self.class.name.downcase + 's'
+      tag.send(method_name + '=', tag.send(method_name) - [self])
     end
 
     def set_array(tags)
@@ -183,8 +183,8 @@ module Mongoid
       self.save if self.new_record?
       self.tag_objects = [];
       tags.each{ |tag|
-      	tag_to_add = Tag.find_or_create_by(body: tag)
-      	add_models_to_tag(tag_to_add)
+        tag_to_add = Tag.find_or_create_by(body: tag)
+        add_models_to_tag(tag_to_add)
         self.tag_objects += [tag_to_add]
       }
       self.save
@@ -194,24 +194,24 @@ module Mongoid
       self[:tags] = self[:tags] | tags
       self.save if self.new_record?
       tags.each { |tag|
-      	tag_to_add = Tag.find_or_create_by(body: tag)
-      	add_models_to_tag(tag_to_add)
+        tag_to_add = Tag.find_or_create_by(body: tag)
+        add_models_to_tag(tag_to_add)
         self.tag_objects << tag_to_add
       }
       self.save
     end
 
     def remove_array(tags)
-    	self[:tags] = self[:tags] - tags
-    	self.save if self.new_record?
-    	tags.each { |tag|
-	      	tag_to_remove = Tag.find_by(body: tag)
-	      	if tag_to_remove.present?
-		      	remove_models_from_tag(tag_to_remove)
-		        self.tag_objects -= [tag_to_remove]
-		    end
-	    }
-	    self.save
+      self[:tags] = self[:tags] - tags
+      self.save if self.new_record?
+      tags.each { |tag|
+        tag_to_remove = Tag.find_by(body: tag)
+        if tag_to_remove.present?
+          remove_models_from_tag(tag_to_remove)
+          self.tag_objects -= [tag_to_remove]
+        end
+      }
+      self.save
     end
 
   end
@@ -221,24 +221,23 @@ module Mongoid
 
     included do
 
-      # for each model
       Mongoid.class_variable_get(:@@taggable_models).each do |model_name|
-      	add_relations_to_model(model_name)
+        add_relations_to_model(model_name)
       end
 
       Mongoid.class_variable_set(:@@init_callback, method(:add_relations_to_model))
-   
+
     end
 
     module ClassMethods
 
       def add_relations_to_model(model_name)
-      	puts "ADD RELATION TO MODEL #{model_name}"
-      	has_and_belongs_to_many "tagged_#{model_name}s".to_sym, inverse_of: :tag_objects, class_name: model_name.capitalize
+        puts "ADD RELATION TO MODEL #{model_name}"
+        has_and_belongs_to_many "tagged_#{model_name}s".to_sym, inverse_of: :tag_objects, class_name: model_name.capitalize
       end
 
       def make_as_tag_model
-      	# has_and_belongs_to_many :taggables, :polymorphic => true
+        # has_and_belongs_to_many :taggables, :polymorphic => true
       end
     end
 
